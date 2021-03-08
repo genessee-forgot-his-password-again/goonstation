@@ -2176,4 +2176,178 @@
 		product_list += new/datum/data/vending_product(/obj/item/clothing/gloves/long, 2)
 
 		product_list += new/datum/data/vending_product(/obj/item/sponge/cheese, 2, hidden=1)
+		
+// custom things gen made
+
+/obj/machinery/vending/adminguns
+	name = "NextGen Munitions"
+	desc = "Military equipment fabricator. It smells kind of like Dr. Gibb and gunpowder."
+	icon_state = "weapon"
+	icon_panel = "card-panel"
+	icon_off = "weapon"
+	icon_broken = "janitor-broken"
+	icon_fallen = "janitor-fallen"
+	pay = 0
+	freestuff = 1
+	window_size = "400x475"
+
+	create_products()
+		..()
+		product_list += new/datum/data/vending_product(/obj/item/gun/energy/taser_gun, 20)
+		product_list += new/datum/data/vending_product(/obj/item/gun/energy/laser_gun, 20)
+		product_list += new/datum/data/vending_product(/obj/item/gun/energy/phaser_gun, 20)
+		product_list += new/datum/data/vending_product(/obj/item/gun/energy/egun, 20)
+		product_list += new/datum/data/vending_product(/obj/item/gun/energy/ntgun, 20)
+		product_list += new/datum/data/vending_product(/obj/item/gun/energy/tasershotgun, 20)
+		product_list += new/datum/data/vending_product(/obj/item/gun/energy/tasersmg, 20)
+		product_list += new/datum/data/vending_product(/obj/item/gun/kinetic/tactical_shotgun, 20)
+		product_list += new/datum/data/vending_product(/obj/item/gun/kinetic/assault_rifle, 20)
+		product_list += new/datum/data/vending_product(/obj/item/gun/kinetic/spes, 20)
+		product_list += new/datum/data/vending_product(/obj/item/gun/kinetic/clock_188, 20)
+		product_list += new/datum/data/vending_product(/obj/item/gun/kinetic/riotgun, 20)
+		product_list += new/datum/data/vending_product(/obj/item/gun/kinetic/revolver, 20)
+
+		product_list += new/datum/data/vending_product(/obj/item/ammo/bullets/a357, 20)
+		product_list += new/datum/data/vending_product(/obj/item/ammo/bullets/nine_mm_NATO, 20)
+		product_list += new/datum/data/vending_product(/obj/item/ammo/bullets/a12, 20)
+		product_list += new/datum/data/vending_product(/obj/item/ammo/bullets/abg, 20)
+		product_list += new/datum/data/vending_product(/obj/item/ammo/bullets/assault_rifle, 20)
+
+		product_list += new/datum/data/vending_product(/obj/item/baton, 20)
+		product_list += new/datum/data/vending_product(/obj/item/sword, 20)
+		product_list += new/datum/data/vending_product(/obj/item/fireaxe, 20)
+
+		product_list += new/datum/data/vending_product(/obj/item/clothing/suit/armor/vest, 20)
+		product_list += new/datum/data/vending_product(/obj/item/clothing/suit/armor/heavy, 20)
+		product_list += new/datum/data/vending_product(/obj/item/clothing/suit/space/ntso, 20)
+		product_list += new/datum/data/vending_product(/obj/item/clothing/suit/space/syndicate, 20)
+		product_list += new/datum/data/vending_product(/obj/item/clothing/head/helmet, 20)
+		product_list += new/datum/data/vending_product(/obj/item/clothing/head/helmet/hardhat/security/improved, 20)
+		product_list += new/datum/data/vending_product(/obj/item/clothing/head/helmet/space/ntso, 20)
+		product_list += new/datum/data/vending_product(/obj/item/clothing/head/helmet/space/syndicate, 20)
+
+		product_list += new/datum/data/vending_product(/obj/item/storage/backpack/syndie/tactical, 20)
+		product_list += new/datum/data/vending_product(/obj/item/storage/fanny, 20)
+		product_list += new/datum/data/vending_product(/obj/item/storage/fanny/syndie, 20)
+		product_list += new/datum/data/vending_product(/obj/item/storage/pouch, 20)
+		product_list += new/datum/data/vending_product(/obj/item/storage/grenade_pouch, 20)
+
+		product_list += new/datum/data/vending_product(/obj/item/old_grenade/stinger, 20)
+		product_list += new/datum/data/vending_product(/obj/item/old_grenade/stinger/frag, 20)
+		product_list += new/datum/data/vending_product(/obj/item/old_grenade/high_explosive, 20)
+		product_list += new/datum/data/vending_product(/obj/item/chem_grenade/flashbang, 20)
+		product_list += new/datum/data/vending_product(/obj/item/chem_grenade/incendiary, 20)
+
+/obj/machinery/vending/adminmats
+	name = "NextGen Minerals"
+	desc = "Raw material fabricator. There's a sticker on the side that says 'DO NOT PLASMASTONE??'"
+	icon_state = "standard"
+	icon_panel = "standard-panel"
+	icon_off = "standard-off"
+	icon_broken = "standard-broken"
+	icon_fallen = "standard-fallen"
+	pay = 0
+	freestuff = 1
+	window_size = "400x475"
+
+	create_products()
+		..()
+		product_list += new/datum/data/vending_product(/obj/item/raw_material/mauxite, 100)
+		product_list += new/datum/data/vending_product(/obj/item/raw_material/pharosium, 100)
+		product_list += new/datum/data/vending_product(/obj/item/raw_material/molitz, 100)
+		product_list += new/datum/data/vending_product(/obj/item/raw_material/char, 100)
+		product_list += new/datum/data/vending_product(/obj/item/raw_material/ice, 100)
+		product_list += new/datum/data/vending_product(/obj/item/raw_material/cobryl, 100)
+		product_list += new/datum/data/vending_product(/obj/item/raw_material/bohrum, 100)
+		product_list += new/datum/data/vending_product(/obj/item/raw_material/claretine, 100)
+		product_list += new/datum/data/vending_product(/obj/item/raw_material/martian, 100)
+		product_list += new/datum/data/vending_product(/obj/item/raw_material/syreline, 100)
+		product_list += new/datum/data/vending_product(/obj/item/raw_material/cerenkite, 100)
+		product_list += new/datum/data/vending_product(/obj/item/raw_material/plasmastone, 100)
+		product_list += new/datum/data/vending_product(/obj/item/raw_material/eldritch, 100)
+		product_list += new/datum/data/vending_product(/obj/item/raw_material/gold, 100)
+		product_list += new/datum/data/vending_product(/obj/item/raw_material/miracle, 100)
+		product_list += new/datum/data/vending_product(/obj/item/raw_material/erebite, 100)
+		product_list += new/datum/data/vending_product(/obj/item/raw_material/starstone, 100)
+
+		product_list += new/datum/data/vending_product(/obj/item/material_piece/steel, 100)
+		product_list += new/datum/data/vending_product(/obj/item/material_piece/glass, 100)
+		product_list += new/datum/data/vending_product(/obj/item/material_piece/copper, 100)
+		product_list += new/datum/data/vending_product(/obj/item/material_piece/rubber/latex, 100)
+		product_list += new/datum/data/vending_product(/obj/item/material_piece/cloth/cottonfabric, 100)
+		
+/obj/machinery/vending/adminmeds
+	name = "NextGen Medicines"
+	desc = "Raw chemical fabricator. Can also make non-chemical medical remedies."
+	icon_state = "med"
+	icon_panel = "standard-panel"
+	icon_off = "med-off"
+	icon_broken = "med-broken"
+	icon_fallen = "med-fallen"
+	pay = 0
+	freestuff = 1
+	window_size = "400x475"
+
+	create_products()
+		..()
+		product_list += new/datum/data/vending_product(/obj/item/storage/firstaid/regular, 100)
+		product_list += new/datum/data/vending_product(/obj/item/storage/firstaid/brute, 100)
+		product_list += new/datum/data/vending_product(/obj/item/storage/firstaid/fire, 100)
+		product_list += new/datum/data/vending_product(/obj/item/storage/firstaid/toxin, 100)
+		product_list += new/datum/data/vending_product(/obj/item/storage/firstaid/oxygen, 100)
+		product_list += new/datum/data/vending_product(/obj/item/storage/firstaid/brain, 100)
+		product_list += new/datum/data/vending_product(/obj/item/storage/firstaid/crit, 100)
+		
+		product_list += new/datum/data/vending_product(/obj/item/storage/pill_bottle/cyberpunk, 100)
+		
+		product_list += new/datum/data/vending_product(/obj/item/device/analyzer/healthanalyzer, 100)
+		product_list += new/datum/data/vending_product(/obj/item/device/analyzer/healthanalyzer_upgrade, 100)
+		product_list += new/datum/data/vending_product(/obj/item/device/analyzer/healthanalyzer_organ_upgrade, 100)
+		
+		product_list += new/datum/data/vending_product(/obj/item/clothing/glasses/healthgoggles, 100)
+		
+/obj/machinery/vending/adminfood
+	name = "NextGen Meals"
+	desc = "Finished food synthesizer. Great for parties!"
+	icon_state = "food"
+	icon_panel = "standard-panel"
+	icon_off = "standard-off"
+	icon_broken = "standard-broken"
+	icon_fallen = "standard-fallen"
+	pay = 0
+	freestuff = 1
+	window_size = "400x475"
+
+	create_products()
+		..()
+		product_list += new/datum/data/vending_product(/obj/item/storage/box/glassbox, 100)
+		product_list += new/datum/data/vending_product(/obj/item/storage/box/cutlery, 100)
+		product_list += new/datum/data/vending_product(/obj/item/storage/box/plates, 100)
+		
+		product_list += new/datum/data/vending_product(/obj/item/storage/box/donkpocket_kit, 100)
+		product_list += new/datum/data/vending_product(/obj/item/storage/box/bacon_kit, 100)
+		product_list += new/datum/data/vending_product(/obj/item/storage/box/cookie_tin, 100)
+		product_list += new/datum/data/vending_product(/obj/item/storage/box/beer, 100)
+		product_list += new/datum/data/vending_product(/obj/item/storage/box/popsicles, 100)
+		
+		product_list += new/datum/data/vending_product(/obj/item/reagent_containers/food/snacks/burger/synthburger, 100)
+		product_list += new/datum/data/vending_product(/obj/item/reagent_containers/food/snacks/sandwich/meat_s, 100)
+		product_list += new/datum/data/vending_product(/obj/item/reagent_containers/food/snacks/sandwich/pb, 100)
+		product_list += new/datum/data/vending_product(/obj/item/reagent_containers/food/snacks/sandwich/cheese, 100)
+		product_list += new/datum/data/vending_product(/obj/item/reagent_containers/food/snacks/steak_s, 100)
+		product_list += new/datum/data/vending_product(/obj/item/reagent_containers/food/snacks/candy, 100)
+		product_list += new/datum/data/vending_product(/obj/item/reagent_containers/food/snacks/chips, 100)
+		
+		product_list += new/datum/data/vending_product(/obj/item/reagent_containers/food/drinks/cola, 100)
+		product_list += new/datum/data/vending_product(/obj/item/reagent_containers/food/drinks/peach, 100)
+		product_list += new/datum/data/vending_product(/obj/item/reagent_containers/food/drinks/cola/random, 100)
+		product_list += new/datum/data/vending_product(/obj/item/reagent_containers/food/drinks/chickensoup, 100)
+		product_list += new/datum/data/vending_product(/obj/item/reagent_containers/food/drinks/bottle/bottledwater, 100)
+		product_list += new/datum/data/vending_product(/obj/item/reagent_containers/food/drinks/water, 100)
+		product_list += new/datum/data/vending_product(/obj/item/reagent_containers/food/drinks/coffee, 100)
+		product_list += new/datum/data/vending_product(/obj/item/reagent_containers/food/drinks/bottle/orange, 100)
+		product_list += new/datum/data/vending_product(/obj/item/reagent_containers/food/drinks/bottle/beer, 100)
+		product_list += new/datum/data/vending_product(/obj/item/reagent_containers/food/drinks/bottle/fancy_beer, 100)
+		product_list += new/datum/data/vending_product(/obj/item/reagent_containers/food/drinks/bottle/hobo_wine, 100)
+		product_list += new/datum/data/vending_product(/obj/item/reagent_containers/food/drinks/bottle/wine, 100)
 
