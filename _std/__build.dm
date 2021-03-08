@@ -97,7 +97,7 @@ o+`        `-` ``..-:yooos-..----------..`
 //#define MAP_OVERRIDE_CHIRON			// Chiron by Kusibu
 //#define MAP_OVERRIDE_OSHAN			// Oshan
 //#define MAP_OVERRIDE_HORIZON			// Horizon by Warcrimes
-//#define MAP_OVERRIDE_ATLAS			// gannetmap OR IS IT KUBIUSGANNETMAP??
+#define MAP_OVERRIDE_ATLAS			// gannetmap OR IS IT KUBIUSGANNETMAP??
 //#define MAP_OVERRIDE_MANTA			// manta map
 //#define MAP_OVERRIDE_DENSITY
 //#define MAP_OVERRIDE_KONDARU
@@ -111,7 +111,7 @@ o+`        `-` ``..-:yooos-..----------..`
 
 //////////// HOLIDAYS AND OTHER SUCH TOGGLES
 
-//#define RP_MODE
+#define RP_MODE
 //#define HALLOWEEN 1
 //#define XMAS 1
 //#define CANADADAY 1
