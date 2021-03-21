@@ -4,4 +4,4 @@
 #To do so, type your BYOND key with no spaces, capitals or other punctuation (including underscores!), a dash with spaces on both side, then the rank you want.
 #For example, the key "ZeWaka" would be given Host rank like this: zewaka - Host
 
-Genessee - Host
+genessee - Host
