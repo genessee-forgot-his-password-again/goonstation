@@ -2759,11 +2759,91 @@ ABSTRACT_TYPE(/datum/manufacture/pod/weapon)
 
 //////////////////////UBER-EXTREME SURVIVAL////////////////////////////////
 /datum/manufacture/armor_vest	//
-	name = "Armor Vest"
-	item_paths = list("MET-3")
-	item_amounts = list(5)
+	name = "Security-Grade Bulletproof Vest"
+	item_paths = list("MET-2")
+	item_amounts = list(20)
 	item_outputs = list(/obj/item/clothing/suit/armor/vest)
 	time = 30 SECONDS
+	create = 1
+	category = "Weapon"
+/datum/manufacture/armor_helmet	//
+	name = "Security-Grade Helmet"
+	item_paths = list("MET-2")
+	item_amounts = list(10)
+	item_outputs = list(/obj/item/clothing/head/helmet/hardhat/security)
+	time = 20 SECONDS
+	create = 1
+	category = "Weapon"
+/datum/manufacture/armor_vest_heavy	//
+	name = "Military-Grade Bulletproof Armor"
+	item_paths = list("MET-3")
+	item_amounts = list(50)
+	item_outputs = list(/obj/item/clothing/suit/armor/heavy)
+	time = 30 SECONDS
+	create = 1
+	category = "Weapon"
+/datum/manufacture/armor_helmet_heavy	//
+	name = "Military-Grade Helmet"
+	item_paths = list("MET-3")
+	item_amounts = list(20)
+	item_outputs = list(/obj/item/clothing/head/helmet/hardhat/security/improved)
+	time = 20 SECONDS
+	create = 1
+	category = "Weapon"
+/datum/manufacture/armor_boots	//
+	name = "Security-Grade Boots"
+	item_paths = list("MET-2")
+	item_amounts = list(10)
+	item_outputs = list(/obj/item/clothing/shoes/swat)
+	time = 10 SECONDS
+	create = 1
+	category = "Weapon"
+/datum/manufacture/armor_boots_heavy	//
+	name = "Military-Grade Hi-Grip Boots"
+	item_paths = list("MET-3")
+	item_amounts = list(20)
+	item_outputs = list(/obj/item/clothing/shoes/swat/noslip)
+	time = 10 SECONDS
+	create = 1
+	category = "Weapon"
+/datum/manufacture/armor_uniform	//
+	name = "Security-Grade Uniform"
+	item_paths = list("MET-1")
+	item_amounts = list(5)
+	item_outputs = list(/obj/item/clothing/under/misc/turds)
+	time = 3 SECONDS
+	create = 1
+	category = "Weapon"
+/datum/manufacture/armor_uniform_heavy	//
+	name = "Military-Grade Uniform"
+	item_paths = list("MET-1")
+	item_amounts = list(10)
+	item_outputs = list(/obj/item/clothing/under/misc/syndicate)
+	time = 3 SECONDS
+	create = 1
+	category = "Weapon"
+/datum/manufacture/armor_gloves	//
+	name = "Security-Grade Gloves"
+	item_paths = list("MET-1")
+	item_amounts = list(2)
+	item_outputs = list(/obj/item/clothing/gloves/black)
+	time = 2 SECONDS
+	create = 1
+	category = "Weapon"
+/datum/manufacture/armor_gloves_heavy	//
+	name = "Military-Grade Gloves"
+	item_paths = list("MET-3")
+	item_amounts = list(5)
+	item_outputs = list(/obj/item/clothing/gloves/swat)
+	time = 2 SECONDS
+	create = 1
+	category = "Weapon"
+/datum/manufacture/armor_sunglasses	//
+	name = "Security-Grade Sunglasses"
+	item_paths = list("MET-2")
+	item_amounts = list(5)
+	item_outputs = list(/obj/item/clothing/glasses/sunglasses)
+	time = 5 SECONDS
 	create = 1
 	category = "Weapon"
 
