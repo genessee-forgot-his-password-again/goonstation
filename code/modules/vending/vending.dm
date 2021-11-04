@@ -2695,12 +2695,14 @@
 		product_list += new/datum/data/vending_product(/obj/item/gun/kinetic/clock_188, 20)
 		product_list += new/datum/data/vending_product(/obj/item/gun/kinetic/riotgun, 20)
 		product_list += new/datum/data/vending_product(/obj/item/gun/kinetic/revolver, 20)
+		product_list += new/datum/data/vending_product(/obj/item/gun/kinetic/pistol, 20)
 
 		product_list += new/datum/data/vending_product(/obj/item/ammo/bullets/a357, 20)
 		product_list += new/datum/data/vending_product(/obj/item/ammo/bullets/nine_mm_NATO, 20)
 		product_list += new/datum/data/vending_product(/obj/item/ammo/bullets/a12, 20)
 		product_list += new/datum/data/vending_product(/obj/item/ammo/bullets/abg, 20)
 		product_list += new/datum/data/vending_product(/obj/item/ammo/bullets/assault_rifle, 20)
+		product_list += new/datum/data/vending_product(/obj/item/ammo/bullets/bullet_9mm, 20)
 
 		product_list += new/datum/data/vending_product(/obj/item/baton, 20)
 		product_list += new/datum/data/vending_product(/obj/item/sword, 20)
