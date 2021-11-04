@@ -2799,6 +2799,22 @@ ABSTRACT_TYPE(/datum/manufacture/pod/weapon)
 	time = 7 SECONDS
 	create = 1
 	category = "ammo"
+/datum/manufacture/branwen	//
+	name = "Branwen Pistol"
+	item_paths = list("MET-1")
+	item_amounts = list(5)
+	item_outputs = list(/obj/item/gun/kinetic/pistol)
+	time = 4 SECONDS
+	create = 1
+	category = "Weapon"
+/datum/manufacture/branwen_ammo	//
+	name = "Branwen Ammo"
+	item_paths = list("MET-1")
+	item_amounts = list(1)
+	item_outputs = list(/obj/item/ammo/bullets/bullet_9mm)
+	time = 7 SECONDS
+	create = 1
+	category = "ammo"
 
 /datum/manufacture/riot_shotgun	//
 	name = "Riot Shotgun"
