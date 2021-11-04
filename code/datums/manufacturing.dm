@@ -2812,7 +2812,23 @@ ABSTRACT_TYPE(/datum/manufacture/pod/weapon)
 	item_paths = list("MET-1")
 	item_amounts = list(1)
 	item_outputs = list(/obj/item/ammo/bullets/bullet_9mm)
-	time = 7 SECONDS
+	time = 2 SECONDS
+	create = 1
+	category = "ammo"
+/datum/manufacture/predator	//
+	name = "Predator Revolver"
+	item_paths = list("MET-1")
+	item_amounts = list(25)
+	item_outputs = list(/obj/item/gun/kinetic/revolver)
+	time = 15 SECONDS
+	create = 1
+	category = "Weapon"
+/datum/manufacture/predator_ammo	//
+	name = "Predator Ammo"
+	item_paths = list("MET-1")
+	item_amounts = list(5)
+	item_outputs = list(/obj/item/ammo/bullets/a357)
+	time = 3 SECONDS
 	create = 1
 	category = "ammo"
 
@@ -2825,11 +2841,35 @@ ABSTRACT_TYPE(/datum/manufacture/pod/weapon)
 	create = 1
 	category = "Weapon"
 /datum/manufacture/riot_shotgun_ammo	//
-	name = "Rubber Bullet ammo"
+	name = "Rubber Shotgun Slugs"
 	item_paths = list("MET-1")
 	item_amounts = list(10)
 	item_outputs = list(/obj/item/ammo/bullets/abg)
 	time = 7 SECONDS
+	create = 1
+	category = "ammo"
+/datum/manufacture/nail_shotgun_ammo	//
+	name = "Makeshift Shotgun Shells"
+	item_paths = list("MET-1")
+	item_amounts = list(5)
+	item_outputs = list(/obj/item/ammo/bullets/nails)
+	time = 3 SECONDS
+	create = 1
+	category = "ammo"
+/datum/manufacture/weak_lethal_shotgun_ammo	//
+	name = "Security-Grade Buckshot Shells"
+	item_paths = list("MET-2")
+	item_amounts = list(10)
+	item_outputs = list(/obj/item/ammo/bullets/a12/weak)
+	time = 8 SECONDS
+	create = 1
+	category = "ammo"
+/datum/manufacture/lethal_shotgun_ammo	//
+	name = "Military-Grade Buckshot Shells"
+	item_paths = list("MET-2")
+	item_amounts = list(20)
+	item_outputs = list(/obj/item/ammo/bullets/a12)
+	time = 10 SECONDS
 	create = 1
 	category = "ammo"
 
