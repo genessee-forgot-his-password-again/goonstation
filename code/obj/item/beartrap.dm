@@ -5,14 +5,13 @@
 	icon_state = "bear_trap-close"
 	item_state = "bear_trap"
 	flags = FPRINT
-	w_class = 2
+	w_class = W_CLASS_SMALL
 	force = 5
 	throwforce = 5
 	var/armed = FALSE
 	stamina_damage = 0
 	stamina_cost = 0
 	stamina_crit_chance = 5
-	event_handler_flags = USE_HASENTERED
 
 	armed
 		icon_state = "bear_trap-open"
@@ -33,8 +32,7 @@
 				return
 			M.visible_message("[M] starts disarming [src]...")
 			var/datum/action/bar/icon/callback/action_bar = new /datum/action/bar/icon/callback(M, src, 3 SECONDS, /obj/item/beartrap/proc/disarm,\
-			src.icon, src.icon_state, "[M] finishes disarming [src]")
-			action_bar.proc_args = list(M)
+			list(M), src.icon, src.icon_state, "[M] finishes disarming [src]")
 			actions.start(action_bar, M)
 		else
 			..()
@@ -43,12 +41,11 @@
 		if (!src.armed)
 			M.show_text("You start to arm the beartrap...", "blue")
 			var/datum/action/bar/icon/callback/action_bar = new /datum/action/bar/icon/callback(M, src, 2 SECONDS, /obj/item/beartrap/proc/arm,\
-			src.icon, src.icon_state, "[M] finishes arming [src]")
-			action_bar.proc_args = list(M)
+			list(M), src.icon, src.icon_state, "[M] finishes arming [src]")
 			actions.start(action_bar, M)
 		return
 
-	HasEntered(AM as mob|obj)
+	Crossed(atom/movable/AM as mob|obj)
 		if ((ishuman(AM)) && (src.armed))
 			var/mob/living/carbon/H = AM
 			src.triggered(H)
@@ -66,9 +63,8 @@
 		..()
 		return
 
-	proc/arm(var/proc_args)
+	proc/arm(mob/M)
 		if (!src.armed)
-			var/mob/M = proc_args[1]
 			logTheThing("combat", src, null, "armed a beartrap at [src.loc]")
 			set_icon_state("bear_trap-open")
 			M.drop_item(src)
@@ -77,7 +73,7 @@
 			playsound(src.loc, "sound/weapons/handcuffs.ogg", 30, 1, -3)
 		return
 
-	proc/disarm(var/proc_args)
+	proc/disarm(mob/M)
 		if (src.armed)
 			playsound(src.loc, "sound/weapons/handcuffs.ogg", 30, 1, -3)
 			set_icon_state("bear_trap-close")

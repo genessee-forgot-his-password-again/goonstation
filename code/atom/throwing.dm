@@ -42,6 +42,7 @@
 		return
 
 	src.material?.triggerOnAttack(src, src, hit_atom)
+	hit_atom.material?.triggerOnHit(hit_atom, src, null, 2)
 	for(var/atom/A in hit_atom)
 		A.material?.triggerOnAttacked(A, src, hit_atom, src)
 
@@ -49,13 +50,23 @@
 		return
 
 	reagents?.physical_shock(20)
+	if(SEND_SIGNAL(hit_atom, COMSIG_ATOM_HITBY_THROWN, src, thr))
+		return
 	var/impact_sfx = hit_atom.hitby(src, thr)
 	if(src && impact_sfx)
 		playsound(src, impact_sfx, 40, 1)
 
 /atom/movable/Bump(atom/O)
 	if(src.throwing)
-		src.throw_impact(O)
+		var/found_any = FALSE
+		// can be optimized later by storing list on the atom itself if this ever becomes a problem (it won't)
+		for(var/datum/thrown_thing/thr as anything in global.throwing_controller.thrown)
+			if(thr.thing == src)
+				src.throw_impact(O, thr)
+				found_any = TRUE
+				break // I'd like this to process all relevant datums but something is duplicating throws so it actually sometimes causes a ton of lag
+		if(!found_any)
+			src.throw_impact(O)
 		src.throwing = 0
 	..()
 
@@ -65,6 +76,10 @@
 	if(!throwing_controller) return
 	if(!target) return
 	if(src.anchored && !allow_anchored) return
+	var/turf/targets_turf = get_turf(target)
+	if(!targets_turf)
+		return
+
 	reagents?.physical_shock(14)
 	src.throwing = throw_type
 
@@ -85,9 +100,6 @@
 		animate(transform = matrix(transform_original, 120, MATRIX_ROTATE | MATRIX_MODIFY), time = 8/3, loop = -1)
 		animate(transform = matrix(transform_original, 120, MATRIX_ROTATE | MATRIX_MODIFY), time = 8/3, loop = -1)
 
-	var/turf/targets_turf = get_turf(target)
-	if(!targets_turf)
-		return
 	var/target_true_x = targets_turf.x
 	var/target_true_y = targets_turf.y
 	if(islist(params))

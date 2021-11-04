@@ -9,11 +9,11 @@ HAND_TELE
 	icon = 'icons/obj/items/device.dmi'
 	icon_state = "locator"
 	var/temp = null
-	var/frequency = 1451
+	var/frequency = FREQ_TRACKING_IMPLANT
 	var/broadcasting = null
 	var/listening = 1.0
 	flags = FPRINT | TABLEPASS| CONDUCT
-	w_class = 2.0
+	w_class = W_CLASS_SMALL
 	item_state = "electronic"
 	throw_speed = 4
 	throw_range = 20
@@ -52,8 +52,6 @@ Frequency:
 				src.temp += "<B>Located Beacons:</B><BR>"
 
 				for_by_tcl(W, /obj/item/device/radio/beacon)
-					if (istype(src, /obj/item/locator/jones) && istype(W, /obj/item/device/radio/beacon/jones)) //For Jones City
-						src.temp += "Unknown Location-[W.x], [W.y], [W.z]<BR>"
 					if (W.frequency == src.frequency)
 						var/turf/tr = get_turf(W)
 						if (tr.z == sr.z && tr)
@@ -120,7 +118,7 @@ Frequency:
 	icon_state = "hand_tele"
 	item_state = "electronic"
 	throwforce = 5
-	w_class = 2.0
+	w_class = W_CLASS_SMALL
 	throw_speed = 3
 	throw_range = 5
 	m_amt = 10000
@@ -260,7 +258,7 @@ Frequency:
 			user.show_text("The [src.name] does not seem to work here!", "red")
 			return
 
-		var/obj/portal/P = unpool(/obj/portal)
+		var/obj/portal/P = new /obj/portal
 		P.set_loc(our_loc)
 		portals += P
 		if (!src.our_target)
@@ -274,6 +272,6 @@ Frequency:
 		SPAWN_DBG(30 SECONDS)
 			if (P)
 				portals -= P
-				pool(P)
+				qdel(P)
 
 		return

@@ -11,26 +11,49 @@ proc/debug_color_of(var/thing)
 		color_caching[thing] = "#[copytext(md5(thing), 1, 7)]"
 	return color_caching[thing]
 
+proc/debug_map_apc_count(delim,zlim)
+	var/apc_count = 0
+	. = ""
+	var/list/apcs = new()
+	var/list/manual_apcs = new()
+	for(var/obj/machinery/power/apc/C in machine_registry[MACHINES_POWER])
+		if(zlim && C.z != zlim)
+			continue
+
+		if(C.areastring)
+			var/area/manual_area = get_area_name(C.areastring)
+			if(!manual_apcs[manual_area]) manual_apcs[manual_area] = list()
+			manual_apcs[manual_area] += C
+
+	for(var/area/area in world)
+		if (!area.requires_power)
+			continue
+
+		if(zlim)
+			var/turf/T = locate() in area
+			if(T?.z != zlim)
+				continue
+
+		for(var/obj/machinery/power/apc/current_apc in area)
+			if (!apcs.Find(current_apc) && !current_apc.areastring) apcs += current_apc
+		if(manual_apcs[area])
+			apcs += manual_apcs[area]
+
+		apc_count = length(apcs)
+		if (apc_count != 1)
+			. += "[area.name] [area.type] has [apc_count] APCs.[delim]"
+			if(apc_count)
+				for(var/obj/machinery/power/apc/duplicate_apc in apcs)
+					. += "  [duplicate_apc.name] ([duplicate_apc.x],[duplicate_apc.y],[duplicate_apc.z]) [duplicate_apc.area.area_apc == duplicate_apc ? "  !AREA APC" : ""][delim]"
+		apcs.len = 0
+		LAGCHECK(LAG_LOW)
+
 /client/proc
 	map_debug_panel()
 		SET_ADMIN_CAT(ADMIN_CAT_DEBUG)
 
 		var/area_txt = "<B>APC LOCATION REPORT</B><HR>"
-		var/apc_count = 0
-		var/list/apcs = new()
-		for(var/area/area in world)
-			if (!area.requires_power)
-				continue
-
-			for(var/obj/machinery/power/apc/current_apc in area)
-				if (!apcs.Find(current_apc)) apcs += current_apc
-
-			apc_count = length(apcs)
-			if (apc_count != 1)
-				area_txt += "[area.name] [area.type] has [apc_count] APCs.<br>"
-			apcs.len = 0
-
-			LAGCHECK(LAG_LOW)
+		area_txt += debug_map_apc_count("<BR>")
 
 		usr.Browse(area_txt,"window=mapdebugpanel")
 
@@ -247,6 +270,24 @@ proc/debug_color_of(var/thing)
 			img.app.desc = "Area: [area.name]<br/>Type: [area.type]"
 			img.app.icon = initial(theTurf.loc.icon)
 			img.app.icon_state = initial(theTurf.loc.icon_state)
+
+	active_areas
+		name = "active areas"
+		help = "Active areas (with a player in them) in green-ish, rest in red-ish."
+		GetInfo(var/turf/theTurf, var/image/debugoverlay/img)
+			var/area/area = theTurf.loc
+			img.app.desc = "Area: [area.name]<br/>Type: [area.type]"
+			var/list/lcolor = hex_to_rgb_list(debug_color_of(area))
+			var/color_factor = 4
+			if(area.active)
+				lcolor[1] /= color_factor
+				lcolor[3] /= color_factor
+				lcolor[2] = 255 - (255 - lcolor[2]) / color_factor
+			else
+				lcolor[2] /= color_factor
+				lcolor[3] /= color_factor
+				lcolor[1] = 255 - (255 - lcolor[2]) / color_factor
+			img.app.color = rgb(lcolor[1], lcolor[2], lcolor[3])
 
 	area_power
 		name = "area power"
@@ -796,17 +837,21 @@ proc/debug_color_of(var/thing)
 		GetInfo(var/turf/theTurf, var/image/debugoverlay/img)
 			img.app.color = theTurf.checkingexit ? "#0f0" : "#f00"
 
-	checkinghasentered
-		name = "checkinghasentered"
-		help = "Green = yes."
+	blocked_dirs
+		name = "blocked dirs"
+		help = "Displays dir flags of blocked turf exits"
 		GetInfo(var/turf/theTurf, var/image/debugoverlay/img)
-			img.app.color = theTurf.checkinghasentered ? "#0f0" : "#f00"
+			if (theTurf.blocked_dirs)
+				img.app.overlays = list(src.makeText(theTurf.blocked_dirs))
+				img.app.color = "#0000ff"
+			else
+				img.app.alpha = 0
 
 	checkinghasproximity
 		name = "checkinghasproximity"
-		help = "Green = yes."
+		help = "Green = yes. Red = no. Yellow = next to yes."
 		GetInfo(var/turf/theTurf, var/image/debugoverlay/img)
-			img.app.color = theTurf.checkinghasproximity ? "#0f0" : "#f00"
+			img.app.color = theTurf.checkinghasproximity ? "#0f0" : (theTurf.neighcheckinghasproximity ? "#ff0" : "#f00")
 
 	blood_owner/no_items
 		name = "blood owner - no items"
@@ -826,6 +871,68 @@ proc/debug_color_of(var/thing)
 			img.app.overlays = list(src.makeText("[temp]", RESET_ALPHA | RESET_COLOR))
 			var/p = clamp(temp / (T0C * 2), 0, 1)
 			img.app.color = rgb(round(p * 255), 0, round((1-p) * 255))
+
+	unrestricted_hotboxing
+		name = "unrestricted hotboxing"
+		help = "Red = unrestricted"
+		GetInfo(var/turf/theTurf, var/image/debugoverlay/img)
+			if (theTurf.allow_unrestricted_hotbox)
+				img.app.overlays = list(src.makeText(theTurf.allow_unrestricted_hotbox))
+				img.app.color = "#f00"
+			else
+				img.app.alpha = 0
+
+	RL_lights
+		name = "RL lights"
+		help = "Displays number of RL lights on theach turf"
+		GetInfo(var/turf/theTurf, var/image/debugoverlay/img)
+			var/n_lights = length(theTurf.RL_Lights)
+			if (n_lights)
+				img.app.overlays = list(src.makeText(n_lights))
+				switch(n_lights)
+					if(1) img.app.color = "#00ff00"
+					if(2) img.app.color = "#ffff00"
+					else img.app.color = "#ff0000"
+			else
+				img.app.alpha = 0
+
+	RL_lights_range
+		name = "RL lights range"
+		help = "Displays range of RL lights on each turf"
+		GetInfo(var/turf/theTurf, var/image/debugoverlay/img)
+			if(!length(theTurf.RL_Lights))
+				img.app.alpha = 0
+				return
+			var/radius = 0
+			for(var/datum/light/light in theTurf.RL_Lights)
+				if(!light.enabled)
+					continue
+				radius = max(radius, light.radius)
+			img.app.icon_state = "circle"
+			img.app.transform = matrix(2 * radius, 2 * radius, MATRIX_SCALE)
+
+
+	navbeacons
+		name = "navbeacons"
+		help = "Displays navbeacons and how they link up to each other."
+		GetInfo(var/turf/theTurf, var/image/debugoverlay/img)
+			var/obj/machinery/navbeacon/beacon = locate() in theTurf
+			img.app.overlays = null
+			if(isnull(beacon))
+				img.app.alpha = 0
+				return
+			img.app.overlays += src.makeText("[beacon.codes[1]]<br>[beacon.location]", align_left=TRUE)
+			try
+				var/next_id = beacon.codes["next_patrol"] || beacon.codes["next_tour"]
+				var/datum/packet_network/net = get_radio_connection_by_id(beacon, "navbeacon").network
+				var/datum/component/packet_connected/next_device = net.devices_by_tag[next_id][1]
+				var/datum/lineResult/R1 = drawLine(theTurf, get_turf(next_device.parent), "triangle", getCrossed = 0, mode = LINEMODE_SIMPLE)
+				R1.lineImage.color = debug_color_of(beacon.freq)
+				img.app.overlays += R1.lineImage
+				R1.lineImage.loc = null
+				img.app.color = null
+			catch
+				img.app.color = "#f00"
 
 #ifdef ATMOS_PROCESS_CELL_STATS_TRACKING
 	process_cell_operations
@@ -900,6 +1007,7 @@ proc/debug_color_of(var/thing)
 		src.maptext = initial(src.maptext)
 		src.alpha = initial(src.alpha)
 		src.appearance_flags = initial(src.appearance_flags)
+		src.transform = initial(src.transform)
 
 
 /client/proc/RenderOverlay()

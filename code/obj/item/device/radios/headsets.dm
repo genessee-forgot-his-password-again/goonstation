@@ -6,13 +6,14 @@
 	icon_state = "headset"
 	inhand_image_icon = 'icons/mob/inhand/hand_headgear.dmi'
 	item_state = "headset"
-	w_class = 1
+	w_class = W_CLASS_TINY
 	rand_pos = 0
 	var/protective_temperature = 0
 	speaker_range = 0
 	desc = "A standard-issue device that can be worn on a crewmember's ear to allow hands-free communication with the rest of the crew."
 	flags = FPRINT | TABLEPASS | CONDUCT | ONBELT
 	icon_override = "civ"
+	wear_layer = MOB_EARS_LAYER
 	var/haswiretap
 	hardened = 0
 
@@ -110,7 +111,7 @@
 
 /obj/item/device/radio/headset/command/radio_show_host
 	name = "Radio show host's Headset"
-	icon_state = "captain headset"
+	icon_state = "radio"
 	secure_frequencies = list(
 		"h" = R_FREQ_COMMAND,
 		"g" = R_FREQ_SECURITY,
@@ -298,6 +299,7 @@
 	name = "Radio Headset"
 	desc = "A radio headset that is also capable of communicating over... wait, isn't that frequency illegal?"
 	icon_state = "headset"
+	chat_class = RADIOCL_SYNDICATE
 	secure_frequencies = list("z" = R_FREQ_SYNDICATE)
 	secure_classes = list(RADIOCL_SYNDICATE)
 	protected_radio = 1
@@ -305,6 +307,26 @@
 
 	leader
 		icon_override = "syndieboss"
+
+	bard
+		name = "Military Headset"
+		desc = "A two-way radio headset designed to protect the wearer from dangerous levels of noise from guns, woofers, and tweeters."
+		secure_frequencies = list("z" = R_FREQ_SYNDICATE, "l"=R_FREQ_LOUDSPEAKERS)
+		secure_classes = list("z" = RADIOCL_SYNDICATE, "l"=RADIOC_OTHER)
+		icon_state = "comtac"
+
+		setupProperties()
+			..()
+			setProperty("disorient_resist_ear", 100)
+
+	comtac
+		name = "Military Headset"
+		icon_state = "comtac"
+		desc = "A two-way radio headset designed to protect the wearer from dangerous levels of noise during gunfights."
+
+		setupProperties()
+			..()
+			setProperty("disorient_resist_ear", 100)
 
 /obj/item/device/radio/headset/deaf
 	name = "Auditory Headset"
@@ -375,4 +397,6 @@ Secure Frequency:
 	desc = "An illegal device capable of picking up and sending all secure station radio signals. Can be installed in a radio headset. Does not actually work by wiretapping."
 	icon = 'icons/obj/items/device.dmi'
 	icon_state = "syndie_upgr"
-	w_class = 1
+	w_class = W_CLASS_TINY
+	is_syndicate = 1
+	mats = 12

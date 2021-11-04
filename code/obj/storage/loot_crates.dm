@@ -34,16 +34,13 @@
 
 				// SCIENCE GOODS LOOT TABLE
 				if (tier == 3)
-					picker = rand(1,4)
+					picker = rand(1,3)
 					switch(picker)
 						if(1)
 							items += /obj/item/clothing/gloves/psylink_bracelet
 							item_amounts += 1
 						if(2)
-							items += /obj/item/artifact/teleport_wand
-							item_amounts += 1
-						if(3)
-							items += /obj/item/clothing/shoes/hermes
+							items += pick(/obj/item/artifact/teleport_wand, /obj/item/artifact/activator_key, /obj/item/gun/energy/artifact, /obj/item/artifact/melee_weapon, /obj/item/artifact/forcewall_wand) // All of these are pretty useful and it heavily reduces chances of telewand.
 							item_amounts += 1
 						else
 							items += /obj/item/device/voltron
@@ -67,8 +64,12 @@
 							items += /obj/item/roboupgrade/jetpack
 							item_amounts += 1
 							picker = rand(1,4)
-							items += pick(/obj/item/roboupgrade/physshield,/obj/item/roboupgrade/teleport,/*
-							/obj/item/roboupgrade/opticthermal,*//obj/item/roboupgrade/speed)
+							items += pick(
+								/obj/item/roboupgrade/physshield,
+								/obj/item/roboupgrade/teleport,
+								// /obj/item/roboupgrade/opticthermal,
+								/obj/item/roboupgrade/speed,
+							)
 							item_amounts += 1
 						if(2)
 							items += /obj/item/reagent_containers/glass/beaker/large/antitox
@@ -170,9 +171,9 @@
 							items += /obj/item/device/voltron
 							item_amounts += 1
 						if(2)
-							items += /obj/item/ammo/power_cell/self_charging/disruptor
+							items += /obj/item/ammo/power_cell/self_charging/pod_wars_standard
 							item_amounts += 1
-							items += /obj/item/ammo/power_cell/self_charging
+							items += /obj/item/ammo/power_cell/higherish_power // 400 pu charge, designed to be able to be a trade off of higher capacity at the cost of no self recharging, or vice versa.
 							item_amounts += 1
 						else
 							items += /obj/item/clothing/gloves/ring/titanium
@@ -181,7 +182,7 @@
 					picker = rand(1,10)
 					switch(picker)
 						if(1)
-							items += pick(/obj/item/gun/energy/teleport,/obj/item/gun/energy/laser_gun/pred)
+							items += pick(/obj/item/gun/energy/laser_gun/pred)
 							item_amounts += 1
 						if(2 to 6)
 							items += /obj/item/gun/energy/phaser_gun
@@ -225,8 +226,8 @@
 							items += /obj/item/gun/bling_blaster
 							item_amounts += 1
 						else
-							items += /obj/item/spacecash/million
-							item_amounts += 1
+							items += /obj/item/spacecash/hundredthousand
+							item_amounts += 3
 				else if (tier == 2)
 					picker = rand(1,4)
 					switch(picker)
@@ -266,10 +267,13 @@
 
 				// CIVILIAN GOODS LOOT TABLE
 				if (tier == 3)
-					picker = rand(1,2)
+					picker = rand(1,3)
 					switch(picker)
 						if(1)
 							items += /obj/item/clothing/under/gimmick/frog
+							item_amounts += 1
+						if(2)
+							items += /obj/item/clothing/shoes/sandal
 							item_amounts += 1
 						else
 							items += /obj/vehicle/skateboard
@@ -284,7 +288,7 @@
 							items += /obj/item/clothing/ears/earmuffs/yeti
 							item_amounts += 1
 						if(3)
-							items += /obj/item/device/light/zippo/brighter
+							items += /obj/item/device/light/zippo/gold
 							item_amounts += 1
 							items += /obj/item/cigpacket/random
 							item_amounts += rand(2,4)
@@ -653,7 +657,7 @@
 	icon = 'icons/obj/items/items.dmi'
 	icon_state = "bracelet"
 	material_prints = "patterned scratches"
-	w_class = 1
+	w_class = W_CLASS_TINY
 	var/primary = TRUE
 	var/image/gemstone = null
 	var/obj/item/clothing/gloves/psylink_bracelet/twin

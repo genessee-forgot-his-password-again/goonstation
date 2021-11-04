@@ -2,7 +2,7 @@
 	name = "Pill bottle"
 	icon_state = "pill_canister"
 	icon = 'icons/obj/chemical.dmi'
-	w_class = 2.0
+	w_class = W_CLASS_SMALL
 	stamina_damage = 0
 	stamina_cost = 0
 	stamina_crit_chance = 1
@@ -52,7 +52,7 @@
 				if (src.reagents_internal.total_volume < src.pvol)
 					src.pcount = 0
 				else
-					P = unpool(/obj/item/reagent_containers/pill)
+					P = new /obj/item/reagent_containers/pill
 					P.set_loc(src)
 					P.name = "[pname] pill"
 

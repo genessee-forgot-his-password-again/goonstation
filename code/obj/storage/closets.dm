@@ -54,6 +54,8 @@
 		if (..()) // make_my_stuff is called multiple times due to lazy init, so the parent returns 1 if it actually fired and 0 if it already has
 			if (prob(80))
 				new /obj/item/extinguisher(src)
+			if (prob(50))
+				new /obj/item/clothing/head/helmet/firefighter(src)
 			if (prob(30))
 				new /obj/item/clothing/suit/fire(src)
 				new /obj/item/clothing/mask/gas/emergency(src)
@@ -96,12 +98,14 @@
 	icon_state = "coffin"
 	icon_closed = "coffin"
 	icon_opened = "coffin-open"
-	layer = 2.2
+	layer = 2.5
+	icon_welded = "welded-coffin-4dirs"
 
 	wood
 		icon_closed = "woodcoffin"
 		icon_state = "woodcoffin"
 		icon_opened = "woodcoffin-open"
+		icon_welded = "welded-coffin-1dir"
 
 /obj/storage/closet/biohazard
 	name = "\improper Level 3 Biohazard Suit closet"
@@ -233,7 +237,7 @@
 			B2.pixel_y = 6
 			B2.pixel_x = 5
 
-			new /obj/item/postit_stack(src)
+			new /obj/item/item_box/postit(src)
 			new /obj/item/hand_labeler(src)
 
 			var/obj/item/pen/B3 = new /obj/item/pen(src)
@@ -279,14 +283,14 @@
 //A locker that traps folks.  I guess it's haunted.
 /obj/storage/closet/haunted
 	var/throw_strength = 100
-	event_handler_flags = USE_HASENTERED | USE_FLUID_ENTER
+	event_handler_flags = USE_FLUID_ENTER
 
 	New()
 		..()
 		src.open()
 		return
 
-	HasEntered(atom/movable/A as mob|obj, atom/OldLoc)
+	Crossed(atom/movable/A as mob|obj)
 		if (!src.open || src.welded || !isliving(A))
 			return ..()
 
@@ -303,8 +307,8 @@
 		if (!istype(M) || M.loc != src)
 			return
 
-		if (M.throwing || istype(OldLoc, /turf/space) || (M.m_intent != "walk"))
-			var/flingdir = turn(get_dir(src.loc, OldLoc), 180)
+		if (M.throwing || istype(A.last_turf, /turf/space) || (M.m_intent != "walk"))
+			var/flingdir = turn(get_dir(src.loc, A.last_turf), 180)
 			src.throw_at(get_edge_target_turf(src, flingdir), throw_strength, 1)
 			return
 
@@ -313,7 +317,7 @@
 /obj/storage/closet/mantacontainerred
 	name = "shipping container"
 	desc = "It's a shipping container, they are frequently used to ship different goods securely across oceans."
-	icon = 'icons/obj/32x96.dmi'
+	icon = 'icons/obj/large/32x96.dmi'
 	icon_state = "mantacontainerleft"
 	icon_closed = "mantacontainerleft"
 	icon_opened = "mantacontainerleft-open"
@@ -476,7 +480,7 @@
 /*
 		else if (issilicon(user))
 			if (get_dist(src, user) <= 1)
-				return src.attack_hand(user)
+				return src.Attackhand(user)
 */
 		else
 			return ..()
@@ -485,7 +489,7 @@
 /obj/storage/closet/mantacontainerred/right
 	name = "shipping container"
 	desc = "It's a shipping container, they are frequently used to ship different goods securely across oceans."
-	icon = 'icons/obj/32x96.dmi'
+	icon = 'icons/obj/large/32x96.dmi'
 	icon_closed = "mantacontainerright"
 	icon_state = "mantacontainerright"
 	icon_opened = "mantacontainerright-open"
@@ -514,10 +518,11 @@
 	icon_state = "medical_clothes"
 	icon_opened = "secure_white-open"
 	desc = "A handy medical locker for storing your doctoring apparel."
-	spawn_contents = list(/obj/item/clothing/head/nursehat = 1,
-					/obj/item/clothing/suit/nursedress = 1,
-					/obj/item/clothing/head/headmirror = 1,
-					/obj/item/clothing/suit/labcoat/medical = 2)
+	spawn_contents = list(/obj/item/clothing/head/nursehat = 3,
+					/obj/item/clothing/suit/nursedress = 3,
+					/obj/item/clothing/suit/wintercoat/medical = 3,
+					/obj/item/clothing/head/headmirror = 3,
+					/obj/item/clothing/suit/labcoat/medical = 3)
 
 /obj/storage/closet/command/ruined //replacements for azones and mining level flavor
 	name = "Dented command locker"

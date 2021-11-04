@@ -265,6 +265,8 @@
 	var/maximum_poison = 5
 	var/inject_poison = 2.5
 
+	var/allow_self_service = 1
+
 	New()
 		..()
 		src.update_icon()
@@ -542,17 +544,20 @@
 			return
 
 		if (target == user)
-			move_inside()
+			if(allow_self_service)
+				move_inside()
+			else
+				return
 		else if (can_operate(user))
 			var/previous_user_intent = user.a_intent
 			user.a_intent = INTENT_GRAB
 			user.drop_item()
-			target.attack_hand(user)
+			target.Attackhand(user)
 			user.a_intent = previous_user_intent
 			SPAWN_DBG(user.combat_click_delay + 2)
 				if (can_operate(user))
 					if (istype(user.equipped(), /obj/item/grab))
-						src.attackby(user.equipped(), user)
+						src.Attackby(user.equipped(), user)
 		return
 
 	proc/can_operate(var/mob/M)
@@ -580,7 +585,7 @@
 
 		if (!can_operate(usr)) return
 
-		usr.pulling = null
+		usr.remove_pulling()
 		usr.set_loc(src)
 		src.occupant = usr
 		src.update_icon()
@@ -609,7 +614,7 @@
 		return
 
 	verb/eject_occupant(var/mob/user)
-		if (!isalive(user)) return
+		if (!isalive(user) || iswraith(user)) return
 		src.go_out()
 		add_fingerprint(user)
 
@@ -671,6 +676,7 @@
 	mats = 30
 	p_class = 1.2
 	var/homeloc = null
+	allow_self_service = 0
 	/// Mailgroups it'll try to send PDA notifications to
 	var/list/mailgroups = list(MGD_MEDBAY, MGD_MEDRESEACH)
 
@@ -683,6 +689,7 @@
 		our_console.our_sleeper = src
 		src.homeloc = src.loc
 		animate_bumble(src, Y1 = 1, Y2 = -1, slightly_random = 0)
+		MAKE_SENDER_RADIO_PACKET_COMPONENT("pda", FREQ_PDA)
 
 	disposing()
 		..()
@@ -695,7 +702,7 @@
 
 	attack_hand(mob/user as mob)
 		if (our_console)
-			our_console.attack_hand(user)
+			our_console.Attackhand(user)
 			interact_particle(user,src)
 
 	examine()
@@ -730,14 +737,15 @@
 			logTheThing("station", usr, null, "sets [src.name]'s home turf to [log_loc(src.homeloc)].")
 		return
 
+	move_inside()
+		boutput(usr, "<span class='notice'>You can't seem to shove yourself into the [src] without it tipping over as you climb in.</span>")
+		return
+
 /// Yells at doctors to check the thing when it's sent home
 /obj/machinery/sleeper/port_a_medbay/proc/PDA_alert_check()
 	if (src.loc != homeloc)
 		return
 	if (!occupant)
-		return
-	var/datum/radio_frequency/transmit_connection = radio_controller.return_frequency(FREQ_PDA)
-	if (!transmit_connection)
 		return
 
 	var/PDAalert = "[src.name] has returned to [get_area(src.homeloc)] with a "
@@ -753,8 +761,7 @@
 	var/datum/signal/PDAsignal = get_free_signal()
 
 	PDAsignal.data = list("address_1"="00000000", "command"="text_message", "sender_name"="HEALTH-MAILBOT",  "group"=mailgroups+alertgroup, "sender"="00000000", "message"="[PDAalert]")
-	PDAsignal.transmission_method = TRANSMISSION_RADIO
-	transmit_connection.post_signal(src, PDAsignal)
+	SEND_SIGNAL(src, COMSIG_MOVABLE_POST_RADIO_PACKET, PDAsignal)
 
 
 /obj/machinery/sleeper/compact
@@ -779,5 +786,5 @@
 
 	attack_hand(mob/user as mob)
 		if (our_console)
-			our_console.attack_hand(user)
+			our_console.Attackhand(user)
 			interact_particle(user,src)

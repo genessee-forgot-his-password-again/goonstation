@@ -7,6 +7,7 @@
 	heal_amt = 1
 	var/activated = 0
 	initial_volume = 60
+	can_recycle = FALSE
 	initial_reagents = list("chickensoup"=10,"msg"=9,"salt"=10,"nicotine"=8)
 
 	New()
@@ -139,7 +140,7 @@
 				src.real_name = "Devil Dan's Quik-Noodles - Brimstone BBQ Flavor"
 				src.initial_reagents["sulfur"] = 5
 				src.initial_reagents["beff"] = 5
-				src.initial_reagents["ghostchilijuice"] = 5
+				src.initial_reagents["el_diablo"] = 5
 /*				R.add_reagent("sulfur",5)
 				R.add_reagent("beff",5)
 				R.add_reagent("ghostchilijuice",5)
@@ -289,7 +290,7 @@
 		else
 			..()
 
-	on_bite(obj/item/I, mob/M, mob/user)
+	heal(var/mob/M)
 		if (prob(5))
 			if (M.mind && M.mind.ckey)
 				boutput(M, "<span class='notice'>You find a shiny golden ticket in this bite!</span>")
@@ -364,7 +365,7 @@
 	desc = "A box containing a self-heating TV dinner."
 	icon = 'icons/obj/foodNdrink/food_discountdans.dmi'
 	icon_state = "tvdinnerc"
-	w_class = 1
+	w_class = W_CLASS_TINY
 	throwforce = 2
 	var/full = 1
 	var/traytype = 0
@@ -552,7 +553,7 @@
 		user.add_karma(-6)
 		return
 
-	on_bite(obj/item/I, mob/M, mob/user)
+	heal(var/mob/M)
 		if (prob(8))
 			if (M.mind && M.mind.ckey)
 				boutput(M, "<span class='notice'>You find a shiny golden ticket in this bite!</span>")
@@ -580,7 +581,7 @@
 			reagents.add_reagent(pick("beff","sugar","eggnog","chocolate","cleaner","luminol","poo","urine","nicotine","mint","tea","juice_lemon","juice_lime","juice_apple","juice_cherry","guacamole","egg","sewage","uranium"), 3)
 
 
-	on_bite(obj/item/I, mob/M, mob/user)
+	heal(var/mob/M)
 		if (prob(5))
 			if (M.mind && M.mind.ckey)
 				boutput(M, "<span class='notice'>You find a shiny golden ticket in this bite!</span>")

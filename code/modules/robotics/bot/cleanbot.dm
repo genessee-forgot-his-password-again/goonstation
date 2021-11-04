@@ -12,7 +12,7 @@
 	throwforce = 10.0
 	throw_speed = 2
 	throw_range = 5
-	w_class = 3.0
+	w_class = W_CLASS_NORMAL
 	flags = TABLEPASS
 	var/created_cleanbot_type = /obj/machinery/bot/cleanbot
 
@@ -342,7 +342,7 @@
 			new bucket_type_on_destruction(T)
 			new /obj/item/device/prox_sensor(T)
 			if (prob(50))
-				new /obj/item/parts/robot_parts/arm/left(T)
+				new /obj/item/parts/robot_parts/arm/left/standard(T)
 
 		qdel(src)
 		return
@@ -380,7 +380,7 @@
 			interrupt(INTERRUPT_ALWAYS)
 			return
 
-		playsound(get_turf(master), "sound/impact_sounds/Liquid_Slosh_2.ogg", 25, 1)
+		playsound(master, "sound/impact_sounds/Liquid_Slosh_2.ogg", 25, 1)
 		master.anchored = 1
 		master.icon_state = "[master.icon_state_base]-c"
 		master.visible_message("<span class='alert'>[master] begins to clean the [T.name].</span>")
@@ -416,7 +416,7 @@
 
 			if (T.active_liquid)
 				if (T.active_liquid.group)
-					T.active_liquid.group.drain(T.active_liquid,1,master)
+					T.active_liquid.group.drain(T.active_liquid, 1)
 
 			master.cleanbottargets -= master.turf2coordinates(get_turf(master.target))
 			ON_COOLDOWN(master, CLEANBOT_CLEAN_COOLDOWN, master.idle_delay)
