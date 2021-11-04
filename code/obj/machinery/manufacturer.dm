@@ -2553,6 +2553,60 @@
 	/datum/manufacture/fireaxe,
 	/datum/manufacture/shovel)
 
+/obj/machinery/manufacturer/military
+	name = "Military-Grade Manufacturer"
+	desc = "A manufacturing unit calibrated to produce items for military groups and security teams."
+	icon_state = "fab-access"
+	icon_base = "access"
+	free_resource_amt = 2
+	free_resources = list(/obj/item/material_piece/steel,
+		/obj/item/material_piece/copper,
+		/obj/item/material_piece/glass)
+	accept_blueprints = 0
+	available = list(
+	/datum/manufacture/armor_helmet,
+	/datum/manufacture/armor_vest,
+	/datum/manufacture/armor_boots,
+	/datum/manufacture/armor_uniform,
+	/datum/manufacture/armor_gloves,
+	/datum/manufacture/armor_sunglasses,
+	/datum/manufacture/armor_helmet_heavy,
+	/datum/manufacture/armor_vest_heavy,
+	/datum/manufacture/armor_boots_heavy,
+	/datum/manufacture/armor_uniform_heavy,
+	/datum/manufacture/armor_gloves_heavy,
+	/datum/manufacture/bullet_22,
+	/datum/manufacture/riot_shotgun,
+	/datum/manufacture/tac_shotgun,
+	/datum/manufacture/riot_shotgun_ammo,
+	/datum/manufacture/nail_shotgun_ammo,
+	/datum/manufacture/weak_lethal_shotgun_ammo,
+	/datum/manufacture/lethal_shotgun_ammo,
+	/datum/manufacture/clock,
+	/datum/manufacture/clock_ammo,
+	/datum/manufacture/branwen,
+	/datum/manufacture/branwen_ammo,
+	/datum/manufacture/predator,
+	/datum/manufacture/predator_ammo,
+	/datum/manufacture/saa,
+	/datum/manufacture/saa_ammo,
+	/datum/manufacture/riot_launcher,
+	/datum/manufacture/riot_launcher_ammo_pbr,
+	/datum/manufacture/riot_launcher_ammo_flashbang,
+	/datum/manufacture/sniper,
+	/datum/manufacture/sniper_ammo,
+	/datum/manufacture/gyrojet,
+	/datum/manufacture/gyrojet_ammo,
+	/datum/manufacture/brute_kit,
+	/datum/manufacture/burn_kit,
+	/datum/manufacture/crit_kit,
+	/datum/manufacture/spacecillin,
+	/datum/manufacture/bat,
+	/datum/manufacture/quarterstaff,
+	/datum/manufacture/cleaver,
+	/datum/manufacture/fireaxe,
+	/datum/manufacture/shovel)
+
 #undef WIRE_EXTEND
 #undef WIRE_POWER
 #undef WIRE_MALF
