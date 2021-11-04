@@ -2561,11 +2561,20 @@
 	free_resource_amt = 2
 	free_resources = list(/obj/item/material_piece/steel,
 		/obj/item/material_piece/copper,
-		/obj/item/material_piece/glass,
-		/obj/item/material_piece/cloth/cottonfabric)
+		/obj/item/material_piece/glass)
 	accept_blueprints = 0
 	available = list(
+	/datum/manufacture/armor_helmet,
 	/datum/manufacture/armor_vest,
+	/datum/manufacture/armor_boots,
+	/datum/manufacture/armor_uniform,
+	/datum/manufacture/armor_gloves,
+	/datum/manufacture/armor_sunglasses,
+	/datum/manufacture/armor_helmet_heavy,
+	/datum/manufacture/armor_vest_heavy,
+	/datum/manufacture/armor_boots_heavy,
+	/datum/manufacture/armor_uniform_heavy,
+	/datum/manufacture/armor_gloves_heavy,
 	/datum/manufacture/bullet_22,
 	/datum/manufacture/riot_shotgun,
 	/datum/manufacture/tac_shotgun,
