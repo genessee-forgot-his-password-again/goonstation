@@ -585,3 +585,65 @@ ported and crapped up by: haine
 	initial_volume = 40
 	var/label = null // the ID of the reagent inside
 	var/label_name = null // the name of the reagent inside, so we don't have to keep calling reagent_id_to_name()
+	
+// custom synthesizers
+// money synth
+
+/obj/item/moneysynthesizer
+	name = "money synthesizer"
+	desc = "A portable synthesizer - jailbroken and illegal, naturally - that can produce counterfeit cash and other high-value items."
+	icon = 'icons/obj/kitchen.dmi'
+	icon_state = "synthesizer"
+	var/vend_this = null
+	var/last_use = 0
+
+	attack_self(var/mob/user as mob)
+		if (!vend_this)
+			var/holder = src.loc
+			var/pickme = input("Please make your selection!", "Item selection", src.vend_this) in list("10$", "20$", "50$", "100$", "500$", "1000$", "100000$", "One Million Dollars!!", "Gold Bullion", "Starstone")
+			if (src.loc != holder)
+				return
+			src.vend_this = pickme
+			user.show_text("[pickme] selected. Click with the synthesizer on yourself to pick a different item.", "blue")
+			return
+
+		if (src.last_use && world.time < src.last_use + 2)
+			user.show_text("The synthesizer is recharging!", "red")
+			return
+
+		else
+			switch(src.vend_this)
+
+				if ("10$")
+					new /obj/item/spacecash/ten(get_turf(src))
+				if ("20$")
+					new /obj/item/spacecash/twenty(get_turf(src))
+				if ("50$")
+					new /obj/item/spacecash/fifty(get_turf(src))
+				if ("100$")
+					new /obj/item/spacecash/hundred(get_turf(src))
+				if ("500$")
+					new /obj/item/spacecash/fivehundred(get_turf(src))
+				if ("1000$")
+					new /obj/item/spacecash/thousand(get_turf(src))
+				if ("100000$")
+					new /obj/item/spacecash/hundredthousand(get_turf(src))
+				if ("One Million Dollars!!")
+					new /obj/item/spacecash/million(get_turf(src))
+				if ("Gold Bullion")
+					new /obj/item/material_piece/gold(get_turf(src))
+				if ("Starstone")
+					new /obj/item/raw_material/starstone(get_turf(src))
+				else
+					user.show_text("<b>ERROR</b> - Invalid item! Resetting...", "red")
+					logTheThing("debug", user, null, "<b>Convair880</b>: [user]'s food synthesizer was set to an invalid value.")
+					src.vend_this = null
+					return
+
+			if (isrobot(user))
+				var/mob/living/silicon/robot/R = user
+				if (R.cell) R.cell.charge -= 100
+			playsound(src.loc, "sound/machines/click.ogg", 50, 1)
+			user.visible_message("<span class='notice'>[user] dispenses a [src.vend_this]!</span>", "<span class='notice'>You dispense a [src.vend_this]!</span>")
+			src.last_use = world.time
+			return
