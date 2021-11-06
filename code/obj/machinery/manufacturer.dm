@@ -2575,6 +2575,14 @@
 	/datum/manufacture/armor_boots_heavy,
 	/datum/manufacture/armor_uniform_heavy,
 	/datum/manufacture/armor_gloves_heavy,
+	/datum/manufacture/emergencyspacesuit,
+	/datum/manufacture/standardspacesuit,
+	/datum/manufacture/securityspacesuit,
+	/datum/manufacture/militaryspacesuit,
+	/datum/manufacture/tasergun,
+	/datum/manufacture/lasergun,
+	/datum/manufacture/lawbringer,
+	/datum/manufacture/laserassaultrifle,
 	/datum/manufacture/bullet_22,
 	/datum/manufacture/riot_shotgun,
 	/datum/manufacture/tac_shotgun,
@@ -2605,6 +2613,8 @@
 	/datum/manufacture/quarterstaff,
 	/datum/manufacture/cleaver,
 	/datum/manufacture/fireaxe,
+	/datum/manufacture/dsaber,
+	/datum/manufacture/csaber,
 	/datum/manufacture/shovel)
 
 #undef WIRE_EXTEND

@@ -2846,6 +2846,71 @@ ABSTRACT_TYPE(/datum/manufacture/pod/weapon)
 	time = 5 SECONDS
 	create = 1
 	category = "Weapon"
+/datum/manufacture/emergencyspacesuit
+	name = "Emergency Space Suit Set"
+	item_paths = list("MET-1","CRY-1")
+	item_amounts = list(2,1)
+	item_outputs = list(/obj/item/clothing/suit/space/emerg,/obj/item/clothing/head/emerg)
+	time = 5 SECONDS
+	create = 1
+	category = "Clothing"
+/datum/manufacture/standardspacesuit
+	name = "Standard Space Suit Set"
+	item_paths = list("FAB-1","MET-1","CRY-1")
+	item_amounts = list(1,3,2)
+	item_outputs = list(/obj/item/clothing/suit/space,/obj/item/clothing/head/helmet/space)
+	time = 10 SECONDS
+	create = 1
+	category = "Clothing"
+/datum/manufacture/securityspacesuit
+	name = "Security-Grade Space Suit Set"
+	item_paths = list("FAB-1","MET-2","CRY-1")
+	item_amounts = list(3,5,4)
+	item_outputs = list(/obj/item/clothing/suit/space/syndicate,/obj/item/clothing/head/helmet/space/syndicate)
+	time = 15 SECONDS
+	create = 1
+	category = "Clothing"
+/datum/manufacture/militaryspacesuit
+	name = "Military-Grade Space Suit Set"
+	item_paths = list("FAB-1","MET-3","CRY-2")
+	item_amounts = list(5,20,10)
+	item_outputs = list(/obj/item/clothing/suit/space/syndicate/specialist,/obj/item/clothing/head/helmet/space/syndicate/specialist)
+	time = 20 SECONDS
+	create = 1
+	category = "Clothing"
+	
+/datum/manufacture/tasergun	//
+	name = "Taser Gun"
+	item_paths = list("MET-1","CRY-1")
+	item_amounts = list(3,2)
+	item_outputs = list(/obj/item/gun/energy/taser_gun)
+	time = 5 SECONDS
+	create = 1
+	category = "Weapon"
+/datum/manufacture/lasergun	//
+	name = "Laser Gun"
+	item_paths = list("MET-2","CRY-1")
+	item_amounts = list(5,5)
+	item_outputs = list(/obj/item/gun/energy/laser_gun)
+	time = 10 SECONDS
+	create = 1
+	category = "Weapon"
+/datum/manufacture/lawbringer	//
+	name = "Replica Lawbringer Sidearm"
+	item_paths = list("MET-3","CRY-2")
+	item_amounts = list(10,5)
+	item_outputs = list(/obj/item/gun/energy/lawbringer)
+	time = 15 SECONDS
+	create = 1
+	category = "Weapon"
+/datum/manufacture/laserassaultrifle	//
+	name = "Laser Assault Rifle"
+	item_paths = list("MET-3","CRY-2","CON-2")
+	item_amounts = list(20,10,10)
+	item_outputs = list(/obj/item/gun/energy/ntgun)
+	time = 30 SECONDS
+	create = 1
+	category = "Weapon"
 
 /datum/manufacture/saa	//
 	name = "Colt SAA"
@@ -3128,5 +3193,21 @@ ABSTRACT_TYPE(/datum/manufacture/pod/weapon)
 	item_amounts = list(25, 5)
 	item_outputs = list(/obj/item/shovel)	//this is powerful)
 	time = 40 SECONDS
+	create = 1
+	category = "Miscellaneous"
+/datum/manufacture/dsaber	//
+	name = "Security-Grade Energy Sword"
+	item_paths = list("MET-2", "CRY-1", "CON-1")
+	item_amounts = list(10,5,5)
+	item_outputs = list(/obj/item/sword/discount)
+	time = 8 SECONDS
+	create = 1
+	category = "Miscellaneous"
+/datum/manufacture/csaber	//
+	name = "Military-Grade Energy Sword"
+	item_paths = list("MET-3", "CRY-2", "CON-1")
+	item_amounts = list(10,10,10)
+	item_outputs = list(/obj/item/sword/red)
+	time = 15 SECONDS
 	create = 1
 	category = "Miscellaneous"
