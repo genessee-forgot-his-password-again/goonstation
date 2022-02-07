@@ -1,6 +1,9 @@
 #if defined(MAP_OVERRIDE_CONSTRUCTION)
 
 
+#elif defined(MAP_OVERRIDE_NEXUS)
+
+
 #elif defined(MAP_OVERRIDE_DESTINY)
 
 
