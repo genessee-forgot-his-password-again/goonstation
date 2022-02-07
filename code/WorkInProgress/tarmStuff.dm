@@ -90,15 +90,16 @@
 	uses_multiple_icon_states = 1
 	force = 15.0
 	contraband = 8
-	caliber = 0.185
+	ammo_cats = list(AMMO_CASELESS_G11)
 	max_ammo_capacity = 45
 	can_dual_wield = 0
 	two_handed = 1
 	var/datum/projectile/bullet/g11/small/smallproj = new
+	default_magazine = /obj/item/ammo/bullets/g11
 
 	New()
 		set_current_projectile(new/datum/projectile/bullet/g11)
-		ammo = new/obj/item/ammo/bullets/g11
+		ammo = new default_magazine
 		. = ..()
 
 	shoot(var/target,var/start,var/mob/user,var/POX,var/POY)
@@ -124,7 +125,7 @@
 	icon_state = "caseless"
 	amount_left = 45.0
 	max_amount = 45.0
-	caliber = 0.185
+	ammo_cat = AMMO_CASELESS_G11
 	sound_load = 'sound/weapons/gunload_heavy.ogg'
 	icon_empty = "caseless-empty"
 
@@ -148,7 +149,6 @@
 	shot_delay = 0.4
 	shot_sound = 'sound/weapons/gunshot.ogg'
 	shot_volume = 66
-	caliber = 0.185
 	dissipation_delay = 10
 	dissipation_rate = 5
 	icon_turf_hit = "bhole-small"
@@ -235,12 +235,14 @@
 	desc = "A semi-automatic handgun that fires rocket-propelled bullets, developed by Mabinogi Firearms Company."
 	icon_state = "gyrojet"
 	item_state = "gyrojet"
-	caliber = 0.512
+	ammo_cats = list(AMMO_GYROJET)
 	max_ammo_capacity = 6
 	has_empty_state = 1
+	default_magazine = /obj/item/ammo/bullets/gyrojet
+	fire_animation = TRUE
 
 	New()
-		ammo = new/obj/item/ammo/bullets/gyrojet
+		ammo = new default_magazine
 		set_current_projectile(new/datum/projectile/bullet/gyrojet)
 		. = ..()
 
@@ -251,7 +253,7 @@
 	amount_left = 6.0
 	max_amount = 6.0
 	ammo_type = new/datum/projectile/bullet/gyrojet
-	caliber = 0.512
+	ammo_cat = AMMO_GYROJET
 
 /datum/projectile/bullet/gyrojet
 	name = "gyrojet bullet"
@@ -260,7 +262,6 @@
 	dissipation_rate = 0
 	power = 10
 	precalculated = 0
-	caliber = 0.512
 	shot_volume = 100
 	shot_sound = 'sound/weapons/gyrojet.ogg'
 	ks_ratio = 1
@@ -285,24 +286,26 @@
 	throwforce = 20 //HEAVY pistol
 	auto_eject = 1
 	max_ammo_capacity = 7
-	caliber = list(0.50, 0.41, 0.357, 0.38, 0.355, 0.22) //the omnihandgun
+	ammo_cats = list(AMMO_PISTOL_ALL, AMMO_REVOLVER_ALL, AMMO_DEAGLE) //the omnihandgun
 	has_empty_state = 1
 	gildable = 1
 	fire_animation = TRUE
+	default_magazine = /obj/item/ammo/bullets/deagle50cal
 
 	New()
 		set_current_projectile(new/datum/projectile/bullet/deagle50cal)
-		ammo = new/obj/item/ammo/bullets/deagle50cal
+		ammo = new default_magazine
 		. = ..()
 
 	//gimmick deagle that decapitates
 	decapitation
 		force = 18.0 //mmm, pistol whip
 		throwforce = 50 //HEAVY pistol
+		default_magazine = /obj/item/ammo/bullets/deagle50cal/decapitation
 		New()
 			. = ..()
 			set_current_projectile(new/datum/projectile/bullet/deagle50cal/decapitation)
-			ammo = new/obj/item/ammo/bullets/deagle50cal/decapitation
+			ammo = new default_magazine
 
 //.50AE deagle ammo
 /obj/item/ammo/bullets/deagle50cal
@@ -312,7 +315,7 @@
 	amount_left = 7.0
 	max_amount = 7.0
 	ammo_type = new/datum/projectile/bullet/deagle50cal
-	caliber = 0.50
+	ammo_cat = AMMO_DEAGLE
 
 	//gimmick deagle ammo that decapitates
 	decapitation
@@ -325,7 +328,6 @@
 	dissipation_rate = 5
 	ks_ratio = 1.0
 	implanted = /obj/item/implant/projectile/bullet_50
-	caliber = 0.50
 	icon_turf_hit = "bhole-large"
 	casing = /obj/item/casing/deagle
 	shot_sound = 'sound/weapons/deagle.ogg'

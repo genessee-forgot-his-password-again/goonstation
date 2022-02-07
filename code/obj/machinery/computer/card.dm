@@ -16,13 +16,13 @@
 	var/list/supply_access_list = list(access_hangar, access_cargo, access_supply_console, access_mining, access_mining_shuttle, access_mining_outpost)
 	var/list/research_access_list = list(access_medical, access_tox, access_tox_storage, access_medlab, access_medical_lockers, access_research, access_robotics, access_chemistry, access_pathology)
 	var/list/security_access_list = list(access_security, access_brig, access_forensics_lockers, access_maxsec, access_securitylockers, access_carrypermit, access_contrabandpermit)
-	var/list/command_access_list = list(access_research_director, access_emergency_storage, access_change_ids, access_ai_upload, access_teleporter, access_eva, access_heads, access_captain, access_engineering_chief, access_medical_director, access_head_of_personnel, access_ghostdrone)
+	var/list/command_access_list = list(access_research_director, access_emergency_storage, access_change_ids, access_ai_upload, access_teleporter, access_eva, access_heads, access_captain, access_engineering_chief, access_medical_director, access_head_of_personnel, access_dwaine_superuser)
 	var/list/allowed_access_list
 	req_access = list(access_change_ids)
 	desc = "A computer that allows an authorized user to change the identification of other ID cards."
 
 	deconstruct_flags = DECON_MULTITOOL
-	light_r =0.7
+	light_r = 0.7
 	light_g = 1
 	light_b = 0.1
 
@@ -393,8 +393,8 @@
 			boutput(usr, "You can't modify an ID without an ID inserted to modify. Once one is in the modify slot on the computer, you can log in.")
 	if(href_list["access"] && href_list["allowed"])
 		if(src.authenticated)
-			var/access_type = text2num(href_list["access"])
-			var/access_allowed = text2num(href_list["allowed"])
+			var/access_type = text2num_safe(href_list["access"])
+			var/access_allowed = text2num_safe(href_list["allowed"])
 			if(access_type in get_all_accesses())
 				src.modify.access -= access_type
 				if(access_allowed == 1)
@@ -419,7 +419,10 @@
 
 			if (t1 == "Custom Assignment")
 				t1 = input(usr, "Enter a custom job assignment.", "Assignment")
+				if(!src.modify || !src.authenticated)
+					return
 				t1 = strip_html(t1, 100, 1)
+				logTheThing("station", usr, null, "changes the assignment on the ID card from [src.modify.assignment] to [t1]")
 				playsound(src.loc, "keyboard", 50, 1, -15)
 			else
 				src.modify.access = get_access(t1)
@@ -458,7 +461,7 @@
 				playsound(src.loc, "keyboard", 50, 1, -15)
 
 	if (href_list["mode"])
-		src.mode = text2num(href_list["mode"])
+		src.mode = text2num_safe(href_list["mode"])
 	if (href_list["print"])
 		if (!( src.printing ))
 			src.printing = 1
@@ -480,7 +483,7 @@
 	if (href_list["mode"])
 		src.authenticated = 0
 		src.scan_access = null
-		src.mode = text2num(href_list["mode"])
+		src.mode = text2num_safe(href_list["mode"])
 	if (href_list["colour"])
 		if(src.modify.keep_icon == FALSE) // ids that are FALSE will update their icon if the job changes
 			var/newcolour = href_list["colour"]
@@ -497,7 +500,7 @@
 			if (newcolour == "green")
 				src.modify.icon_state = "id_com"
 	if (href_list["save"])
-		var/slot = text2num(href_list["save"])
+		var/slot = text2num_safe(href_list["save"])
 		if (!src.modify.assignment)
 			src.custom_names[slot] = "Custom [slot]"
 		else
@@ -505,7 +508,7 @@
 		src.custom_access_list[slot] = src.modify.access.Copy()
 		src.custom_access_list[slot] &= allowed_access_list //prevent saving non-allowed accesses
 	if (href_list["apply"])
-		var/slot = text2num(href_list["apply"])
+		var/slot = text2num_safe(href_list["apply"])
 		src.modify.assignment = src.custom_names[slot]
 		var/list/selected_access_list = src.custom_access_list[slot]
 		src.modify.access = selected_access_list.Copy()
