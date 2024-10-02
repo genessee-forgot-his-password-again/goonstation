@@ -5,19 +5,19 @@
  * @license MIT
  */
 
-@import '../colors.scss';
+@import "../colors.scss";
 
 .PINInput {
   display: flex;
   justify-content: center;
 
-  .PINInput__button {
+  .Button {
     display: flex;
     justify-content: center;
     font-size: 1.7rem;
 
     // Center icon buttons
-    i {
+    .Icon {
       margin-left: -0.1em;
     }
   }

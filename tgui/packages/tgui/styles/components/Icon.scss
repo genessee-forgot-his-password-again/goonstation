@@ -11,15 +11,16 @@
   text-align: center;
 }
 
+
 .IconStack {
   position: relative;
   display: inline-block;
   height: 1.2em;
   line-height: 2em;
   vertical-align: middle;
+}
 
-  &:after {
-    color: transparent;
-    content: '.';
-  }
+.IconStack:after {
+  color: transparent;
+  content: '.';
 }

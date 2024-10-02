@@ -6,8 +6,8 @@
  */
 
 import { Window } from '../../layouts';
-import * as styles from './style';
 import { ModuleView } from './views/ModuleView';
+import * as styles from './style';
 
 export const CyborgModuleRewriter = () => {
   return (

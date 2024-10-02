@@ -5,7 +5,7 @@
  * @license ISC
  */
 
-import { Box, Button, LabeledList, Section } from 'tgui-core/components';
+import { Box, Button, LabeledList, Section } from '../../components';
 
 interface ConnectionSectionProps {
   isConnected: boolean;
@@ -17,8 +17,7 @@ interface ConnectionSectionProps {
 }
 
 export const ConnectionSection = (props: ConnectionSectionProps) => {
-  const { isConnected, isPanelOpen, onCyclePad, onReset, onRetry, padNum } =
-    props;
+  const { isConnected, isPanelOpen, onCyclePad, onReset, onRetry, padNum } = props;
   const connectionButtons = isConnected ? (
     <Button icon="power-off" color="red" onClick={onReset}>
       Reset
@@ -32,11 +31,7 @@ export const ConnectionSection = (props: ConnectionSectionProps) => {
     <Section>
       <LabeledList>
         <LabeledList.Item label="Connection" buttons={connectionButtons}>
-          {isConnected ? (
-            <Box color="green">Connected</Box>
-          ) : (
-            <Box color="red">No connection to host</Box>
-          )}
+          {isConnected ? <Box color="green">Connected</Box> : <Box color="red">No connection to host</Box>}
         </LabeledList.Item>
         {isPanelOpen && (
           <LabeledList.Item
@@ -45,8 +40,7 @@ export const ConnectionSection = (props: ConnectionSectionProps) => {
               <Button icon="arrows-spin" onClick={onCyclePad}>
                 Cycle
               </Button>
-            }
-          >
+            }>
             {padNum}
           </LabeledList.Item>
         )}

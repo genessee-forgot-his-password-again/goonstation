@@ -5,8 +5,8 @@
  * @license ISC
  */
 
-import { Section } from 'tgui-core/components';
+import { Section } from '../../components';
 
-export const JobBanList = () => {
+export const JobBanList = (_props, _context) => {
   return <Section>Not yet implemented</Section>;
 };

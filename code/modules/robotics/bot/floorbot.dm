@@ -443,9 +443,6 @@
 /obj/machinery/bot/floorbot/active
 	on = TRUE
 
-/obj/machinery/bot/floorbot/active/improvefloors
-	improvefloors = TRUE
-
 /////////////////////////////////
 //////Floorbot Construction//////
 /////////////////////////////////

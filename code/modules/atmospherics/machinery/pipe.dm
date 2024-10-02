@@ -416,7 +416,7 @@
 			SET_SIMPLE_PIPE_UNDERLAY(src.node2, turn(src.dir, -45))
 
 
-/obj/machinery/atmospherics/pipe/simple/initialize(player_caused_init)
+/obj/machinery/atmospherics/pipe/simple/initialize()
 	var/node1_connect
 	var/node2_connect
 	switch(src.dir)
@@ -436,9 +436,7 @@
 		if(target.initialize_directions & get_dir(target,src))
 			src.node2 = target
 			break
-	if(player_caused_init)
-		src.node1?.initialize(FALSE)
-		src.node2?.initialize(FALSE)
+
 	var/turf/T = src.loc // hide if turf is not intact
 	hide(T.intact)
 
@@ -578,7 +576,7 @@
 /obj/machinery/atmospherics/pipe/vertical_pipe/pipeline_expansion()
 	return list(node1, node2)
 
-/obj/machinery/atmospherics/pipe/vertical_pipe/initialize(player_caused_init)
+/obj/machinery/atmospherics/pipe/vertical_pipe/initialize()
 	var/turf/T = get_turf(src)
 	var/connect_direction = dir
 
@@ -586,8 +584,7 @@
 		if(target.initialize_directions & get_dir(target,src))
 			node1 = target
 			break
-	if(player_caused_init)
-		src.node1?.initialize(FALSE)
+
 	// Search disjoint connections for vertical pipe
 	node2 = locate() in T.get_disjoint_objects_by_type(DISJOINT_TURF_CONNECTION_ATMOS_MACHINERY, /obj/machinery/atmospherics/pipe/vertical_pipe)
 	UpdateIcon()
@@ -686,7 +683,7 @@
 	src.hide(T.intact)
 	alpha = invisibility ? 128 : 255
 
-/obj/machinery/atmospherics/pipe/manifold/initialize(player_caused_init)
+/obj/machinery/atmospherics/pipe/manifold/initialize()
 	var/node1_connect = turn(src.dir, 90)
 	var/node2_connect = turn(src.dir, 180)
 	var/node3_connect = turn(src.dir, -90)
@@ -705,10 +702,7 @@
 		if(target.initialize_directions & get_dir(target,src))
 			src.node3 = target
 			break
-	if(player_caused_init)
-		src.node1?.initialize(FALSE)
-		src.node2?.initialize(FALSE)
-		src.node3?.initialize(FALSE)
+
 	var/turf/T = src.loc			// hide if turf is not intact
 	hide(T.intact)
 
@@ -794,7 +788,7 @@
 	var/turf/T = get_turf(src)
 	src.hide(T.intact)
 
-/obj/machinery/atmospherics/pipe/quadway/initialize(player_caused_init)
+/obj/machinery/atmospherics/pipe/quadway/initialize()
 
 	for(var/obj/machinery/atmospherics/target in get_step(src, SOUTH))
 		if(target.initialize_directions & get_dir(target,src))
@@ -815,10 +809,6 @@
 		if(target.initialize_directions & get_dir(target,src))
 			src.node4 = target
 			break
-	if(player_caused_init)
-		src.node1?.initialize(FALSE)
-		src.node2?.initialize(FALSE)
-		src.node3?.initialize(FALSE)
-		src.node4?.initialize(FALSE)
+
 	var/turf/T = src.loc // hide if turf is not intact
 	hide(T.intact)

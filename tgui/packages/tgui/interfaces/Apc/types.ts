@@ -5,7 +5,7 @@
  * @license ISC
  */
 
-import { BooleanLike } from 'tgui-core/react';
+import { BooleanLike } from 'common/react';
 
 export enum InterfaceType {
   LocalOnly = 0,
@@ -14,14 +14,8 @@ export enum InterfaceType {
 }
 
 export type ApcAccessPanelData = Pick<ApcData, 'is_ai' | 'wiresexposed'>;
-export type ApcWireCutData = Pick<
-  ApcData,
-  'dark_red_cut' | 'orange_cut' | 'white_cut' | 'yellow_cut'
->;
-export type ApcInterfaceData = Pick<
-  ApcData,
-  'can_access_remotely' | 'setup_networkapc'
->;
+export type ApcWireCutData = Pick<ApcData, 'dark_red_cut' | 'orange_cut' | 'white_cut' | 'yellow_cut'>
+export type ApcInterfaceData = Pick<ApcData, 'can_access_remotely' | 'setup_networkapc'>;
 
 export type ApcData = {
   aidisabled: BooleanLike;
@@ -34,7 +28,7 @@ export type ApcData = {
   chargemode;
   charging;
   coverlocked: BooleanLike;
-  dark_red_cut;
+  dark_red_cut,
   environ;
   equipment;
   host_id;
@@ -48,11 +42,11 @@ export type ApcData = {
   locked: BooleanLike;
   main_status;
   net_id;
-  orange_cut;
+  orange_cut,
   operating;
   setup_networkapc: InterfaceType;
   shorted;
-  white_cut;
+  white_cut,
   wiresexposed;
-  yellow_cut;
+  yellow_cut,
 };

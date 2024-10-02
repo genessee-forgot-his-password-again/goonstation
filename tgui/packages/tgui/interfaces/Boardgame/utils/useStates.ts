@@ -8,22 +8,16 @@ export const DEFAULT_STATES = {
   MOUSE_COORDS: { x: 0, y: 0 },
 };
 
-export const STATES = () => {
+export const STATES = (context) => {
   return {
     // TODO: add more states here
-    flip: useLocalState<boolean>('flip', DEFAULT_STATES.FLIP),
-    zoom: useLocalState<number>('zoom', DEFAULT_STATES.ZOOM),
-    mouseCoords: useLocalState<XYType>(
-      'mouseCoords',
-      DEFAULT_STATES.MOUSE_COORDS,
-    ),
-    palettesExpanded: useLocalState<PalleteExpandType>('palettesExpanded', {}),
-    paletteLastElement: useLocalState<HTMLElement | null>(
-      'paletteLastElement',
-      null,
-    ),
-    tileSize: useLocalState<TileSizeType>('tileSize', { width: 0, height: 0 }),
-    helpModalOpen: useLocalState<boolean>('helpModalOpen', false),
+    flip: useLocalState<boolean>(context, 'flip', DEFAULT_STATES.FLIP),
+    zoom: useLocalState<number>(context, 'zoom', DEFAULT_STATES.ZOOM),
+    mouseCoords: useLocalState<XYType>(context, 'mouseCoords', DEFAULT_STATES.MOUSE_COORDS),
+    palettesExpanded: useLocalState<PalleteExpandType>(context, 'palettesExpanded', {}),
+    paletteLastElement: useLocalState<HTMLElement | null>(context, 'paletteLastElement', null),
+    tileSize: useLocalState<TileSizeType>(context, 'tileSize', { width: 0, height: 0 }),
+    helpModalOpen: useLocalState<boolean>(context, 'helpModalOpen', false),
   };
 };
 
@@ -32,8 +26,8 @@ export const STATES = () => {
  * @param context
  * @returns an object with functions to update the state
  */
-export const useStates = () => {
-  const states = STATES();
+export const useStates = (context) => {
+  const states = STATES(context);
 
   return {
     paletteLastElementSet: (element: HTMLElement) => {
@@ -74,10 +68,7 @@ export const useStates = () => {
 
     togglePalette: (index: number) => {
       const [, setPalettesExpanded] = states.palettesExpanded;
-      setPalettesExpanded({
-        ...states.palettesExpanded[0],
-        [index]: !states.palettesExpanded[0][index],
-      });
+      setPalettesExpanded({ ...states.palettesExpanded[0], [index]: !states.palettesExpanded[0][index] });
     },
 
     isExpanded: (index: number) => {

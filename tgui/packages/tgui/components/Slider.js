@@ -4,13 +4,12 @@
  * @license MIT
  */
 
+import { clamp01, keyOfMatchingRange, scale } from 'common/math';
 import { classes } from 'common/react';
-import { DraggableControl } from 'tgui-core/components';
-import { clamp01, keyOfMatchingRange, scale } from 'tgui-core/math';
-
 import { computeBoxClassName, computeBoxProps } from './Box';
+import { DraggableControl } from './DraggableControl';
 
-export const Slider = (props) => {
+export const Slider = props => {
   const {
     // Draggable props (passthrough)
     animated,
@@ -48,9 +47,8 @@ export const Slider = (props) => {
         suppressFlicker,
         unit,
         value,
-      }}
-    >
-      {(control) => {
+      }}>
+      {control => {
         const {
           dragging,
           editing,
@@ -60,16 +58,23 @@ export const Slider = (props) => {
           inputElement,
           handleDragStart,
         } = control;
-        const hasFillValue = fillValue !== undefined && fillValue !== null;
-        const scaledValue = scale(value, minValue, maxValue);
+        const hasFillValue = fillValue !== undefined
+          && fillValue !== null;
+        const scaledValue = scale(
+          value,
+          minValue,
+          maxValue);
         const scaledFillValue = scale(
           fillValue ?? displayValue,
           minValue,
-          maxValue,
-        );
-        const scaledDisplayValue = scale(displayValue, minValue, maxValue);
-        const effectiveColor =
-          color || keyOfMatchingRange(fillValue ?? value, ranges) || 'default';
+          maxValue);
+        const scaledDisplayValue = scale(
+          displayValue,
+          minValue,
+          maxValue);
+        const effectiveColor = color
+          || keyOfMatchingRange(fillValue ?? value, ranges)
+          || 'default';
         return (
           <div
             className={classes([
@@ -80,8 +85,7 @@ export const Slider = (props) => {
               computeBoxClassName(rest),
             ])}
             {...computeBoxProps(rest)}
-            onMouseDown={handleDragStart}
-          >
+            onMouseDown={handleDragStart}>
             <div
               className={classes([
                 'ProgressBar__fill',
@@ -90,30 +94,30 @@ export const Slider = (props) => {
               style={{
                 width: clamp01(scaledFillValue) * 100 + '%',
                 opacity: 0.4,
-              }}
-            />
+              }} />
             <div
               className="ProgressBar__fill"
               style={{
-                width:
-                  clamp01(Math.min(scaledFillValue, scaledDisplayValue)) * 100 +
-                  '%',
-              }}
-            />
+                width: clamp01(Math.min(scaledFillValue, scaledDisplayValue))
+                  * 100 + '%',
+              }} />
             <div
               className="Slider__cursorOffset"
               style={{
                 width: clamp01(scaledDisplayValue) * 100 + '%',
-              }}
-            >
+              }}>
               <div className="Slider__cursor" />
               <div className="Slider__pointer" />
               {dragging && (
-                <div className="Slider__popupValue">{displayElement}</div>
+                <div className="Slider__popupValue">
+                  {displayElement}
+                </div>
               )}
             </div>
             <div className="ProgressBar__content">
-              {hasContent ? children : displayElement}
+              {hasContent
+                ? children
+                : displayElement}
             </div>
             {inputElement}
           </div>

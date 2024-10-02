@@ -5,20 +5,13 @@
  * @license MIT
  */
 
-import { Fragment } from 'react';
-import {
-  Box,
-  Button,
-  Divider,
-  LabeledList,
-  Section,
-} from 'tgui-core/components';
-
+import { Fragment } from 'inferno';
 import { useBackend } from '../../backend';
+import { Box, Button, Divider, LabeledList, Section } from '../../components';
 import { CharacterPreferencesData } from './type';
 
 export const SavesTab = (_props, context) => {
-  const { act, data } = useBackend<CharacterPreferencesData>();
+  const { act, data } = useBackend<CharacterPreferencesData>(context);
 
   return (
     <Section title="Cloud Saves">
@@ -48,8 +41,8 @@ type CloudSaveProps = {
   index: number;
 };
 
-const Cloudsave = ({ name, index }: CloudSaveProps) => {
-  const { act } = useBackend<CharacterPreferencesData>();
+const Cloudsave = ({ name, index }: CloudSaveProps, context: any) => {
+  const { act } = useBackend<CharacterPreferencesData>(context);
 
   return (
     <LabeledList>
@@ -58,16 +51,11 @@ const Cloudsave = ({ name, index }: CloudSaveProps) => {
         buttons={
           <>
             {/* Just a small gap between these so you dont accidentally hit one */}
-            <Button onClick={() => act('cloud-load', { name })}>Load</Button>
-            {' - '}
-            <Button onClick={() => act('cloud-save', { name })}>Save</Button>
-            {' - '}
-            <Button.Confirm onClick={() => act('cloud-delete', { name })}>
-              Delete
-            </Button.Confirm>
+            <Button onClick={() => act('cloud-load', { name })}>Load</Button> -{' '}
+            <Button onClick={() => act('cloud-save', { name })}>Save</Button> -{' '}
+            <Button.Confirm onClick={() => act('cloud-delete', { name })} content="Delete" />
           </>
-        }
-      >
+        }>
         {name}
       </LabeledList.Item>
     </LabeledList>

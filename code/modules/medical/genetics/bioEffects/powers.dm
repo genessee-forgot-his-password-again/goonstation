@@ -1,7 +1,9 @@
-ABSTRACT_TYPE(/datum/bioEffect/power)
 /datum/bioEffect/power
-	name = "parent_power"
-	id = "power_parent_do_not_use"
+	name = "Cryokinesis"
+	desc = "Allows the subject to control ice and cold."
+	id = "cryokinesis"
+	msgGain = "You notice a strange cold tingle in your fingertips."
+	msgLose = "Your fingers feel warmer."
 	effectType = EFFECT_TYPE_POWER
 	cooldown = 600
 	probability = 66
@@ -9,7 +11,7 @@ ABSTRACT_TYPE(/datum/bioEffect/power)
 	blockGaps = 2
 	stability_loss = 10
 	var/using = 0
-	var/ability_path = null
+	var/ability_path = /datum/targetable/geneticsAbility/cryokinesis
 	var/datum/targetable/geneticsAbility/ability = null
 
 	New()
@@ -52,20 +54,6 @@ ABSTRACT_TYPE(/datum/bioEffect/power)
 		if (variable == "cooldown" && istype(src.ability))
 			src.ability.cooldown = newval
 			src.ability.holder?.updateButtons()
-
-/datum/bioEffect/power/cryokinesis
-	name = "Cryokinesis"
-	desc = "Allows the subject to control ice and cold."
-	id = "cryokinesis"
-	msgGain = "You notice a strange cold tingle in your fingertips."
-	msgLose = "Your fingers feel warmer."
-	effectType = EFFECT_TYPE_POWER
-	cooldown = 600
-	probability = 66
-	blockCount = 3
-	blockGaps = 2
-	stability_loss = 10
-	ability_path = /datum/targetable/geneticsAbility/cryokinesis
 
 /datum/targetable/geneticsAbility/cryokinesis
 	name = "Cryokinesis"
@@ -608,12 +596,8 @@ ABSTRACT_TYPE(/datum/bioEffect/power)
 			boutput(owner, SPAN_ALERT("You can't contact [recipient.name]'s mind at all!"))
 			return 1
 
-		if(isghostcritter(owner))
-			boutput(owner, SPAN_ALERT("You can't contact [recipient.name]'s mind with your spectral brain!"))
-			return 1
-
 		if(!recipient.client || recipient.stat)
-			boutput(owner, SPAN_ALERT("You can't seem to get through to [recipient.name] mentally."))
+			boutput(recipient, SPAN_ALERT("You can't seem to get through to [recipient.name] mentally."))
 			return 1
 
 		var/msg = copytext( adminscrub(input(usr, "Message to [recipient.name]:","Telepathy") as text), 1, MAX_MESSAGE_LEN)
@@ -2322,7 +2306,6 @@ ABSTRACT_TYPE(/datum/bioEffect/power)
 						if (thrown_limb)
 							thrown_limb.throwforce = tmp_force
 
-ABSTRACT_TYPE(/datum/bioEffect/power/critter)
 /datum/bioEffect/power/critter
 	id = "critter_do_not_use"
 

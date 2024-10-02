@@ -747,11 +747,6 @@ ABSTRACT_TYPE(/datum/trait/job)
 	desc = "Subject is experienced in foodstuffs and their effects."
 	id = "training_chef"
 
-/datum/trait/job/bartender
-	name = "Bartender Training"
-	desc = "Subject has a keen mind for all things alcoholic."
-	id = "training_bartender"
-
 // bartender, detective, HoS
 /datum/trait/job/drinker
 	name = "Professional Drinker"
@@ -941,6 +936,7 @@ TYPEINFO(/datum/trait/partyanimal)
 	id = "randomallergy"
 	icon_state = "allergy"
 	points = 0
+	category = list("allergy")
 	afterlife_blacklisted = TRUE
 
 	var/allergen = null
@@ -970,6 +966,7 @@ TYPEINFO(/datum/trait/partyanimal)
 	id = "medicalallergy"
 	icon_state = "medallergy"
 	points = 1
+	category = list("allergy")
 	afterlife_blacklisted = TRUE
 
 	allergen_id_list = list("spaceacillin","morphine","teporone","salicylic_acid","calomel","synthflesh","omnizine","saline","anti_rad","smelling_salt",\
@@ -1209,6 +1206,7 @@ TYPEINFO(/datum/trait/partyanimal)
 	id = "allergic"
 	icon_state = "hypeallergy"
 	points = 1
+	category = list("allergy")
 	disability_type = TRAIT_DISABILITY_MINOR
 	disability_name = "Anaphylactic"
 	disability_desc = "Acute response to allergens"
@@ -1339,7 +1337,7 @@ TYPEINFO(/datum/trait/partyanimal)
 	icon_state = "hair"
 
 	onAdd(mob/owner)
-		owner.bioHolder.AddEffect("hair_growth", magical = TRUE)
+		owner.bioHolder.AddEffect("hair_growth")
 
 	onRemove(mob/owner)
 		owner.bioHolder.RemoveEffect("hair_growth")

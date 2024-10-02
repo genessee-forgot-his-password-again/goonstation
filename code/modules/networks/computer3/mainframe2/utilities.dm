@@ -836,9 +836,8 @@
 				return
 
 			var/current = read_user_field("curpath")
-
-			var/list/grep_results = list()
 			for (var/i = 2, i <= initlist.len, i++)
+
 				if (!dd_hasprefix(initlist[i], "/"))
 					initlist[i] = "[current]" + (current == "/" ? null : "/") + initlist[i]
 
@@ -855,6 +854,8 @@
 					if (istype(listfolder))
 						for(var/datum/computer/P in listfolder.contents)
 							initlist.Add(initlist[i]+"/"+P.name)
+					. += ""
+
 				else if (istype(to_check, /datum/computer/file/record))
 					var/j = 0
 					for (var/textLine in to_check:fields)
@@ -864,19 +865,17 @@
 
 						if (R.Find(case_sensitive ? "[textLine][to_check:fields[textLine]]" : lowertext("[textLine][to_check:fields[textLine]]")))
 							if (print_only_match)
-								grep_results += "[R.match]"
+								. += "[R.match]|n"
 							else if (plain)
-								grep_results += "[textLine][to_check:fields[textLine]]"
+								. += "[textLine][to_check:fields[textLine]]|n"
 							else
-								grep_results += "[to_check.name]:[j]:" + "[textLine][to_check:fields[textLine]]"
+								. += "[to_check.name]:[j]:" + "[textLine][to_check:fields[textLine]]|n"
 						R = null
 				else
 					if(no_messages)
-						grep_results += "[to_check] could not be read."
+						. += "[to_check] could not be read.|n"
 
-			if (length(grep_results))
-				message_user("[jointext(grep_results, "|n")]", "multiline")
-			else if (.)
+			if (.)
 				message_user(., "multiline")
 
 		mainframe_prog_exit

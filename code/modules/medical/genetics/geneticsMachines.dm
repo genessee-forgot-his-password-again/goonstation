@@ -557,7 +557,7 @@
 				var/datum/bioEffect/mutantrace = H.mutantrace.race_mutation
 				if (mutantrace && GetBioeffectResearchLevelFromGlobalListByID(initial(mutantrace.id)) >= EFFECT_RESEARCH_ACTIVATED)
 					addEffect = initial(mutantrace.id)
-			subject.bioHolder.RemoveAllEffects(null, TRUE)
+			subject.bioHolder.RemoveAllEffects()
 			subject.bioHolder.BuildEffectPool()
 			if (addEffect) // re-mutantify if we would have been able to anyway
 				subject.bioHolder.AddEffect(addEffect)
@@ -1006,7 +1006,6 @@
 			if (GBE.secret && !genResearch.see_secret)
 				continue
 			.["subject"]["active"] += list(serialize_bioeffect_for_tgui(BE, active = TRUE, full_data=(BE == src.currently_browsing)))
-
 		if (src.modify_appearance)
 			.["modifyAppearance"] = src.modify_appearance.ui_data(user)
 		else
@@ -1077,19 +1076,18 @@
 		))
 
 /obj/machinery/computer/genetics/ui_static_data(mob/user)
-	. = list(
-			"boothCost" = genResearch.isResearched(/datum/geneticsResearchEntry/genebooth) ? genResearch.genebooth_cost : -1,
-			"injectorCost" = genResearch.isResearched(/datum/geneticsResearchEntry/injector) ? genResearch.injector_cost : -1,
-			"saveSlots" = genResearch.isResearched(/datum/geneticsResearchEntry/saver) ? genResearch.max_save_slots : 0,
-			"precisionEmitter" = genResearch.isResearched(/datum/geneticsResearchEntry/rad_precision),
-			"materialMax" = genResearch.max_material,
-			"mutantRaces" = list(list(
-				"name" = "Clear Mutantrace",
-				"icon" = "template",
-				"ref" = "\ref[null]",
-				)
-			),
-		)
+	. = list("research"=list(),
+					"boothCost" = genResearch.isResearched(/datum/geneticsResearchEntry/genebooth) ? genResearch.genebooth_cost : -1,
+					"injectorCost" = genResearch.isResearched(/datum/geneticsResearchEntry/injector) ? genResearch.injector_cost : -1,
+					"saveSlots" = genResearch.isResearched(/datum/geneticsResearchEntry/saver) ? genResearch.max_save_slots : 0,
+					"precisionEmitter" = genResearch.isResearched(/datum/geneticsResearchEntry/rad_precision),
+					"materialMax" = genResearch.max_material,
+					"mutantRaces" = list(list(
+						"name" = "Clear Mutantrace",
+						"icon" = "template",
+						"ref" = "\ref[null]",
+						)),
+					)
 
 	var/bioEffects = list()
 	for (var/id as anything in bioEffectList)
@@ -1106,7 +1104,6 @@
 			))
 	.["bioEffects"] = bioEffects
 
-	.["research"] = list()
 	for(var/key as anything in genResearch.researchTree)
 		var/datum/geneticsResearchEntry/R = genResearch.researchTree[key]
 
@@ -1121,7 +1118,7 @@
 /obj/machinery/computer/genetics/ui_interact(mob/user, datum/tgui/ui)
 	ui = tgui_process.try_update_ui(user, src, ui)
 	if(!ui)
-		ui = new(user, src, "GeneTek", "GeneTek Console v2.02")
+		ui = new(user, src, "GeneTek", "GeneTek Console v2.01")
 		ui.open()
 
 /obj/machinery/computer/genetics/ui_close(mob/user)

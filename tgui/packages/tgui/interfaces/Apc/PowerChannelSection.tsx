@@ -6,9 +6,9 @@
  * @license MIT
  */
 
-import { Button, LabeledList, Section } from 'tgui-core/components';
-
+import { SFC } from 'inferno';
 import { useBackend } from '../../backend';
+import { Button, LabeledList, Section } from '../../components';
 import type { ApcData } from './types';
 import { formatWatts, getHasPermission } from './util';
 
@@ -33,12 +33,10 @@ interface PowerChannelConfig {
   statusChangeAction: string;
 }
 
-const autoPowerChannelStatuses = [
-  PowerChannelStatus.AutoOff,
-  PowerChannelStatus.AutoOn,
-];
-const getPowerChannelStatusIsAuto = (powerChannelStatus: PowerChannelStatus) =>
-  autoPowerChannelStatuses.includes(powerChannelStatus);
+const autoPowerChannelStatuses = [PowerChannelStatus.AutoOff, PowerChannelStatus.AutoOn];
+const getPowerChannelStatusIsAuto = (powerChannelStatus: PowerChannelStatus) => (
+  autoPowerChannelStatuses.includes(powerChannelStatus)
+);
 
 const powerChannelConfig: PowerChannelConfig[] = [
   {
@@ -66,16 +64,16 @@ const powerChannelConfig: PowerChannelConfig[] = [
 
 const powerChannelConfigLookup = powerChannelConfig.reduce(
   (acc, cur) => ({ ...acc, [cur.id]: cur }),
-  {} as Record<PowerChannel, PowerChannelConfig>,
+  {} as Record<PowerChannel, PowerChannelConfig>
 );
 
 interface PowerChannelItemProps {
   powerChannel: PowerChannel;
 }
 
-const PowerChannelItem = (props: PowerChannelItemProps) => {
+const PowerChannelItem: SFC<PowerChannelItemProps> = (props, context) => {
   const { powerChannel } = props;
-  const { act, data } = useBackend<ApcData>();
+  const { act, data } = useBackend<ApcData>(context);
 
   const hasPermission = getHasPermission(data);
   const currPowerChannelConfig = powerChannelConfigLookup[powerChannel];
@@ -100,30 +98,22 @@ const PowerChannelItem = (props: PowerChannelItemProps) => {
       buttons={
         <>
           <Button
-            disabled={
-              !hasPermission && currentStatus !== PowerChannelStatus.Off
-            }
-            onClick={() =>
-              handlePowerChannelStatusChange(PowerChannelStatus.Off)
-            }
+            disabled={!hasPermission && currentStatus !== PowerChannelStatus.Off}
+            onClick={() => handlePowerChannelStatusChange(PowerChannelStatus.Off)}
             selected={currentStatus === PowerChannelStatus.Off}
           >
             Off
           </Button>
           <Button
             disabled={!hasPermission && currentStatus !== PowerChannelStatus.On}
-            onClick={() =>
-              handlePowerChannelStatusChange(PowerChannelStatus.On)
-            }
+            onClick={() => handlePowerChannelStatusChange(PowerChannelStatus.On)}
             selected={currentStatus === PowerChannelStatus.On}
           >
             On
           </Button>
           <Button
             disabled={!hasPermission && !currentStatusIsAuto}
-            onClick={() =>
-              handlePowerChannelStatusChange(PowerChannelStatus.AutoOn)
-            }
+            onClick={() => handlePowerChannelStatusChange(PowerChannelStatus.AutoOn)}
             selected={currentStatusIsAuto}
           >
             Auto
@@ -137,7 +127,7 @@ const PowerChannelItem = (props: PowerChannelItemProps) => {
 };
 
 export const PowerChannelSection = (_props, context) => {
-  const { data } = useBackend<ApcData>();
+  const { data } = useBackend<ApcData>(context);
   const { lastused_total } = data;
   return (
     <Section title="Power Channel">

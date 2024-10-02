@@ -45,7 +45,7 @@
 		var/mob/living/L = owner
 		var/datum/bioHolder/B = L.bioHolder
 
-		B.RemoveAllEffects(null, TRUE)
+		B.RemoveAllEffects()
 		B.BuildEffectPool()
 		return
 
@@ -70,7 +70,7 @@
 		var/mob/living/L = owner
 		var/datum/bioHolder/B = L.bioHolder
 
-		B.RemoveAllEffects(null, TRUE)
+		B.RemoveAllEffects()
 		B.RemoveAllPoolEffects()
 		return
 

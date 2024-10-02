@@ -1,12 +1,12 @@
-import { Box, Button, Flex } from 'tgui-core/components';
-
+import { BoardgameData } from '../../utils';
 import { useBackend } from '../../../../backend';
 import { fetchPalettes, PieceSetupType } from '../../games';
-import { BoardgameData } from '../../utils';
 import { useActions, useStates } from '../../utils';
+import { Box, Button, Flex } from '../../../../components';
 
-export const Palettes = () => {
-  const { isExpanded } = useStates();
+export const Palettes = (props, context) => {
+  const { act, data } = useBackend<BoardgameData>(context);
+  const { isExpanded } = useStates(context);
   return (
     <Box className={'boardgame__palettes'}>
       {fetchPalettes().map((set, i) => (
@@ -15,9 +15,7 @@ export const Palettes = () => {
             <PaletteExpandButton index={i} setId={set.name} />
           </Box>
 
-          <Flex
-            className={`boardgame__palettes-set ${isExpanded(i) ? '' : 'boardgame__palettes-set-minimized'}`}
-          >
+          <Flex className={`boardgame__palettes-set ${isExpanded(i) ? '' : 'boardgame__palettes-set-minimized'}`}>
             {set.pieces.map((piece, index) => (
               <Palette key={index} piece={piece} />
             ))}
@@ -32,8 +30,8 @@ type PaletteProps = {
   piece: PieceSetupType;
 };
 
-const Palette = ({ piece }: PaletteProps) => {
-  const { act, data } = useBackend<BoardgameData>();
+const Palette = ({ piece }: PaletteProps, context) => {
+  const { act, data } = useBackend<BoardgameData>(context);
   const { currentUser } = data;
 
   const { paletteSet } = useActions(act);
@@ -42,8 +40,7 @@ const Palette = ({ piece }: PaletteProps) => {
     <Flex.Item
       className="boardgame__palettes-set-piece"
       key={piece.name}
-      onMouseDown={() => paletteSet(currentUser.ckey, piece.code)}
-    >
+      onMouseDown={() => paletteSet(currentUser.ckey, piece.code)}>
       <img src={piece.image} />
     </Flex.Item>
   );
@@ -54,14 +51,13 @@ type PaletteExpandButtonProps = {
   setId: string;
 };
 
-const PaletteExpandButton = ({ index, setId }: PaletteExpandButtonProps) => {
-  const { isExpanded, togglePalette } = useStates();
+const PaletteExpandButton = ({ index, setId }: PaletteExpandButtonProps, context) => {
+  const { isExpanded, togglePalette } = useStates(context);
   return (
     <Button.Checkbox
       className={'boardgame__palettes-set-toggle'}
       checked={isExpanded(index)}
-      onClick={() => togglePalette(index)}
-    >
+      onClick={() => togglePalette(index)}>
       {setId}
     </Button.Checkbox>
   );

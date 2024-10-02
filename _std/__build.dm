@@ -117,7 +117,7 @@ o+`        `-` ``..-:yooos-..----------..`
 //#define DISPOSE_IS_QDEL
 
 // Toggle this to enable perspective wall icons in .dmm-compatible map editors. By default, icons in the editor will be flat.
-//#define USE_PERSPECTIVE_EDITOR_WALLS
+#define USE_PERSPECTIVE_EDITOR_WALLS
 
 //------------- MAP OVERRIDES -------------//
 
@@ -139,7 +139,7 @@ o+`        `-` ``..-:yooos-..----------..`
 //#define MAP_OVERRIDE_ATLAS        // NCS Atlas, by Gannets (and Kubius)
 //#define MAP_OVERRIDE_CLARION      // NSS Clarion (Used to be Destiny's Alt), by Dionsu and a69andahalf.
 //#define MAP_OVERRIDE_OSHAN        // Oshan Laboratory, Abzu, by committee
-//#define MAP_OVERRIDE_NADIR        // Nadir Extraction Site by Kubius
+#define MAP_OVERRIDE_NADIR        // Nadir Extraction Site by Kubius
 
 //-------Discontinued or gimmick maps:
 //#define MAP_OVERRIDE_MANTA        // NSS Manta by Azungar
@@ -164,12 +164,12 @@ o+`        `-` ``..-:yooos-..----------..`
 
 //------ HOLIDAYS AND OTHER SUCH TOGGLES ------//
 
-//#define RP_MODE 1
+#define RP_MODE 1
 //#define HALLOWEEN 1
 //#define SEASON_WINTER 1
 //#define SEASON_SPRING 1
 //#define SEASON_SUMMER 1
-//#define SEASON_AUTUMN 1
+#define SEASON_AUTUMN 1
 //#define XMAS 1
 //#define CANADADAY 1
 //#define FOOTBALL_MODE 1

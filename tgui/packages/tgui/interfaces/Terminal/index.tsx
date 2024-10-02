@@ -6,25 +6,49 @@
  * @license MIT
  */
 
-import { Stack } from 'tgui-core/components';
-
 import { useBackend } from '../../backend';
 import { Window } from '../../layouts';
+import { TerminalData } from './types';
+import { TerminalOutputSection } from './TerminalOutputSection';
 import { InputAndButtonsSection } from './InputAndButtonsSection';
 import { PheripheralsSection } from './PheripheralsSection';
-import { TerminalOutputSection } from './TerminalOutputSection';
-import { TerminalData } from './types';
+import { Stack } from '../../components';
 
-export const Terminal = () => {
-  const { data } = useBackend<TerminalData>();
-  const { windowName, displayHTML } = data;
+export const Terminal = (_props, context) => {
+  const { data } = useBackend<TerminalData>(context);
+  const {
+    windowName,
+    displayHTML,
+  } = data;
+
+  const handleTerminalOutputComponentDidUpdate = (lastProps, nextProps) => {
+    if (lastProps.displayHTML === nextProps.displayHTML) {
+      return;
+    }
+    scrollToBottom();
+  };
+  const scrollToBottom = () => {
+    const terminalOutputScroll = document.querySelector('#terminalOutput .Section__content');
+    if (!terminalOutputScroll) {
+      return;
+    }
+    terminalOutputScroll.scrollTop = terminalOutputScroll.scrollHeight;
+  };
 
   return (
-    <Window theme="retro-dark" title={windowName} width={380} height={350}>
-      <Window.Content fontFamily="Consolas">
+    <Window
+      theme="retro-dark"
+      title={windowName}
+      fontFamily="Consolas"
+      width="380"
+      height="350">
+      <Window.Content>
         <Stack vertical fill>
           <Stack.Item grow>
-            <TerminalOutputSection displayHTML={displayHTML} />
+            <TerminalOutputSection
+              displayHTML={displayHTML}
+              onComponentDidMount={scrollToBottom}
+              onComponentDidUpdate={handleTerminalOutputComponentDidUpdate} />
           </Stack.Item>
           <Stack.Item>
             <InputAndButtonsSection />

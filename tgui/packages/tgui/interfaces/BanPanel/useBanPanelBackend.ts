@@ -7,14 +7,15 @@
  */
 
 import { useBackend } from '../../backend';
-import type { BanPanelData } from './type';
 import { BanPanelAction, BanPanelSearchFilter, BanPanelTab } from './type';
+import type { BanPanelData } from './type';
 
-export const useBanPanelBackend = () => {
-  const { act, data } = useBackend<BanPanelData>();
+export const useBanPanelBackend = (context) => {
+  const { act, data } = useBackend<BanPanelData>(context);
   const action = {
-    searchBans: (searchText: string, searchFilter: BanPanelSearchFilter) =>
-      act(BanPanelAction.SearchBans, { searchText, searchFilter }),
+    searchBans: (
+      searchText: string, searchFilter: BanPanelSearchFilter
+    ) => act(BanPanelAction.SearchBans, { searchText, searchFilter }),
     navigatePreviousPage: () => act(BanPanelAction.NavigatePreviousPage),
     navigateNextPage: () => act(BanPanelAction.NavigateNextPage),
     setPerPage: (amount: number) => act(BanPanelAction.SetPerPage, { amount }),

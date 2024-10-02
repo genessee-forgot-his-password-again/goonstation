@@ -5,24 +5,25 @@
  * @license ISC
  */
 
-import { ReactNode } from 'react';
-import { Dropdown, Input, NumberInput, Stack } from 'tgui-core/components';
-
+import { InfernoNode } from 'inferno';
+import { Dropdown, Input, NumberInput, Stack } from '../../../../components';
 import type { ExpiryOptions, ExpiryType } from './types';
 
 const expiryTypeLookup: Record<ExpiryType, string> = {
-  never: 'Never',
-  minutes: 'Minutes',
-  hours: 'Hours',
-  days: 'Days',
-  timestamp: 'Timestamp',
+  'never': 'Never',
+  'minutes': 'Minutes',
+  'hours': 'Hours',
+  'days': 'Days',
+  'timestamp': 'Timestamp',
 };
 
-export const expiryTypeLookupByName: Partial<Record<string, ExpiryType>> =
-  Object.entries(expiryTypeLookup).reduce((acc, [id, name]) => {
+export const expiryTypeLookupByName: Partial<Record<string, ExpiryType>> = Object.entries(expiryTypeLookup).reduce(
+  (acc, [id, name]) => {
     acc[name] = id;
     return acc;
-  }, {});
+  },
+  {}
+);
 
 export const expiryTypeOptions = Object.keys(expiryTypeLookupByName);
 
@@ -54,31 +55,24 @@ export const ExpiryInput = (props: ExpiryInputProps) => {
       expiryType,
       expiryValue: newValue,
     });
-  const handleChangeNumberValuePart = (newValue: number) => {
+  const handleChangeNumberValuePart = (_e: unknown, newValue: number) => {
     onChange({
       expiryType,
       expiryValue: `${newValue}`,
     });
   };
-  let valueControl: ReactNode = null;
+  let valueControl: InfernoNode = null;
   if (expiryType === 'timestamp') {
-    valueControl = (
-      <Input
-        width="100%"
-        value={expiryValue}
-        onChange={handleChangeValuePart}
-        placeholder="yyyy-mm-dd"
-      />
-    );
+    valueControl = <Input width="100%" value={expiryValue} onChange={handleChangeValuePart} placeholder="yyyy-mm-dd" />;
   } else if (expiryType && ['minutes', 'days', 'hours'].includes(expiryType)) {
     valueControl = (
       <NumberInput
         width="100%"
         value={safeParseInt(expiryValue)}
         onChange={handleChangeNumberValuePart}
+        placeholder="Amount"
         minValue={0}
         maxValue={1_000}
-        step={1}
       />
     );
   }

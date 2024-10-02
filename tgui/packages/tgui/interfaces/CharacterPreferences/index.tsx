@@ -6,41 +6,26 @@
  */
 
 import { KEY_LEFT, KEY_RIGHT } from 'common/keycodes';
-import { useState } from 'react';
-import {
-  Box,
-  Button,
-  ByondUi,
-  LabeledList,
-  Section,
-  Stack,
-  Tabs,
-} from 'tgui-core/components';
-
-import { useBackend } from '../../backend';
+import { useBackend, useLocalState } from '../../backend';
+import { Box, Button, ByondUi, LabeledList, Section, Stack, Tabs } from '../../components';
 import { Window } from '../../layouts';
 import { CharacterTab } from './CharacterTab';
 import { GameSettingsTab } from './GameSettingsTab';
 import { GeneralTab } from './GeneralTab';
 import { SavesTab } from './SavesTab';
 import { TraitsTab } from './TraitsTab';
-import {
-  CharacterPreferencesData,
-  CharacterPreferencesProfile,
-  CharacterPreferencesTabKeys,
-} from './type';
+import { CharacterPreferencesData, CharacterPreferencesProfile, CharacterPreferencesTabKeys } from './type';
 
 let nextRotateTime = 0;
 
-export const CharacterPreferences = (_props: any) => {
-  const { act, data } = useBackend<CharacterPreferencesData>();
-  const [menu, setMenu] = useState(CharacterPreferencesTabKeys.General);
+export const CharacterPreferences = (_props: any, context: any) => {
+  const { act, data } = useBackend<CharacterPreferencesData>(context);
+  const [menu, setMenu] = useLocalState(context, 'menu', CharacterPreferencesTabKeys.General);
 
   const handleKeyDown = (e) => {
     if (
-      (menu === CharacterPreferencesTabKeys.General ||
-        menu === CharacterPreferencesTabKeys.Character) &&
-      (e.keyCode === KEY_LEFT || e.keyCode === KEY_RIGHT)
+      (menu === CharacterPreferencesTabKeys.General || menu === CharacterPreferencesTabKeys.Character)
+      && (e.keyCode === KEY_LEFT || e.keyCode === KEY_RIGHT)
     ) {
       e.preventDefault();
       if (nextRotateTime > performance.now()) {
@@ -68,53 +53,39 @@ export const CharacterPreferences = (_props: any) => {
             <Tabs>
               <Tabs.Tab
                 selected={menu === CharacterPreferencesTabKeys.General}
-                onClick={() => setMenu(CharacterPreferencesTabKeys.General)}
-              >
+                onClick={() => setMenu(CharacterPreferencesTabKeys.General)}>
                 General
               </Tabs.Tab>
               <Tabs.Tab
                 selected={menu === CharacterPreferencesTabKeys.Character}
-                onClick={() => setMenu(CharacterPreferencesTabKeys.Character)}
-              >
+                onClick={() => setMenu(CharacterPreferencesTabKeys.Character)}>
                 Appearance
               </Tabs.Tab>
-              <Tabs.Tab onClick={() => act('open-occupation-window')}>
-                Occupation
-              </Tabs.Tab>
+              <Tabs.Tab onClick={() => act('open-occupation-window')}>Occupation</Tabs.Tab>
               <Tabs.Tab
                 selected={menu === CharacterPreferencesTabKeys.Traits}
-                onClick={() => setMenu(CharacterPreferencesTabKeys.Traits)}
-              >
+                onClick={() => setMenu(CharacterPreferencesTabKeys.Traits)}>
                 Traits
               </Tabs.Tab>
               <Tabs.Tab
                 selected={menu === CharacterPreferencesTabKeys.GameSettings}
-                onClick={() =>
-                  setMenu(CharacterPreferencesTabKeys.GameSettings)
-                }
-              >
+                onClick={() => setMenu(CharacterPreferencesTabKeys.GameSettings)}>
                 Game Settings
               </Tabs.Tab>
               <Tabs.Tab
                 selected={menu === CharacterPreferencesTabKeys.Saves}
-                onClick={() => setMenu(CharacterPreferencesTabKeys.Saves)}
-              >
+                onClick={() => setMenu(CharacterPreferencesTabKeys.Saves)}>
                 Cloud Saves
               </Tabs.Tab>
             </Tabs>
           </Stack.Item>
-          <Stack.Item grow={1}>
-            {(menu === CharacterPreferencesTabKeys.General ||
-              menu === CharacterPreferencesTabKeys.Character) && (
+          <Stack.Item grow="1">
+            {(menu === CharacterPreferencesTabKeys.General || menu === CharacterPreferencesTabKeys.Character) && (
               <Stack fill>
-                <Stack.Item basis={0} grow={1}>
+                <Stack.Item basis={0} grow="1">
                   <Section scrollable fill>
-                    {menu === CharacterPreferencesTabKeys.General && (
-                      <GeneralTab />
-                    )}
-                    {menu === CharacterPreferencesTabKeys.Character && (
-                      <CharacterTab />
-                    )}
+                    {menu === CharacterPreferencesTabKeys.General && <GeneralTab />}
+                    {menu === CharacterPreferencesTabKeys.Character && <CharacterTab />}
                   </Section>
                 </Stack.Item>
                 <Stack.Item>
@@ -130,25 +101,16 @@ export const CharacterPreferences = (_props: any) => {
                       }}
                     />
                     <Box textAlign="center" mt="5px">
-                      <Button
-                        icon="chevron-left"
-                        onClick={() => act('rotate-counter-clockwise')}
-                      />
-                      <Button
-                        icon="chevron-right"
-                        onClick={() => act('rotate-clockwise')}
-                      />
+                      <Button icon="chevron-left" onClick={() => act('rotate-counter-clockwise')} />
+                      <Button icon="chevron-right" onClick={() => act('rotate-clockwise')} />
                     </Box>
                   </Section>
                 </Stack.Item>
               </Stack>
             )}
-            {(menu === CharacterPreferencesTabKeys.GameSettings ||
-              menu === CharacterPreferencesTabKeys.Saves) && (
+            {(menu === CharacterPreferencesTabKeys.GameSettings || menu === CharacterPreferencesTabKeys.Saves) && (
               <Section scrollable fill>
-                {menu === CharacterPreferencesTabKeys.GameSettings && (
-                  <GameSettingsTab />
-                )}
+                {menu === CharacterPreferencesTabKeys.GameSettings && <GameSettingsTab />}
                 {menu === CharacterPreferencesTabKeys.Saves && <SavesTab />}
               </Section>
             )}
@@ -156,9 +118,7 @@ export const CharacterPreferences = (_props: any) => {
           </Stack.Item>
           <Stack.Item>
             <Section>
-              <Button.Confirm onClick={() => act('reset')}>
-                Reset All
-              </Button.Confirm>
+              <Button.Confirm content="Reset All" onClick={() => act('reset')} />
             </Section>
           </Stack.Item>
         </Stack>
@@ -167,8 +127,8 @@ export const CharacterPreferences = (_props: any) => {
   );
 };
 
-const SavesAndProfile = () => {
-  const { act, data } = useBackend<CharacterPreferencesData>();
+const SavesAndProfile = (_props: any, context: any) => {
+  const { act, data } = useBackend<CharacterPreferencesData>(context);
 
   const activeProfileIndex = data.profiles.findIndex((p) => p.active);
 
@@ -191,54 +151,28 @@ const SavesAndProfile = () => {
               buttons={
                 activeProfileIndex > -1 ? (
                   <>
-                    <Button
-                      onClick={() =>
-                        act('profile-file-import', {
-                          index: activeProfileIndex + 1,
-                        })
-                      }
-                    >
+                    <Button onClick={() => act('profile-file-import', { index: activeProfileIndex + 1 })}>
                       Import
                     </Button>
-                    <Button
-                      onClick={() =>
-                        act('profile-file-export', {
-                          index: activeProfileIndex + 1,
-                        })
-                      }
-                    >
+                    <Button onClick={() => act('profile-file-export', { index: activeProfileIndex + 1 })}>
                       Export
                     </Button>
+                    <Button onClick={() => act('load', { index: activeProfileIndex + 1 })}>Reload</Button>
                     <Button
-                      onClick={() =>
-                        act('load', { index: activeProfileIndex + 1 })
-                      }
-                    >
-                      Reload
-                    </Button>
-                    <Button
-                      onClick={() =>
-                        act('save', { index: activeProfileIndex + 1 })
-                      }
-                      icon={
-                        data.profileModified
-                          ? 'exclamation-triangle'
-                          : undefined
-                      }
+                      onClick={() => act('save', { index: activeProfileIndex + 1 })}
+                      icon={data.profileModified ? 'exclamation-triangle' : undefined}
                       color={data.profileModified ? 'danger' : undefined}
                       tooltip={
                         data.profileModified
                           ? 'You may have unsaved changes! Any unsaved changes will take effect for this round only.'
                           : undefined
                       }
-                      tooltipPosition="left"
-                    >
+                      tooltipPosition="left">
                       Save
                     </Button>
                   </>
                 ) : null
-              }
-            >
+              }>
               <Button onClick={() => act('update-profileName')}>
                 {data.profileName ? data.profileName : <Box italic>None</Box>}
               </Button>
@@ -255,17 +189,16 @@ type ProfileProps = {
   profile: CharacterPreferencesProfile;
 };
 
-const Profile = (props: ProfileProps) => {
+const Profile = (props: ProfileProps, context: any) => {
   const { index, profile } = props;
-  const { act } = useBackend<CharacterPreferencesData>();
+  const { act } = useBackend<CharacterPreferencesData>(context);
 
   return (
     <Section
       title={`Profile ${index + 1}`}
       textAlign="center"
       backgroundColor={profile.active ? 'rgba(0, 0, 0, 0.10)' : null}
-      fill
-    >
+      fill>
       <Stack vertical fill justify="space-between">
         <Stack.Item>
           <Box>
@@ -279,16 +212,11 @@ const Profile = (props: ProfileProps) => {
           </Box>
         </Stack.Item>
         <Stack.Item>
-          <Button
-            disabled={!profile.name}
-            onClick={() => act('load', { index: index + 1 })}
-          >
+          <Button disabled={!profile.name} onClick={() => act('load', { index: index + 1 })}>
             Load
           </Button>
           {' - '}
-          <Button onClick={() => act('save', { index: index + 1 })}>
-            Save
-          </Button>
+          <Button onClick={() => act('save', { index: index + 1 })}>Save</Button>
         </Stack.Item>
       </Stack>
     </Section>

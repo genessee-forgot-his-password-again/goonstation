@@ -5,7 +5,7 @@
  * @license MIT
  */
 
-import { BooleanLike } from 'tgui-core/react';
+import { BooleanLike } from 'common/react';
 
 export interface RadioData {
   name: string;

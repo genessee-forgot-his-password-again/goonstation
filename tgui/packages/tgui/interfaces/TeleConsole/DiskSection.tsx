@@ -5,7 +5,7 @@
  * @license ISC
  */
 
-import { Button, Section } from 'tgui-core/components';
+import { Button, Section } from '../../components';
 
 interface DiskSectionProps {
   isDiskPresent: boolean;
@@ -21,10 +21,15 @@ export const DiskSection = (props: DiskSectionProps) => {
   }
   return (
     <Section title="Disk Controls">
-      <Button icon="upload" onClick={onScanDisk}>
+      <Button
+        icon="upload"
+        onClick={onScanDisk}>
         Read from Disk
       </Button>
-      <Button icon="eject" color="bad" onClick={onEjectDisk}>
+      <Button
+        icon="eject"
+        color="bad"
+        onClick={onEjectDisk}>
         Eject Disk
       </Button>
     </Section>

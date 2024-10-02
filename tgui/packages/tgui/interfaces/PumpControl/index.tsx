@@ -1,30 +1,28 @@
 /**
  * @file
  * @copyright 2024
- * @author Romayne (https://github.com/MyNameIsRomayne)
+ * @author Romayne (https://github.com/MeggalBozale)
  * @license ISC (https://choosealicense.com/licenses/isc/)
  */
 
-import { useState } from 'react';
-import { Button, Section, Slider, Stack } from 'tgui-core/components';
-
-import { useBackend } from '../../backend';
+import { useBackend, useLocalState } from '../../backend';
+import { Button, Section, Slider, Stack } from '../../components';
 import { Window } from '../../layouts';
 
 // Responsible for providing information and settings for a pump.
-const PumpSettings = (props) => {
-  const { act } = useBackend<PumpData>();
+const PumpSettings = (props:any, context:any) => {
+  const { act } = useBackend<PumpData>(context);
   const { pump } = props;
   // Local states allow to keep the appearance of seamless response, but do not cope well with button spamming
-  const [target_output, setOutput] = useState(pump.target_output);
-  const [power, setPower] = useState(pump.power);
+  const [target_output, setOutput] = useLocalState(context, pump.netid+"pressure", pump.target_output);
+  const [power, setPower] = useLocalState(context, pump.netid+"power", pump.power);
 
   const setPressure = (newPressure: number) => {
     setOutput(newPressure);
     act('setPressure', { netid: pump.netid, pressure: newPressure });
   };
   const togglePump = () => {
-    setPower(power === 'on' ? 'off' : 'on');
+    setPower((power === "on") ? "off" : "on");
     act('togglePump', { netid: pump.netid });
   };
 
@@ -33,9 +31,11 @@ const PumpSettings = (props) => {
       <Stack vertical>
         <Stack.Item>
           <Stack>
-            <Stack.Item>{pump.tag}</Stack.Item>
+            <Stack.Item>
+              {pump.tag}
+            </Stack.Item>
             <Stack.Item textAlign="right" grow={1}>
-              {pump.alive === -1 ? 'Establishing Connection...' : 'Connected'}
+              {pump.alive === -1 ? "Establishing Connection..." : "Connected"}
             </Stack.Item>
           </Stack>
         </Stack.Item>
@@ -45,14 +45,14 @@ const PumpSettings = (props) => {
               <Button
                 width={4}
                 icon="power-off"
-                color={power === 'on' ? 'green' : 'red'}
-                onClick={() => togglePump()}
-              >
-                {power === 'on' ? 'On' : 'Off'}
+                color={(power === 'on') ? "green" : "red"}
+                onClick={() => togglePump()}>
+                {(power === 'on') ? 'On' : 'Off'}
               </Button>
             </Stack.Item>
             <Stack.Item grow>
               <Slider
+                disabled={pump.alive !== 1}
                 value={target_output}
                 minValue={pump.min_output}
                 maxValue={pump.max_output}
@@ -68,9 +68,10 @@ const PumpSettings = (props) => {
   );
 };
 
+
 // Responsible for creating a section for the pumps in an area.
-const PumpArea = (props) => {
-  const { data } = useBackend<AreaList>();
+const PumpArea = (props: any, context: any) => {
+  const { data } = useBackend<AreaList>(context);
   const { area } = props;
 
   // Need the keys as a list >:(
@@ -84,9 +85,7 @@ const PumpArea = (props) => {
         {pump_controls.length > 0 ? (
           pump_controls
         ) : (
-          <Stack.Item>
-            No pumps found for {area}, please refresh and check connection.
-          </Stack.Item>
+          <Stack.Item>No pumps found for {area}, please refresh and check connection.</Stack.Item>
         )}
       </Stack>
     </Section>
@@ -94,8 +93,8 @@ const PumpArea = (props) => {
 };
 
 // Main element, responsible for building the window.
-export const PumpControl = () => {
-  const { act, data } = useBackend<AreaList>();
+export const PumpControl = (props, context) => {
+  const { act, data } = useBackend<AreaList>(context);
   const refresh = () => act('refresh');
 
   // Need this as list >:(
@@ -103,16 +102,20 @@ export const PumpControl = () => {
   for (let area in data.area_list) areas.push(area);
 
   return (
-    <Window title="Pump Control Computer" width={400} height={550}>
+    <Window
+      title="Pump Control Computer"
+      width={400}
+      height={550}>
       <Window.Content scrollable>
         <Section>
-          <Button icon="wifi" onClick={() => refresh()}>
+          <Button
+            icon="wifi"
+            onClick={() => refresh()}
+          >
             Requery Pumps
           </Button>
         </Section>
-        {areas.map((area) => (
-          <PumpArea area={area} key={area} />
-        ))}
+        {areas.map((area) => (<PumpArea area={area} key={area} />))}
       </Window.Content>
     </Window>
   );

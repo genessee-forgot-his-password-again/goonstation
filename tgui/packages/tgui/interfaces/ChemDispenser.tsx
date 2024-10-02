@@ -6,36 +6,13 @@
  * @license ISC
  */
 
-import { useState } from 'react';
-import {
-  AnimatedNumber,
-  Box,
-  Icon,
-  Input,
-  Modal,
-  NumberInput,
-  Section,
-  Stack,
-  Tabs,
-} from 'tgui-core/components';
-import { BooleanLike } from 'tgui-core/react';
-
-import { useBackend, useSharedState } from '../backend';
-import { Button } from '../components';
+import { BooleanLike } from 'common/react';
+import { useBackend, useLocalState, useSharedState } from '../backend';
+import { AnimatedNumber, Box, Button, Icon, Input, Modal, NumberInput, Section, Stack, Tabs } from '../components';
 import { Window } from '../layouts';
-import {
-  MatterState,
-  MatterStateIconMap,
-  Reagent,
-  ReagentContainer,
-  ReagentGraph,
-  ReagentList,
-} from './common/ReagentInfo';
+import { MatterState, MatterStateIconMap, Reagent, ReagentContainer, ReagentGraph, ReagentList } from './common/ReagentInfo';
 import { capitalize } from './common/stringUtils';
-import {
-  getTemperatureColor,
-  getTemperatureIcon,
-} from './common/temperatureUtils';
+import { getTemperatureColor, getTemperatureIcon } from './common/temperatureUtils';
 
 interface ChemDispenserData {
   beakerName: string;
@@ -68,8 +45,7 @@ const sortMap = [
   {
     id: 2,
     contents: 'Density',
-    compareFunction: (a: Reagent, b: Reagent) =>
-      (a.state ?? MatterState.Solid) - (b.state ?? MatterState.Solid),
+    compareFunction: (a: Reagent, b: Reagent) => (a.state ?? MatterState.Solid) - (b.state ?? MatterState.Solid),
   },
   {
     id: 3,
@@ -92,17 +68,18 @@ export const ChemDispenser = () => {
 };
 
 const sectionTitleResetProps = {
+  fontSize: 1,
   style: {
-    fontWeight: 'normal',
+    'font-weight': 'normal',
   },
 };
 
-export const ReagentDispenser = () => {
-  const { act, data } = useBackend<ChemDispenserData>();
+export const ReagentDispenser = (_props: unknown, context: unknown) => {
+  const { act, data } = useBackend<ChemDispenserData>(context);
   const { beakerName = 'beaker', container } = data;
-  const [addAmount, setAddAmount] = useSharedState('addAmount', 10);
-  const [iconToggle, setIconToggle] = useSharedState('iconToggle', false);
-  const [hoverOverId, setHoverOverId] = useState('');
+  const [addAmount, setAddAmount] = useSharedState(context, 'addAmount', 10);
+  const [iconToggle, setIconToggle] = useSharedState(context, 'iconToggle', false);
+  const [hoverOverId, setHoverOverId] = useLocalState(context, 'hoverOver', '');
 
   const dispensableReagents = data.dispensableReagents || [];
 
@@ -120,13 +97,8 @@ export const ReagentDispenser = () => {
                   width={2}
                   textAlign="center"
                   backgroundColor="rgba(0, 0, 0, 0)"
-                  textColor={
-                    iconToggle
-                      ? 'rgba(255, 255, 255, 0.5)'
-                      : 'rgba(255, 255, 255, 1)'
-                  }
-                  onClick={() => setIconToggle(false)}
-                >
+                  textColor={iconToggle ? 'rgba(255, 255, 255, 0.5)' : 'rgba(255, 255, 255, 1)'}
+                  onClick={() => setIconToggle(false)}>
                   <Icon mr={1} name={'circle'} />
                 </Button>
               </Stack.Item>
@@ -134,13 +106,8 @@ export const ReagentDispenser = () => {
                 <Button
                   width={2}
                   backgroundColor="rgba(0, 0, 0, 0)"
-                  textColor={
-                    iconToggle
-                      ? 'rgba(255, 255, 255, 1)'
-                      : 'rgba(255, 255, 255, 0.5)'
-                  }
-                  onClick={() => setIconToggle(true)}
-                >
+                  textColor={iconToggle ? 'rgba(255, 255, 255, 1)' : 'rgba(255, 255, 255, 0.5)'}
+                  onClick={() => setIconToggle(true)}>
                   <Icon name="tint" />
                 </Button>
               </Stack.Item>
@@ -153,23 +120,19 @@ export const ReagentDispenser = () => {
                 <NumberInput
                   value={addAmount}
                   format={(value: number) => `${value}u`}
-                  width={'4'}
+                  width={4}
                   minValue={1}
                   maxValue={100}
-                  step={1}
-                  onDrag={(value: number) => setAddAmount(value)}
+                  onDrag={(_e: unknown, value: number) => setAddAmount(value)}
                 />
               </Stack.Item>
             </Stack>
           </Stack.Item>
         </Stack>
-      }
-    >
+      }>
       {(!container || container.maxVolume === container.totalVolume) && (
         <Modal fontSize={2} mr={2}>
-          {container
-            ? `${capitalize(beakerName)} Full`
-            : `No ${capitalize(beakerName)} Inserted`}
+          {container ? `${capitalize(beakerName)} Full` : `No ${capitalize(beakerName)} Inserted`}
         </Modal>
       )}
       <Stack vertical>
@@ -188,18 +151,12 @@ export const ReagentDispenser = () => {
                   reagentId: reagent.id,
                 });
               }}
-              disabled={container?.maxVolume === container?.totalVolume}
-            >
+              disabled={container?.maxVolume === container?.totalVolume}>
               <Icon
                 color={`rgba(${reagent.colorR},${reagent.colorG},${reagent.colorB}, 1)`}
-                name={
-                  iconToggle
-                    ? MatterStateIconMap[reagent.state ?? MatterState.Solid]
-                        .icon
-                    : 'circle'
-                }
+                name={iconToggle ? MatterStateIconMap[reagent.state ?? MatterState.Solid].icon : 'circle'}
                 style={{
-                  textShadow: '0 0 3px #000',
+                  'text-shadow': '0 0 3px #000',
                 }}
                 mr={1}
               />
@@ -213,12 +170,12 @@ export const ReagentDispenser = () => {
   );
 };
 
-export const Beaker = () => {
-  const { act, data } = useBackend<ChemDispenserData>();
+export const Beaker = (_props: unknown, context: unknown) => {
+  const { act, data } = useBackend<ChemDispenserData>(context);
   const { beakerName, container } = data;
 
-  const [iconToggle] = useSharedState('iconToggle', false);
-  const [removeAmount, setRemoveAmount] = useSharedState('removeAmount', 10);
+  const [iconToggle] = useSharedState(context, 'iconToggle', false);
+  const [removeAmount, setRemoveAmount] = useSharedState(context, 'removeAmount', 10);
   const removeReagentButtons = [removeAmount, 10, 5, 1];
 
   return (
@@ -237,20 +194,18 @@ export const Beaker = () => {
               <Stack.Item>Remove Amount:</Stack.Item>
               <Stack.Item>
                 <NumberInput
-                  width={'4'}
+                  width={4}
                   format={(value: number) => `${value}u`}
                   value={removeAmount}
                   minValue={1}
                   maxValue={100}
-                  step={1}
-                  onDrag={(value: number) => setRemoveAmount(value)}
+                  onDrag={(_e: unknown, value: number) => setRemoveAmount(value)}
                 />
               </Stack.Item>
             </Stack>
           </Stack.Item>
         </Stack>
-      }
-    >
+      }>
       <ReagentList
         container={container}
         height="auto"
@@ -263,8 +218,7 @@ export const Beaker = () => {
                 act('isolate', {
                   reagentId: reagent.id,
                 });
-              }}
-            >
+              }}>
               Isolate
             </Button>
             <Button
@@ -274,8 +228,7 @@ export const Beaker = () => {
                   amount: removeAmount,
                   reagentId: reagent.id,
                 });
-              }}
-            >
+              }}>
               All
             </Button>
             {removeReagentButtons.map((amount, indexButtons) => (
@@ -287,8 +240,7 @@ export const Beaker = () => {
                     amount: amount,
                     reagentId: reagent.id,
                   });
-                }}
-              >
+                }}>
                 {amount}
               </Button>
             ))}
@@ -300,9 +252,9 @@ export const Beaker = () => {
   );
 };
 
-export const BeakerContentsGraph = () => {
-  const { data } = useBackend<ChemDispenserData>();
-  const [sort, setSort] = useSharedState('sort', 1);
+export const BeakerContentsGraph = (_props: unknown, context: unknown) => {
+  const { data } = useBackend<ChemDispenserData>(context);
+  const [sort, setSort] = useSharedState(context, 'sort', 1);
   const { container } = data;
   return (
     <Section>
@@ -314,8 +266,7 @@ export const BeakerContentsGraph = () => {
                 key={sortBy.id}
                 selected={sort === sortBy.id}
                 textAlign="center"
-                onClick={() => setSort(sortBy.id)}
-              >
+                onClick={() => setSort(sortBy.id)}>
                 {sortBy.icon && <Icon name={sortBy.icon} />}
                 {sortBy.contents}
               </Tabs.Tab>
@@ -323,18 +274,11 @@ export const BeakerContentsGraph = () => {
           </Tabs>
         </Stack.Item>
         <Stack.Item>
-          <ReagentGraph
-            container={container}
-            sort={sortMap[sort].compareFunction}
-          />
+          <ReagentGraph container={container} sort={sortMap[sort].compareFunction} />
         </Stack.Item>
         {!!container?.totalVolume && (
           <Stack.Item>
-            <Box
-              textAlign="center"
-              fontSize={2}
-              color={getTemperatureColor(container.temperature)}
-            >
+            <Box textAlign="center" fontSize={2} color={getTemperatureColor(container.temperature)}>
               <Icon name={getTemperatureIcon(container.temperature)} mr={0.5} />
               <AnimatedNumber value={container.temperature ?? 0} /> K
             </Box>
@@ -345,17 +289,11 @@ export const BeakerContentsGraph = () => {
   );
 };
 
-export const ChemGroups = () => {
-  const { act, data } = useBackend<ChemDispenserData>();
-  const [groupName, setGroupName] = useState('');
-  const [reagents, setReagents] = useState('');
-  const {
-    groupList,
-    idCardName,
-    idCardInserted,
-    isRecording,
-    activeRecording,
-  } = data;
+export const ChemGroups = (_props: unknown, context: unknown) => {
+  const { act, data } = useBackend<ChemDispenserData>(context);
+  const [groupName, setGroupName] = useLocalState(context, 'groupName', '');
+  const [reagents, setReagents] = useLocalState(context, 'reagents', '');
+  const { groupList, idCardName, idCardInserted, isRecording, activeRecording } = data;
 
   return (
     <>
@@ -369,40 +307,26 @@ export const ChemGroups = () => {
             <Button color="red" icon="circle" onClick={() => act('record')}>
               {isRecording ? 'Stop' : 'Record'}
             </Button>
-            <Button
-              color="bad"
-              icon="eraser"
-              disabled={!activeRecording}
-              onClick={() => act('clear_recording')}
-            >
+            <Button color="bad" icon="eraser" disabled={!activeRecording} onClick={() => act('clear_recording')}>
               Clear
             </Button>
           </>
-        }
-      >
+        }>
         <Stack vertical>
           <Stack.Item>
-            <Input
-              placeholder="Group Name"
-              value={groupName}
-              onInput={(_e, value: string) => setGroupName(value)}
-            />
+            <Input placeholder="Group Name" value={groupName} onInput={(_e, value: string) => setGroupName(value)} />
             <Button
               icon="plus-circle"
               onClick={() => {
                 act('newGroup', { reagents, groupName });
                 setGroupName('');
                 setReagents('');
-              }}
-            >
+              }}>
               Add Group
             </Button>
           </Stack.Item>
           <Stack.Item>
-            <Box
-              italic={!activeRecording}
-              color={!activeRecording ? 'grey' : undefined}
-            >
+            <Box italic={!activeRecording} color={!activeRecording ? 'grey' : undefined}>
               {activeRecording || 'Recording Empty'}
             </Box>
           </Stack.Item>
@@ -418,8 +342,7 @@ export const ChemGroups = () => {
                   act('groupDispense', {
                     selectedGroup: group.ref,
                   });
-                }}
-              >
+                }}>
                 {group.name}
               </Button>
               <Button
@@ -428,8 +351,7 @@ export const ChemGroups = () => {
                   act('deleteGroup', {
                     selectedGroup: group.ref,
                   });
-                }}
-              >
+                }}>
                 Delete
               </Button>
               {' ' + group.info}

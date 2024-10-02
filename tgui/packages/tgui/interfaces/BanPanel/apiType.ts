@@ -5,7 +5,7 @@
  * @license ISC
  */
 
-import { BooleanLike } from 'tgui-core/react';
+import { BooleanLike } from 'common/react';
 
 export interface BanResource {
   id: number;

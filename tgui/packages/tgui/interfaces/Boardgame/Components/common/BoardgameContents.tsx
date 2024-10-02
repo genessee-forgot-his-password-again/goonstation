@@ -1,10 +1,10 @@
-import { Window } from '../../../../layouts';
-import { useStates } from '../../utils';
-import { Palettes } from '../';
 import { Board } from '../board';
+import { Window } from '../../../../layouts';
+import { Palettes } from '../';
+import { useStates } from '../../utils';
 
-export const BoardgameContents = () => {
-  const { mouseCoordsSet } = useStates();
+export const BoardgameContents = (props, context) => {
+  const { mouseCoordsSet } = useStates(context);
 
   return (
     <Window.Content
@@ -15,8 +15,7 @@ export const BoardgameContents = () => {
         });
       }}
       fitted
-      className="boardgame__window"
-    >
+      className="boardgame__window">
       <Board />
       <Palettes />
     </Window.Content>

@@ -6,39 +6,32 @@
  * @license MIT
  */
 
-import {
-  Box,
-  Button,
-  ByondUi,
-  NumberInput,
-  Section,
-  Stack,
-} from 'tgui-core/components';
-import { toFixed } from 'tgui-core/math';
-import { BooleanLike } from 'tgui-core/react';
-
 import { useBackend } from '../backend';
+import { toFixed } from 'common/math';
+import { Box, Button, ByondUi, NumberInput, Section, Stack } from '../components';
 import { Window } from '../layouts';
 
 interface ColorMatrixEditorData {
   previewRef: string;
-  targetIsClient: BooleanLike;
-  currentColor: number[];
+  targetIsClient: boolean;
+  currentColor: string[][];
 }
 
-export const ColorMatrixEditor = () => {
-  const { act, data } = useBackend<ColorMatrixEditorData>();
-  // How the currentColor array is structured:
-  // const [
-  //   rr, rg, rb, ra,
-  //   gr, gg, gb, ga,
-  //   br, bg, bb, ba,
-  //   ar, ag, ab, aa,
-  //   cr, cg, cb, ca,
-  // ] = data.currentColor;
+export const ColorMatrixEditor = (props, context) => {
+  const { act, data } = useBackend<ColorMatrixEditorData>(context);
+  const [
+    [rr, rg, rb, ra],
+    [gr, gg, gb, ga],
+    [br, bg, bb, ba],
+    [ar, ag, ab, aa],
+    [cr, cg, cb, ca],
+  ] = data.currentColor;
   const prefixes = ['r', 'g', 'b', 'a', 'c'];
   return (
-    <Window title="Color Matrix Editor" width={560} height={245}>
+    <Window
+      title="Color Matrix Editor"
+      width={560}
+      height={245}>
       <Window.Content>
         <Stack fill>
           <Stack.Item align="center">
@@ -51,23 +44,25 @@ export const ColorMatrixEditor = () => {
                       <Stack.Item key={key}>
                         <Stack vertical>
                           {[0, 1, 2, 3, 4].map((row, key) => (
-                            <Stack.Item key={key}>
-                              <Box inline textColor="label" width="2.1rem">
+                            <Stack.Item
+                              key={key}>
+                              <Box
+                                inline
+                                textColor="label"
+                                width="2.1rem">
                                 {`${prefixes[row]}${prefixes[col]}:`}
                               </Box>
                               <NumberInput
-                                value={data.currentColor[row * 4 + col]}
+                                inline
+                                value={data.currentColor[row*4+col]}
                                 step={0.01}
-                                minValue={-Infinity}
-                                maxValue={Infinity}
                                 width="50px"
-                                format={(value) => toFixed(value, 2)}
-                                onDrag={(value: number) => {
+                                format={value => toFixed(value, 2)}
+                                onDrag={(_e, value: string[]) => {
                                   let retColor = data.currentColor;
-                                  retColor[row * 4 + col] = value;
-                                  act('transition_color', { color: retColor });
-                                }}
-                              />
+                                  retColor[row*4+col] = value;
+                                  act("transition_color", { color: retColor });
+                                }} />
                             </Stack.Item>
                           ))}
                         </Stack>
@@ -79,23 +74,23 @@ export const ColorMatrixEditor = () => {
               <Stack.Item grow />
               <Stack.Item align="left">
                 <Button.Confirm
+                  content="Confirm"
                   confirmContent="Confirm?"
-                  onClick={() => act('confirm')}
-                >
-                  Confirm
-                </Button.Confirm>
-                {data.targetIsClient ? (
-                  <>
-                    <Button onClick={() => act('client-preview')}>
-                      Preview Color
-                    </Button>
-                    <Button onClick={() => act('client-reset')}>
-                      Reset Your Color
-                    </Button>
-                  </>
-                ) : (
-                  ''
-                )}
+                  onClick={() => act("confirm")} />
+                {
+                  data.targetIsClient
+                    ? (
+                      <>
+                        <Button
+                          content="Preview Color"
+                          onClick={() => act("client-preview")} />
+                        <Button
+                          content="Reset Your Color"
+                          onClick={() => act("client-reset")} />
+                      </>
+                    )
+                    : ''
+                }
               </Stack.Item>
             </Stack>
           </Stack.Item>

@@ -6,8 +6,7 @@
  * @license ISC
  */
 
-import { Box, LabeledList } from 'tgui-core/components';
-
+import { Box, LabeledList } from '../../../components';
 import { CellChargeBar } from '../CellChargeBar';
 import { DockingAllowedButton } from '../DockingAllowedButton';
 import type { PowerCellData } from '../type';
@@ -30,13 +29,8 @@ export const OccupantCellDisplay = (props: OccupantCellDisplayProps) => {
           tooltip="Remove the occupant's power cell"
           disabled={!cell}
         />
-      }
-    >
-      {cell ? (
-        <CellChargeBar cell={cell} />
-      ) : (
-        <Box bold>No Power Cell Installed</Box>
-      )}
+      }>
+      {cell ? <CellChargeBar cell={cell} /> : <Box bold>No Power Cell Installed</Box>}
     </LabeledList.Item>
   );
 };

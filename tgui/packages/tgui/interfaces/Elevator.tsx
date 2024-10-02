@@ -5,11 +5,10 @@
  * @license ISC
  */
 
-import { Button, Section } from 'tgui-core/components';
-import { BooleanLike } from 'tgui-core/react';
-
+import { BooleanLike } from 'common/react';
 import { useBackend } from '../backend';
 import { Window } from '../layouts';
+import { Button, Section } from '../components';
 
 interface ElevatorData {
   active: BooleanLike;
@@ -17,7 +16,7 @@ interface ElevatorData {
 }
 
 export const Elevator = (_props: unknown, context: unknown) => {
-  const { act, data } = useBackend<ElevatorData>();
+  const { act, data } = useBackend<ElevatorData>(context);
   const { active, location } = data;
   const handleSend = () => act('send', {});
   return (
@@ -27,13 +26,7 @@ export const Elevator = (_props: unknown, context: unknown) => {
           Location: <em>{location}</em>
         </Section>
         <Section fontSize={1.5}>
-          <Button
-            onClick={handleSend}
-            disabled={!!active}
-            color={active ? 'grey' : 'green'}
-            icon="elevator"
-            fluid
-          >
+          <Button onClick={handleSend} enabled={!active} color={active ? 'grey' : 'green'} icon="elevator" fluid>
             {active ? 'Moving' : 'Move Elevator'}
           </Button>
         </Section>

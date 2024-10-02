@@ -96,12 +96,12 @@
 		if(a.y < b.y + b.height && a.y + a.height > b.y)
 			if(a.x + a.width == b.x)  // A|B to the right
 				. = TRUE
-			else if(b.x + b.width == a.x)  // B|A to the left
+			if(b.x + b.width == a.x)  // B|A to the left
 				. = TRUE
 		if(a.x < b.x + b.width && a.x + a.width > b.x)
 			if(a.y + a.height == b.y)  // A/B above
 				. = TRUE
-			else if(b.y + b.height == a.y)  // B/A below
+			if(b.y + b.height == a.y)  // B/A below
 				. = TRUE
 
 	/// Get all leaves from a given node

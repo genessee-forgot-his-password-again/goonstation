@@ -6,27 +6,14 @@
  * @license ISC
  */
 
-import {
-  Box,
-  Button,
-  Dimmer,
-  Image,
-  LabeledList,
-  Section,
-  Stack,
-} from 'tgui-core/components';
-import { pluralize } from 'tgui-core/string';
-
 import { useBackend, useSharedState } from '../../backend';
+import { Box, Button, Dimmer, Image, LabeledList, Section, Stack } from '../../components';
+import { pluralize } from '../common/stringUtils';
 import type { EnvironmentProps, SpellData, WizardSpellbookData } from './type';
 
 const THUMBNAIL_SIZE = '32px';
 
-const buildPurchaseText = (
-  purchased: boolean,
-  cost: number,
-  spellSlots: number,
-) => {
+const buildPurchaseText = (purchased: boolean, cost: number, spellSlots: number) => {
   if (purchased) {
     return 'Spell purchased';
   } else if (cost > spellSlots) {
@@ -41,24 +28,21 @@ interface SpellItemProps extends EnvironmentProps {
 
 // needed to standardize a button within the `title` prop of a `Section` component
 const titleButtonResetProps = {
-  style: { fontWeight: 'normal' },
+  fontSize: 1,
+  style: { 'font-weight': 'normal' },
 };
 
-export const SpellItem = (props: SpellItemProps) => {
-  const { act } = useBackend<WizardSpellbookData>();
+export const SpellItem = (props: SpellItemProps, context) => {
+  const { act } = useBackend<WizardSpellbookData>(context);
   const { spell, isVr, spellSlots } = props;
   const { name, desc, cooldown, cost, spell_img, vr_allowed } = spell;
-  const [purchased, setPurchased] = useSharedState(name + '-purchased', false);
+  const [purchased, setPurchased] = useSharedState(context, name + '-purchased', false);
 
   const title = (
     <Stack align="center">
       {!!spell_img && (
         <Stack.Item height={THUMBNAIL_SIZE}>
-          <Image
-            height={THUMBNAIL_SIZE}
-            width={THUMBNAIL_SIZE}
-            src={`data:image/png;base64,${spell_img}`}
-          />
+          <Image height={THUMBNAIL_SIZE} width={THUMBNAIL_SIZE} src={`data:image/png;base64,${spell_img}`} />
         </Stack.Item>
       )}
       <Stack.Item grow>{name}</Stack.Item>
@@ -70,8 +54,7 @@ export const SpellItem = (props: SpellItemProps) => {
           onClick={() => {
             setPurchased(true);
             act('buyspell', { spell: name });
-          }}
-        >
+          }}>
           {buildPurchaseText(purchased, cost, spellSlots)}
         </Button>
       </Stack.Item>
@@ -88,9 +71,7 @@ export const SpellItem = (props: SpellItemProps) => {
       )}
       <Section title={title}>
         <LabeledList>
-          {cooldown && (
-            <LabeledList.Item label="Cooldown">{`${cooldown} seconds`}</LabeledList.Item>
-          )}
+          {cooldown && <LabeledList.Item label="Cooldown">{`${cooldown} seconds`}</LabeledList.Item>}
           <LabeledList.Item label="Description">{desc}</LabeledList.Item>
         </LabeledList>
       </Section>

@@ -6,10 +6,8 @@
  * @license ISC
  */
 
-import { useState } from 'react';
-import { Box, Flex, Input, Section, Stack, Tabs } from 'tgui-core/components';
-
-import { useBackend } from '../../backend';
+import { useBackend, useLocalState } from '../../backend';
+import { Box, Flex, Input, Section, Stack, Tabs } from '../../components';
 import { Window } from '../../layouts';
 import { PlaceholderItem } from './PlaceholderItem';
 import { SpellItem } from './SpellItem';
@@ -17,19 +15,16 @@ import type { WizardSpellbookData } from './type';
 
 const SIDEBAR_WIDTH = '160px';
 
-export const WizardSpellbook = () => {
-  const { data } = useBackend<WizardSpellbookData>();
-  const [searchQuery, setSearchQuery] = useState('');
-  const [categoryFilters, setCategoryFilters] = useState<
-    Record<string, boolean>
-  >({});
+export const WizardSpellbook = (_props: unknown, context) => {
+  const { data } = useBackend<WizardSpellbookData>(context);
+  const [searchQuery, setSearchQuery] = useLocalState(context, 'searchQuery', '');
+  const [categoryFilters, setCategoryFilters] = useLocalState<Record<string, boolean>>(context, 'categoryFilters', {});
   const clearFilters = () => {
     setSearchQuery('');
     setCategoryFilters({});
   };
-  const allFiltersApplied =
-    Object.values(categoryFilters).length === 0 ||
-    Object.values(categoryFilters).every((filter) => !filter);
+  const allFiltersApplied
+    = Object.values(categoryFilters).length === 0 || Object.values(categoryFilters).every((filter) => !filter);
 
   const { spellbook_contents, spell_slots, owner_name, vr } = data;
   const isVr = !!vr;
@@ -39,17 +34,11 @@ export const WizardSpellbook = () => {
   const filteredSpells = Object.entries(spellbook_contents)
     .filter(([category]) => allFiltersApplied || categoryFilters[category])
     .flatMap(([_category, spells]) => spells)
-    .filter((spell) =>
-      spell.name.toLocaleLowerCase().includes(lowerSearchQuery),
-    )
+    .filter((spell) => spell.name.toLocaleLowerCase().includes(lowerSearchQuery))
     .sort((a, b) => a.name.localeCompare(b.name));
 
   return (
-    <Window
-      title={`${owner_name || 'Wizard'}'s Spellbook`}
-      height={600}
-      width={720}
-    >
+    <Window title={`${owner_name || 'Wizard'}'s Spellbook`} height={600} width={720}>
       <Flex>
         <Flex.Item style={{ width: SIDEBAR_WIDTH }}>
           <Stack vertical ml={1} mt={1}>
@@ -75,11 +64,7 @@ export const WizardSpellbook = () => {
             <Stack.Item>
               <Section fitted>
                 <Tabs vertical>
-                  <Tabs.Tab
-                    align="right"
-                    selected={allFiltersApplied}
-                    onClick={() => setCategoryFilters({})}
-                  >
+                  <Tabs.Tab align="right" selected={allFiltersApplied} onClick={() => setCategoryFilters({})}>
                     All
                   </Tabs.Tab>
                   {spellCategories.map((spellCategory) => (
@@ -87,10 +72,7 @@ export const WizardSpellbook = () => {
                       key={spellCategory}
                       align="right"
                       selected={!!categoryFilters[spellCategory]}
-                      onClick={() =>
-                        setCategoryFilters({ [spellCategory]: true })
-                      }
-                    >
+                      onClick={() => setCategoryFilters({ [spellCategory]: true })}>
                       {spellCategory}
                     </Tabs.Tab>
                   ))}
@@ -106,12 +88,7 @@ export const WizardSpellbook = () => {
                 <PlaceholderItem onClearClick={clearFilters} />
               ) : (
                 filteredSpells.map((spell) => (
-                  <SpellItem
-                    key={spell.name}
-                    spell={spell}
-                    isVr={isVr}
-                    spellSlots={spell_slots}
-                  />
+                  <SpellItem key={spell.name} spell={spell} isVr={isVr} spellSlots={spell_slots} />
                 ))
               )}
             </Stack>

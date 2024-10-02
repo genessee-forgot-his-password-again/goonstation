@@ -6,7 +6,7 @@
  * @license ISC
  */
 
-import { BooleanLike } from 'tgui-core/react';
+import { BooleanLike } from 'common/react';
 
 type FalsyBooleanLike = false | 0 | null | undefined;
 type TruthyBooleanLike = true | 1;
@@ -57,10 +57,7 @@ export interface OccupantDataEyebot extends OccupantDataBase {
   cell: PowerCellData;
 }
 
-export type OccupantData =
-  | OccupantDataEyebot
-  | OccupantDataHuman
-  | OccupantDataRobot;
+export type OccupantData = OccupantDataEyebot | OccupantDataHuman | OccupantDataRobot;
 
 export interface PartListData {
   head: PartData;
@@ -88,9 +85,7 @@ interface PresentPartData extends BasePartData {
 
 export type PartData = MissingPartData | PresentPartData;
 
-export const isPresentPartsData = (
-  partData: PartData,
-): partData is PresentPartData => !!partData.exists;
+export const isPresentPartsData = (partData: PartData): partData is PresentPartData => !!partData.exists;
 
 export interface ItemData {
   name: string;

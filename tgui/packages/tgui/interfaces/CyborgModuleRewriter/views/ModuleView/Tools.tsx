@@ -5,9 +5,8 @@
  * @license ISC
  */
 
-import { PropsWithChildren } from 'react';
-import { Tabs } from 'tgui-core/components';
-
+import { SFC } from 'inferno';
+import { Tabs } from '../../../../components';
 import { EmptyPlaceholder } from '../../EmptyPlaceholder';
 import type { ToolData } from '../../type/data';
 
@@ -16,7 +15,7 @@ interface ToolProps {
   onClick: () => void;
 }
 
-const Tool = (props: PropsWithChildren<ToolProps>) => {
+const Tool: SFC<ToolProps> = (props) => {
   const { children, onClick, selected } = props;
   return (
     <Tabs.Tab onClick={onClick} selected={selected}>
@@ -41,11 +40,7 @@ export const Tools = (props: ToolsProps) => {
       {tools.map((tool) => {
         const { name, item_ref: itemRef } = tool;
         return (
-          <Tool
-            key={itemRef}
-            onClick={() => onSelectTool(itemRef)}
-            selected={itemRef === selectedToolRef}
-          >
+          <Tool key={itemRef} onClick={() => onSelectTool(itemRef)} selected={itemRef === selectedToolRef}>
             {name}
           </Tool>
         );

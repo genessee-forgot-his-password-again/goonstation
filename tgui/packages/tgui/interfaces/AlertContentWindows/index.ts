@@ -4,21 +4,18 @@
  * @author garash2k
  * @license ISC
  */
-import { rpRules } from './rpRules';
-import { tgControls } from './tgControls';
-import type { AlertContentWindow } from './types';
+import { AlertContentWindow } from './types';
 
-export const getAlertContentWindow = (
-  alertContentWindowName: string,
-): AlertContentWindow => {
+import { tgControls } from './tgControls';
+import { rpRules } from './rpRules';
+
+export const getAlertContentWindow = (alertContentWindowName: string): AlertContentWindow => {
   switch (alertContentWindowName) {
-    case 'tgControls':
+    case "tgControls":
       return tgControls;
-    case 'rpRules':
+    case "rpRules":
       return rpRules;
     default:
-      throw new Error(
-        `Unrecognized alert content window name: ${alertContentWindowName}`,
-      );
+      throw new Error(`Unrecognized alert content window name: ${alertContentWindowName}`);
   }
 };

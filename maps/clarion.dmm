@@ -2258,9 +2258,8 @@
 	},
 /obj/machinery/crema_switch{
 	id = "crematorium";
-	pixel_x = -23;
-	pixel_y = 28;
-	dir = 8
+	pixel_x = -20;
+	pixel_y = 26
 	},
 /turf/simulated/floor/sanitary/white,
 /area/station/medical/crematorium)
@@ -4108,8 +4107,7 @@
 /obj/machinery/door_control{
 	id = "disposals_door";
 	name = "Disposals Safety Shutters";
-	pixel_y = 24;
-	pixel_x = 8
+	pixel_y = 28
 	},
 /obj/machinery/manufacturer/general,
 /turf/simulated/floor,
@@ -6589,14 +6587,8 @@
 	dir = 1;
 	pixel_y = 21
 	},
-/obj/item/decoration/flower_vase{
-	pixel_x = -7;
-	pixel_y = 14
-	},
-/obj/item/disk/data/floppy/read_only/communications{
-	pixel_x = 5;
-	pixel_y = 3
-	},
+/obj/item/decoration/flower_vase,
+/obj/item/disk/data/floppy/read_only/communications,
 /obj/machinery/light_switch/east{
 	dir = 4;
 	pixel_y = 5
@@ -6669,10 +6661,8 @@
 	dir = 1
 	},
 /obj/machinery/door_control/bolter/new_walls/south{
-	pixel_x = -7;
-	id = "res_bathroom";
-	dir = 1;
-	pixel_y = -21
+	pixel_x = -8;
+	id = "res_bathroom"
 	},
 /turf/simulated/floor/sanitary,
 /area/station/science/lobby)
@@ -6926,9 +6916,7 @@
 /obj/machinery/door_control{
 	id = "lockdown";
 	name = "Bridge Lockdown Control";
-	pixel_x = -23;
-	dir = 8;
-	pixel_y = 1
+	pixel_x = -24
 	},
 /obj/cable{
 	icon_state = "0-4"
@@ -8631,16 +8619,14 @@
 /obj/machinery/door_control{
 	id = "scienceteleporter2";
 	name = "Pad Public-Access Lockdown";
-	pixel_x = 23;
-	pixel_y = -7;
-	dir = 4
+	pixel_x = 24;
+	pixel_y = -8
 	},
 /obj/machinery/door_control{
 	id = "scienceteleporter";
 	name = "Pad Control-Access Lockdown";
-	pixel_x = 23;
-	pixel_y = 7;
-	dir = 4
+	pixel_x = 24;
+	pixel_y = 8
 	},
 /turf/simulated/floor/orangeblack,
 /area/station/science/teleporter)
@@ -8959,13 +8945,11 @@
 	},
 /obj/machinery/door_timer/solitary/new_walls/north{
 	layer = 3.1;
-	pixel_x = -8;
-	dir = 2
+	pixel_x = -8
 	},
 /obj/machinery/door_timer/solitary2/new_walls/north{
 	layer = 3.1;
-	pixel_x = 8;
-	dir = 2
+	pixel_x = 8
 	},
 /obj/machinery/light{
 	dir = 1;
@@ -9060,26 +9044,15 @@
 /area/station/science/lab)
 "bgY" = (
 /obj/table/reinforced/auto,
-/obj/item/clipboard{
-	pixel_x = 6;
-	pixel_y = 2
-	},
-/obj/item/paper_bin{
-	pixel_x = -7;
-	pixel_y = 0
-	},
-/obj/item/pen{
-	pixel_x = 6;
-	pixel_y = 2
-	},
-/obj/item/stamp{
-	pixel_x = -7;
-	pixel_y = 2
-	},
-/obj/item/clothing/glasses/vr/bomb{
+/obj/item/clipboard,
+/obj/item/paper_bin,
+/obj/item/pen,
+/obj/item/stamp,
+/obj/item/clothing/glasses/vr{
 	desc = "A pair of VR goggles connected to a virtual bomb test chamber.  How fancy!";
-	pixel_x = -6;
-	pixel_y = 16
+	network = "bombtest";
+	pixel_x = 2;
+	pixel_y = 5
 	},
 /turf/simulated/floor,
 /area/station/science/lab)
@@ -9583,16 +9556,14 @@
 /obj/machinery/door_control{
 	id = "tox_one";
 	name = "Chamber Exhaust";
-	pixel_x = -23;
-	pixel_y = 7;
-	dir = 8
+	pixel_x = -24;
+	pixel_y = 8
 	},
 /obj/machinery/door_control{
 	id = "tox_hs_one";
 	name = "Chamber Heat Shield";
-	pixel_x = -23;
-	pixel_y = -7;
-	dir = 8
+	pixel_x = -24;
+	pixel_y = -8
 	},
 /turf/simulated/floor,
 /area/station/science/lab)
@@ -11207,22 +11178,15 @@
 	dir = 4
 	},
 /obj/table/reinforced/auto,
-/obj/item/deconstructor{
-	pixel_x = 3;
-	pixel_y = 10
+/obj/machinery/light/lamp/green{
+	pixel_x = -6;
+	pixel_y = 4;
+	switchon = 1
 	},
-/obj/item/device/radio/headset/engineer{
-	pixel_x = 9;
-	pixel_y = 6
-	},
-/obj/machinery/cell_charger{
-	pixel_x = 0;
-	pixel_y = 0
-	},
-/obj/item/cell/supercell/charged{
-	pixel_x = 0;
-	pixel_y = 0
-	},
+/obj/machinery/cell_charger,
+/obj/item/cell/supercell/charged,
+/obj/item/deconstructor,
+/obj/item/device/radio/headset/engineer,
 /turf/simulated/floor/carpet{
 	icon_state = "fblue1"
 	},
@@ -11373,6 +11337,11 @@
 /obj/stool/chair/comfy{
 	dir = 1;
 	name = "worn brown chair"
+	},
+/obj/machinery/door_control{
+	id = "engineshield";
+	name = "Engine Room Heat Shield";
+	pixel_y = 20
 	},
 /turf/simulated/floor/carpet{
 	icon_state = "fblue2"
@@ -14043,9 +14012,7 @@
 /obj/machinery/door_control{
 	id = "cloning_exit";
 	name = "Cloning Exit Door Control";
-	pixel_x = 23;
-	dir = 4;
-	pixel_y = 0
+	pixel_x = 24
 	},
 /turf/simulated/floor/white/checker2{
 	dir = 5
@@ -14193,9 +14160,7 @@
 /obj/storage/closet/dresser/random,
 /obj/landmark/bill_spawn,
 /obj/machinery/door_control/bolter/new_walls/west{
-	id = "cc_room1";
-	pixel_x = -23;
-	pixel_y = 0
+	id = "cc_room1"
 	},
 /turf/simulated/floor/carpet/red/fancy/edge/nw,
 /area/station/crew_quarters/quarters_west)
@@ -17667,9 +17632,6 @@
 /obj/cable{
 	icon_state = "1-8"
 	},
-/obj/item/rocko{
-	pixel_x = -12
-	},
 /turf/simulated/floor/carpet{
 	icon_state = "fblue1"
 	},
@@ -19231,8 +19193,7 @@
 "gqa" = (
 /obj/storage/closet/dresser/random,
 /obj/machinery/door_control/bolter/new_walls/north{
-	id = "cc_room3";
-	dir = 2
+	id = "cc_room3"
 	},
 /turf/simulated/floor/carpet/red/fancy/edge/ne,
 /area/station/crew_quarters/quarters_west)
@@ -19980,7 +19941,7 @@
 	dir = 8
 	},
 /obj/item/storage/wall/office,
-/obj/landmark/start/job/medical_trainee,
+/obj/landmark/start/job/medical_assistant,
 /turf/simulated/floor/wood/two,
 /area/station/medical/staff)
 "gXP" = (
@@ -20772,7 +20733,7 @@
 /obj/stool/chair/office{
 	dir = 1
 	},
-/obj/landmark/start/job/research_trainee,
+/obj/landmark/start/job/research_assistant,
 /turf/simulated/floor/carpet{
 	icon_state = "fred2"
 	},
@@ -22094,9 +22055,8 @@
 /obj/machinery/door_control{
 	id = "engineshield";
 	name = "Engine Room Heat Shield";
-	pixel_x = 23;
-	pixel_y = 1;
-	dir = 4
+	pixel_x = 24;
+	pixel_y = 8
 	},
 /obj/machinery/networked/printer{
 	print_id = "Engineering"
@@ -22339,7 +22299,7 @@
 	},
 /area/station/crew_quarters/bar)
 "iDb" = (
-/obj/landmark/start/job/medical_trainee,
+/obj/landmark/start/job/medical_assistant,
 /turf/simulated/floor/bluewhite{
 	dir = 4
 	},
@@ -22637,8 +22597,7 @@
 "iMu" = (
 /obj/storage/closet/dresser/random,
 /obj/machinery/door_control/bolter/new_walls/north{
-	id = "cc_room4";
-	dir = 2
+	id = "cc_room4"
 	},
 /turf/simulated/floor/carpet/red/fancy/edge/nw,
 /area/station/crew_quarters/quarters_west)
@@ -23901,13 +23860,6 @@
 	pixel_x = -10
 	},
 /obj/disposalpipe/segment,
-/obj/machinery/door_control{
-	id = "cargo_swapabout";
-	name = "Cargo Shutters";
-	pixel_x = -24;
-	dir = 8;
-	pixel_y = 0
-	},
 /turf/simulated/floor/yellow/side{
 	dir = 8
 	},
@@ -23940,9 +23892,7 @@
 	pixel_x = 12
 	},
 /obj/machinery/door_control/bolter/new_walls/west{
-	id = "cc_shower_2";
-	pixel_x = -23;
-	pixel_y = 0
+	id = "cc_shower_2"
 	},
 /turf/simulated/floor/sanitary,
 /area/station/crew_quarters/showers)
@@ -24395,10 +24345,7 @@
 /turf/simulated/floor/shuttlebay,
 /area/station/hangar/escape)
 "kkr" = (
-/obj/machinery/door_control/podbay/security/new_walls/west{
-	pixel_x = -23;
-	pixel_y = 1
-	},
+/obj/machinery/door_control/podbay/security/new_walls/west,
 /obj/machinery/camera{
 	c_tag = "autotag";
 	dir = 5;
@@ -28786,7 +28733,7 @@
 /obj/cable{
 	icon_state = "4-8"
 	},
-/obj/landmark/start/job/technical_trainee,
+/obj/landmark/start/job/technical_assistant,
 /turf/simulated/floor/orangeblack/side/white,
 /area/station/engine/engineering)
 "nwl" = (
@@ -29651,36 +29598,13 @@
 	dir = 4
 	},
 /obj/table/reinforced/auto,
-/obj/item/reagent_containers/food/drinks/mug/random_color{
-	pixel_x = 16;
-	pixel_y = 1
-	},
-/obj/machinery/door_control/table{
-	pixel_x = -8;
-	pixel_y = 0;
-	name = "Engine Room Heat Shield";
-	id = "engineshield"
-	},
-/obj/machinery/light/lamp/green{
-	pixel_x = 16;
-	pixel_y = 17;
-	switchon = 1
-	},
-/obj/item/clipboard{
-	pixel_x = 5;
-	pixel_y = 4
-	},
-/obj/item/paper_bin{
-	pixel_x = 6;
-	pixel_y = 2
-	},
-/obj/item/stamp/ce{
-	pixel_x = -7;
-	pixel_y = 13
-	},
-/obj/item/pen/fancy{
-	pixel_x = 5;
-	pixel_y = 1
+/obj/item/clipboard,
+/obj/item/paper_bin,
+/obj/item/pen/fancy,
+/obj/item/stamp/ce,
+/obj/item/reagent_containers/food/drinks/mug/random_color,
+/obj/item/rocko{
+	pixel_x = -12
 	},
 /turf/simulated/floor/carpet{
 	icon_state = "fblue1"
@@ -31240,9 +31164,7 @@
 "pnZ" = (
 /obj/machinery/door_control{
 	id = "market_2";
-	pixel_y = -21;
-	dir = 1;
-	pixel_x = -1
+	pixel_y = -24
 	},
 /turf/simulated/floor/wood,
 /area/station/crew_quarters/market)
@@ -32064,9 +31986,7 @@
 /obj/machinery/shower,
 /obj/machinery/drainage,
 /obj/machinery/door_control/bolter/new_walls/east{
-	id = "med_bathroom";
-	pixel_x = 23;
-	pixel_y = 0
+	id = "med_bathroom"
 	},
 /turf/simulated/floor/white,
 /area/station/medical/staff)
@@ -33581,6 +33501,11 @@
 	pixel_x = -5
 	},
 /obj/disposalpipe/trunk,
+/obj/machinery/door_control{
+	id = "cargo_swapabout";
+	name = "Cargo Shutters";
+	pixel_x = -26
+	},
 /obj/machinery/light_switch/north,
 /turf/simulated/floor/yellow/side{
 	dir = 9
@@ -33598,9 +33523,7 @@
 /obj/machinery/door_control{
 	id = "ai_core";
 	name = "AI Core Shield";
-	pixel_y = -21;
-	dir = 1;
-	pixel_x = -1
+	pixel_y = -21
 	},
 /obj/item/device/radio/intercom/AI{
 	dir = 4
@@ -34045,10 +33968,7 @@
 /obj/cable{
 	icon_state = "1-2"
 	},
-/obj/machinery/door_control/podbay/mainpod1/new_walls/west{
-	pixel_x = -23;
-	pixel_y = 0
-	},
+/obj/machinery/door_control/podbay/mainpod1/new_walls/west,
 /turf/simulated/floor/stairs{
 	dir = 1
 	},
@@ -34155,6 +34075,7 @@
 	dir = 1;
 	pixel_y = 21
 	},
+/obj/item/decoration/flower_vase,
 /obj/disposalpipe/segment{
 	dir = 1;
 	icon_state = "pipe-c"
@@ -34164,21 +34085,8 @@
 	pixel_x = -10;
 	pixel_y = -5
 	},
-/obj/item/storage/toolbox/emergency{
-	pixel_x = 0;
-	pixel_y = 10
-	},
+/obj/item/storage/toolbox/emergency,
 /obj/blind_switch/area/west,
-/obj/item/decoration/flower_vase{
-	pixel_x = 8;
-	pixel_y = 12
-	},
-/obj/machinery/door_control/table{
-	name = "Bridge Lockdown Control";
-	id = "lockdown";
-	pixel_x = -1;
-	pixel_y = 2
-	},
 /turf/simulated/floor/carpet{
 	dir = 9;
 	icon_state = "blue2"
@@ -34499,14 +34407,14 @@
 /obj/machinery/door_control{
 	id = "cargodock_out";
 	name = "Outlet Door Control";
-	pixel_x = -7;
-	pixel_y = 24
+	pixel_x = -8;
+	pixel_y = 22
 	},
 /obj/machinery/door_control{
 	id = "cargodock_in";
 	name = "Intake Door Control";
-	pixel_x = 7;
-	pixel_y = 24
+	pixel_x = 8;
+	pixel_y = 22
 	},
 /obj/machinery/conveyor_switch{
 	id = "cargobelt_out";
@@ -35066,9 +34974,7 @@
 /obj/storage/closet/dresser/random,
 /obj/landmark/bill_spawn,
 /obj/machinery/door_control/bolter/new_walls/west{
-	id = "cc_room2";
-	pixel_x = -23;
-	pixel_y = 0
+	id = "cc_room2"
 	},
 /turf/simulated/floor/carpet/red/fancy/edge/sw,
 /area/station/crew_quarters/quarters_west)
@@ -37392,21 +37298,17 @@
 	c_tag = "autotag";
 	dir = 8;
 	name = "autoname  - SS13";
-	pixel_x = 10;
-	pixel_y = 1
+	pixel_x = 10
 	},
 /obj/blind_switch/area/east{
-	dir = 4;
-	pixel_x = 24;
-	pixel_y = 2
+	dir = 4
 	},
 /obj/machinery/chem_heater/chemistry,
 /obj/machinery/door_control{
 	id = "chemblast";
 	name = "Chemistry Blast Shield Control";
 	pixel_x = 24;
-	pixel_y = -11;
-	dir = 4
+	pixel_y = -8
 	},
 /turf/simulated/floor/purpleblack{
 	dir = 4
@@ -37979,7 +37881,7 @@
 /area/station/crew_quarters/quarters_west)
 "ulP" = (
 /obj/stool/chair/office,
-/obj/landmark/start/job/research_trainee,
+/obj/landmark/start/job/research_assistant,
 /turf/simulated/floor/carpet,
 /area/station/science/lobby)
 "ulV" = (
@@ -38091,9 +37993,7 @@
 "upO" = (
 /obj/machinery/door_control{
 	id = "market_3";
-	pixel_y = -21;
-	dir = 1;
-	pixel_x = -1
+	pixel_y = -24
 	},
 /turf/simulated/floor/wood,
 /area/station/crew_quarters/market)
@@ -38720,10 +38620,7 @@
 /obj/cable{
 	icon_state = "2-8"
 	},
-/obj/machinery/door_timer/minibrig/new_walls/east{
-	pixel_x = 22;
-	pixel_y = -1
-	},
+/obj/machinery/door_timer/minibrig/new_walls/east,
 /turf/simulated/floor/black,
 /area/station/security/checkpoint/escape)
 "uKc" = (
@@ -39140,13 +39037,11 @@
 /obj/machinery/door_control{
 	id = "lockdown";
 	name = "Bridge Lockdown Control";
-	pixel_x = -23;
-	pixel_y = -8;
-	dir = 8
+	pixel_x = -24;
+	pixel_y = -8
 	},
 /obj/machinery/firealarm/west{
-	pixel_y = 6;
-	pixel_x = -23
+	pixel_y = 5
 	},
 /turf/simulated/floor/black,
 /area/station/bridge)
@@ -39346,7 +39241,7 @@
 	anchored = 0;
 	dir = 8
 	},
-/obj/landmark/start/job/technical_trainee,
+/obj/landmark/start/job/technical_assistant,
 /turf/simulated/floor{
 	dir = 1;
 	icon_state = "yellowblack"
@@ -39723,8 +39618,7 @@
 	dir = 1
 	},
 /obj/item/decoration/flower_vase{
-	pixel_y = 18;
-	pixel_x = -14
+	pixel_y = 24
 	},
 /turf/simulated/floor/carpet{
 	dir = 8;
@@ -41837,9 +41731,7 @@
 	pixel_x = -12
 	},
 /obj/machinery/door_control/bolter/new_walls/east{
-	id = "cc_shower_1";
-	pixel_x = 23;
-	pixel_y = 0
+	id = "cc_shower_1"
 	},
 /turf/simulated/floor/sanitary,
 /area/station/crew_quarters/showers)
@@ -41934,9 +41826,7 @@
 	icon_state = "0-2"
 	},
 /obj/machinery/door_control/bolter/new_walls/east{
-	id = "n_bathroom";
-	pixel_x = 23;
-	pixel_y = 0
+	id = "n_bathroom"
 	},
 /turf/simulated/floor/sanitary,
 /area/station/crew_quarters/toilets)
@@ -42367,6 +42257,11 @@
 /obj/item/device/radio/intercom/science{
 	dir = 4
 	},
+/obj/machinery/door_control{
+	id = "lockdown";
+	name = "Bridge Lockdown Control";
+	pixel_y = 28
+	},
 /obj/machinery/computer/security{
 	dir = 4
 	},
@@ -42481,18 +42376,11 @@
 "xOE" = (
 /obj/machinery/firealarm/east,
 /obj/table/reinforced/auto,
-/obj/item/device/audio_log{
-	pixel_x = -9;
-	pixel_y = 8
-	},
+/obj/item/device/audio_log,
 /obj/item/audio_tape{
-	pixel_y = -6;
-	pixel_x = 5
+	pixel_y = 5
 	},
-/obj/item/wrench{
-	pixel_x = 1;
-	pixel_y = 3
-	},
+/obj/item/wrench,
 /turf/simulated/floor,
 /area/station/science/lab)
 "xOU" = (

@@ -1,8 +1,8 @@
 /**
  * @file
  * @copyright 2024
- * @author Romayne (https://github.com/MyNameIsRomayne)
- * @license ISC (https://choosealicense.com/licenses/isc/)
+ * @author Romayne (https://github.com/MeggalBozale)
+ * @license ISC
  */
 
 interface TransferValveParams {

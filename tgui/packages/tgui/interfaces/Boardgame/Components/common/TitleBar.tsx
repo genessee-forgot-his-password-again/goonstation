@@ -1,18 +1,11 @@
-import { Box, Button } from 'tgui-core/components';
-
 import { useBackend } from '../../../../backend';
-import { BoardgameData, useActions, useStates } from '../../utils';
+import { Box, Button } from '../../../../components';
 import { ButtonConfirm } from './ButtonConfirm';
+import { BoardgameData, useActions, useStates } from '../../utils';
 
-export const TitleBar = () => {
-  const { act } = useBackend<BoardgameData>();
-  const {
-    isFlipped,
-    toggleFlip,
-    helpModalOpen,
-    helpModalClose,
-    isHelpModalOpen,
-  } = useStates();
+export const TitleBar = (props, context) => {
+  const { act } = useBackend<BoardgameData>(context);
+  const { isFlipped, toggleFlip, helpModalOpen, helpModalClose, isHelpModalOpen } = useStates(context);
   const { boardClear, applyGNot } = useActions(act);
 
   return (
@@ -23,12 +16,7 @@ export const TitleBar = () => {
         icon={isHelpModalOpen ? 'times' : 'question'}
         onClick={() => (isHelpModalOpen ? helpModalClose() : helpModalOpen())}
       />
-      <Button
-        tooltip="Flip board"
-        color={isFlipped ? 'orange' : 'default'}
-        icon="repeat"
-        onClick={toggleFlip}
-      />
+      <Button tooltip="Flip board" color={isFlipped ? 'orange' : 'default'} icon="repeat" onClick={toggleFlip} />
 
       <ButtonConfirm
         tooltipContent="Clear board"
@@ -41,18 +29,14 @@ export const TitleBar = () => {
         tooltipContent="Load Chess Preset"
         icon="chess"
         onConfirm={() => {
-          applyGNot(
-            'r,n,b,q,k,b,n,r,p,p,p,p,p,p,p,p,32,P,P,P,P,P,P,P,P,R,N,B,Q,K,B,N,R',
-          );
+          applyGNot('r,n,b,q,k,b,n,r,p,p,p,p,p,p,p,p,32,P,P,P,P,P,P,P,P,R,N,B,Q,K,B,N,R');
         }}
       />
       <ButtonConfirm
         tooltipContent="Load Draughts Preset"
         icon="ring"
         onConfirm={() => {
-          applyGNot(
-            '1,d,1,d,1,d,1,d,d,1,d,1,d,1,d,2,d,1,d,1,d,1,d,16,D,1,D,1,D,1,D,2,D,1,D,1,D,1,D,D,1,D,1,D,1,D',
-          );
+          applyGNot('1,d,1,d,1,d,1,d,d,1,d,1,d,1,d,2,d,1,d,1,d,1,d,16,D,1,D,1,D,1,D,2,D,1,D,1,D,1,D,D,1,D,1,D,1,D');
         }}
       />
     </Box>

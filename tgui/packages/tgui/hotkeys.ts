@@ -5,7 +5,6 @@
  */
 
 import * as keycodes from 'common/keycodes';
-
 import { globalEvents, KeyEvent } from './events';
 import { createLogger } from './logging';
 
@@ -52,7 +51,6 @@ const keyCodeToByond = (keyCode: number) => {
   if (keyCode === 40) return 'South';
   if (keyCode === 45) return 'Insert';
   if (keyCode === 46) return 'Delete';
-  // prettier-ignore
   if (keyCode >= 48 && keyCode <= 57 || keyCode >= 65 && keyCode <= 90) {
     return String.fromCharCode(keyCode);
   }
@@ -83,12 +81,9 @@ const handlePassthrough = (key: KeyEvent) => {
     return;
   }
   // NOTE: Alt modifier is pretty bad and sticky in IE11.
-  // prettier-ignore
-  if (
-    key.event.defaultPrevented
-    || key.isModifierKey()
-    || hotKeysAcquired.includes(key.code)
-  ) {
+  if (key.event.defaultPrevented
+      || key.isModifierKey()
+      || hotKeysAcquired.includes(key.code)) {
     return;
   }
   const byondKeyCode = keyCodeToByond(key.code);
@@ -104,14 +99,14 @@ const handlePassthrough = (key: KeyEvent) => {
   // KeyDown
   if (key.isDown() && !keyState[byondKeyCode]) {
     keyState[byondKeyCode] = true;
-    const command = `.keydown "${byondKeyCode}"`; // |GOONSTATION-CHANGE|
+    const command = `.keydown "${byondKeyCode}"`;
     logger.debug(command);
     return Byond.command(command);
   }
   // KeyUp
   if (key.isUp() && keyState[byondKeyCode]) {
     keyState[byondKeyCode] = false;
-    const command = `.force_keyup "${byondKeyCode}"`; // |GOONSTATION-CHANGE|
+    const command = `.force_keyup "${byondKeyCode}"`;
     logger.debug(command);
     return Byond.command(command);
   }
@@ -140,7 +135,7 @@ export const releaseHeldKeys = () => {
     if (keyState[byondKeyCode]) {
       keyState[byondKeyCode] = false;
       logger.log(`releasing key "${byondKeyCode}"`);
-      Byond.command(`.force_keyup "${byondKeyCode}"`); // |GOONSTATION-CHANGE|
+      Byond.command(`.force_keyup "${byondKeyCode}"`);
     }
   }
 };
@@ -171,7 +166,6 @@ export const setupHotKeys = () => {
     }
     // Insert macros
     const escapedQuotRegex = /\\"/g;
-    // prettier-ignore
     const unescape = (str: string) => str
       .substring(1, str.length - 1)
       .replace(escapedQuotRegex, '"');
@@ -205,7 +199,9 @@ export const setupHotKeys = () => {
  * @param callback The function to call whenever a key event occurs
  * @returns A callback to stop listening
  */
-export const listenForKeyEvents = (callback: (key: KeyEvent) => void) => {
+export const listenForKeyEvents = (
+  callback: (key: KeyEvent) => void,
+): () => void => {
   keyListeners.push(callback);
 
   let removed = false;

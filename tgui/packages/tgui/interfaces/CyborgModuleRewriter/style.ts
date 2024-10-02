@@ -5,7 +5,7 @@
  * @license ISC
  */
 
-import { block } from 'common/goonstation/bem';
+import { block } from 'common/bem';
 
 export const Block = 'cyborg-module-rewriter-interface';
 

@@ -5,13 +5,12 @@
  * @license ISC
  */
 
-import { Button, Section, Stack } from 'tgui-core/components';
-
 import { useBackend } from '../../backend';
 import { ChemiCompilerData } from './type';
+import { Button, Icon, Section, Stack } from '../../components';
 
-export const ChemiCompilerReservoirs = () => {
-  const { act, data } = useBackend<ChemiCompilerData>();
+export const ChemiCompilerReservoirs = (_props, context) => {
+  const { act, data } = useBackend<ChemiCompilerData>(context);
   const { reservoirs } = data;
   return (
     <Section title="Reservoirs">
@@ -22,11 +21,12 @@ export const ChemiCompilerReservoirs = () => {
               key={index}
               onClick={() => act('reservoir', { index })}
               width={8}
-              icon="eject"
-              tooltip={reservoir && 'Eject'}
-              ellipsis
-            >
-              {reservoir || `None (${index + 1})`}
+              tooltip={reservoir && "Eject"}
+              ellipsis>
+              <Icon name="eject" />
+              {
+                reservoir || <>None ({index + 1})</>
+              }
             </Button>
           </Stack.Item>
         ))}

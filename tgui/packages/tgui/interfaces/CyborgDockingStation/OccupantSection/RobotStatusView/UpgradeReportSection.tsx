@@ -6,8 +6,7 @@
  * @license ISC
  */
 
-import { Section, Stack } from 'tgui-core/components';
-
+import { Section, Stack } from '../../../../components';
 import { DockingAllowedButton } from '../../DockingAllowedButton';
 import type { UpgradeData } from '../../type';
 

@@ -23,7 +23,6 @@
 	var/detectability = 0				// detectors must >= this to pick up the disease
 	var/resistance_prob = 0				// how likely this disease is to grant immunity once cured
 	var/max_stacks = 1					// how many times at once you can have this ailment
-	var/can_be_asymptomatic = TRUE
 
 	///If we need a specific ailment_data type
 	var/datum/ailment_data/strain_type = /datum/ailment_data
@@ -91,7 +90,7 @@
 
 	setup_strain()
 		var/datum/ailment_data/disease/strain = ..()
-		if (prob(5) && src.can_be_asymptomatic)
+		if (prob(5))
 			strain.state = "Asymptomatic"
 			// carrier - will spread it but won't suffer from it
 		strain.virulence = src.virulence

@@ -8,7 +8,7 @@
 		schedule_interval = 2.3 SECONDS
 
 		last_object = "genResearch.setup"
-		genResearch?.setup()
+		if(genResearch) genResearch.setup()
 
 		last_object = "setup_radiocodes"
 		setup_radiocodes()
@@ -19,6 +19,9 @@
 		emergency_shuttle = new /datum/shuttle_controller/emergency_shuttle()
 		src.shuttle = emergency_shuttle
 
+		last_object = "generate_access_name_lookup"
+		generate_access_name_lookup()
+
 	copyStateFrom(datum/controller/process/target)
 		var/datum/controller/process/world/old_world = target
 		src.shuttle = old_world.shuttle
@@ -28,7 +31,7 @@
 		sun.calc_position()
 
 		last_object = "genResearch.progress"
-		genResearch?.progress()
+		if(genResearch) genResearch.progress()
 
 		for (var/byondkey in muted_keys)
 			last_object = "muted_keys[byondkey]"

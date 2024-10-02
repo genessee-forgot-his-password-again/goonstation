@@ -5,25 +5,22 @@
  * @license ISC
  */
 
-export type TerminalOutputSectionProps = Pick<TerminalData, 'displayHTML'>;
+export type TerminalOutputSectionProps = Pick<TerminalData, 'displayHTML'>
 
 export type PeripheralData = {
-  card: string;
-  icon: string;
-  label: string;
-  Clown?: boolean;
-  color: any;
-  index: number;
+  card: string,
+  icon: string,
+  label: string,
+  Clown?: boolean,
+  color: any,
+  index: number,
 };
 
 export type TerminalData = {
-  displayHTML: string;
-  TermActive: boolean;
-  windowName: string;
-  fontColor: string;
-  bgColor: string;
-  peripherals: Array<PeripheralData>;
-  inputValue: string;
-  loadTimestamp: number;
-  ckey: string;
+  displayHTML: string,
+  TermActive: boolean,
+  windowName: string,
+  fontColor: string,
+  bgColor: string,
+  peripherals: Array<PeripheralData>
 };

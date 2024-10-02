@@ -1,13 +1,12 @@
-import { Box, Flex } from 'tgui-core/components';
-
-import { useBackend } from '../../../../backend';
-import { BoardgameData } from '../../utils';
-import { useActions } from '../../utils';
 import { HorizontalNotations, VerticalNotations } from '../';
+import { Box, Flex } from '../../../../components';
+import { BoardgameData } from '../../utils';
+import { useBackend } from '../../../../backend';
+import { useActions } from '../../utils';
 import CheckerBoard from './styles/checkerboard';
 
-export const Board = () => {
-  const { act, data } = useBackend<BoardgameData>();
+export const Board = (props, context) => {
+  const { act, data } = useBackend<BoardgameData>(context);
   const { pieceDeselect } = useActions(act);
 
   return (
@@ -22,8 +21,7 @@ export const Board = () => {
               if (data.currentUser?.selected) {
                 pieceDeselect(data.currentUser.ckey);
               }
-            }}
-          >
+            }}>
             <DesignSelector />
           </Flex.Item>
           <VerticalNotations />
@@ -34,13 +32,13 @@ export const Board = () => {
   );
 };
 
-const DesignSelector = () => {
-  const { data } = useBackend<BoardgameData>();
+const DesignSelector = (props, context) => {
+  const { data } = useBackend<BoardgameData>(context);
   const { boardstyle } = data.boardInfo;
   switch (boardstyle) {
     // Apply new designs here
     case 'checkerboard':
-      return <CheckerBoard />;
+      return <CheckerBoard interactable />;
     default:
       return <div>Unknown design: {boardstyle}</div>;
   }

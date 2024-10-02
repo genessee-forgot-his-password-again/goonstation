@@ -1925,9 +1925,7 @@
 	//only 1 can spawn for now since the pool size is small. Might want to increase it if the pool size increases by a fair amount
 
 	items2spawn = list(/obj/item/aiModule/experimental/equality/a,
-						/obj/item/aiModule/experimental/equality/b,
-						/obj/item/aiModule/experimental/corrupted,
-						/obj/item/aiModule/experimental/historic)
+						/obj/item/aiModule/experimental/equality/b)
 
 	one
 		amt2spawn = 1

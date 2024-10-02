@@ -1,17 +1,16 @@
-import { Box } from 'tgui-core/components';
-
-import { useBackend } from '../../../../backend';
-import { codeRecordFromPieces, fetchPieces } from '../../games';
+import { Box } from '../../../../components';
 import { BoardgameData } from '../../utils';
+import { useBackend } from '../../../../backend';
 import { useStates } from '../../utils';
+import { codeRecordFromPieces, fetchPieces } from '../../games';
 
-export const HeldPieceRenderer = () => {
-  const { data } = useBackend<BoardgameData>();
+export const HeldPieceRenderer = (_, context) => {
+  const { act, data } = useBackend<BoardgameData>(context);
 
   // Exit early if there is no current user
   if (!data.currentUser) return null;
 
-  const { mouseCoords } = useStates();
+  const { mouseCoords } = useStates(context);
   const { x, y } = mouseCoords;
 
   // Get the piece code
@@ -32,22 +31,20 @@ export const HeldPieceRenderer = () => {
     <Box
       className={`boardgame__heldpiece`}
       style={{
-        top: y + 'px',
-        left: x + 'px',
+        'top': y + 'px',
+        'left': x + 'px',
         width: '120px',
         height: '120px',
-      }}
-    >
+      }}>
       <Box className="boardgame__heldpiece-inner">
         <img src={piece.image} />
       </Box>
       <Box
         style={{
-          fontSize: '12px',
-          fontWeight: 'bold',
-          textShadow: '0 0 2px black',
-        }}
-      >
+          'font-size': '12px',
+          'font-weight': 'bold',
+          'text-shadow': '0 0 2px black',
+        }}>
         Right click to cancel
       </Box>
     </Box>

@@ -5,31 +5,28 @@
  * @license ISC
  */
 
-import { Button, Section } from 'tgui-core/components';
-
 import { useBackend } from '../../backend';
 import { TerminalData } from './types';
+import { Button, Section } from '../../components';
 
-export const PheripheralsSection = () => {
-  const { act, data } = useBackend<TerminalData>();
+export const PheripheralsSection = (_props, context) => {
+  const { act, data } = useBackend<TerminalData>(context);
   const peripherals = data.peripherals || [];
 
-  const handlePheripheralClick = (peripheral) =>
-    act('buttonPressed', { card: peripheral.card, index: peripheral.index });
+  const handlePheripheralClick = (peripheral) => act('buttonPressed', { card: peripheral.card, index: peripheral.index });
 
   return (
     <Section fitted>
-      {peripherals.map((peripheral) => {
+      {peripherals.map(peripheral => {
         return (
           <Button
             key={peripheral.card}
             icon={peripheral.icon}
-            fontFamily={peripheral.Clown ? 'Comic Sans MS' : 'Consolas'}
-            color={peripheral.color ? 'green' : 'grey'}
+            content={peripheral.label}
+            fontFamily={peripheral.Clown ? "Comic Sans MS" : "Consolas"}
+            color={peripheral.color ? "green" : "grey"}
             onClick={() => handlePheripheralClick(peripheral)}
-          >
-            {peripheral.label}
-          </Button>
+          />
         );
       })}
     </Section>

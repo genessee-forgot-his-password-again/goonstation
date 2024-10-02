@@ -1,28 +1,12 @@
 import { randInt } from './mathUtils';
 
-export const capitalize = (word: string) =>
-  word.replace(/(^\w{1})|(\s+\w{1})/g, (letter) => letter.toUpperCase());
+export const pluralize = (word: string, n: number) => (n !== 1 ? word + 's' : word);
 
-export const spaceUnderscores = (word: string) =>
-  word.replace(/[_]/g, (letter) => ' ');
+export const capitalize = (word: string) => word.replace(/(^\w{1})|(\s+\w{1})/g, letter => letter.toUpperCase());
 
-const glitches = [
-  '$',
-  '{',
-  ']',
-  '%',
-  '^',
-  '?',
-  '>',
-  '¬',
-  'π',
-  ';',
-  'и',
-  'ѫ',
-  '/',
-  '#',
-  '~',
-];
+export const spaceUnderscores = (word: string) => word.replace(/[_]/g, letter => " ");
+
+const glitches = ['$', '{', ']', '%', '^', '?', '>', '¬', 'π', ';', 'и', 'ѫ', '/', '#', '~'];
 export const glitch = (text: string, amount: number) => {
   const chars = text.split('');
   for (let i = 0; i < amount; i++) {
@@ -31,5 +15,3 @@ export const glitch = (text: string, amount: number) => {
   }
   return chars.join('');
 };
-
-export const asCreditsString = (amount: number) => `${amount}⪽`;

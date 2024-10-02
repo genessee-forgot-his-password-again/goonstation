@@ -6,9 +6,7 @@
  * @license ISC
  */
 
-import { ReactNode } from 'react';
-import { Box, Stack, Tooltip } from 'tgui-core/components';
-
+import { Box, Stack, Tooltip } from '../../';
 import { ColumnConfig, isValuedColumnConfig, RowId } from './type';
 
 interface CellProps<T extends object, V> {
@@ -23,16 +21,8 @@ export const Cell = <T extends object, V>(props: CellProps<T, V>) => {
   const hasValue = isValuedColumnConfig(config);
   const value = hasValue ? config.getValue(data) : undefined;
   const tooltipText = getValueTooltip?.(data);
-  const contents = renderContents ? (
-    renderContents({ data, rowId, value })
-  ) : (
-    <Box>{value as ReactNode}</Box>
-  );
-  const cellContents = tooltipText ? (
-    <Tooltip content={tooltipText}>{contents}</Tooltip>
-  ) : (
-    contents
-  );
+  const contents = renderContents ? renderContents({ data, rowId, value }) : <Box>{value}</Box>;
+  const cellContents = tooltipText ? <Tooltip content={tooltipText}>{contents}</Tooltip> : contents;
   return (
     <Stack.Item basis={basis} grow={grow}>
       {cellContents}

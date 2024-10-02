@@ -5,16 +5,8 @@
  * @license MIT
  */
 
-import {
-  Box,
-  Chart,
-  LabeledList,
-  Stack,
-  Table,
-  Tooltip,
-} from 'tgui-core/components';
-
 import { useBackend } from '../../backend';
+import { Box, Chart, LabeledList, Stack, Table, Tooltip } from '../../components';
 import { formatPower } from '../../format';
 import { PowerMonitorApcData, PowerMonitorApcItemData } from './type';
 
@@ -22,7 +14,7 @@ const apcState = {
   [0]: 'Off',
   [1]: (
     <Box inline>
-      {'Off '}
+      Off{' '}
       <Box inline color="grey">
         (Auto)
       </Box>
@@ -31,7 +23,7 @@ const apcState = {
   [2]: 'On',
   [3]: (
     <Box inline>
-      {'On '}
+      On{' '}
       <Box inline color="grey">
         (Auto)
       </Box>
@@ -45,8 +37,8 @@ const apcCellState = {
   [2]: 'Charged',
 };
 
-export const PowerMonitorApcGlobal = () => {
-  const { data } = useBackend<PowerMonitorApcData>();
+export const PowerMonitorApcGlobal = (_props, context) => {
+  const { data } = useBackend<PowerMonitorApcData>(context);
 
   const availableHistory = data.history.map((v) => v[0]);
   const availableHistoryData = availableHistory.map((v, i) => [i, v]);
@@ -60,9 +52,7 @@ export const PowerMonitorApcGlobal = () => {
     <Stack fill>
       <Stack.Item width="50%">
         <LabeledList>
-          <LabeledList.Item label="Total Power">
-            {formatPower(data.available)}
-          </LabeledList.Item>
+          <LabeledList.Item label="Total Power">{formatPower(data.available)}</LabeledList.Item>
         </LabeledList>
         <Chart.Line
           mt="5px"
@@ -76,9 +66,7 @@ export const PowerMonitorApcGlobal = () => {
       </Stack.Item>
       <Stack.Item width="50%">
         <LabeledList>
-          <LabeledList.Item label="Total Load">
-            {formatPower(data.load)}
-          </LabeledList.Item>
+          <LabeledList.Item label="Total Load">{formatPower(data.load)}</LabeledList.Item>
         </LabeledList>
         <Chart.Line
           mt="5px"
@@ -128,11 +116,9 @@ type PowerMonitorApcTableRowsProps = {
   search: string;
 };
 
-export const PowerMonitorApcTableRows = (
-  props: PowerMonitorApcTableRowsProps,
-) => {
+export const PowerMonitorApcTableRows = (props: PowerMonitorApcTableRowsProps, context) => {
   const { search } = props;
-  const { data } = useBackend<PowerMonitorApcData>();
+  const { data } = useBackend<PowerMonitorApcData>(context);
 
   return (
     <>
@@ -148,19 +134,11 @@ type PowerMonitorApcTableRowProps = {
   search: string;
 };
 
-const PowerMonitorApcTableRow = (props: PowerMonitorApcTableRowProps) => {
+const PowerMonitorApcTableRow = (props: PowerMonitorApcTableRowProps, context) => {
   const { apc, search } = props;
   // Indexed array to lower data transfer between byond and the window.
-  const [
-    ref,
-    equipment,
-    lighting,
-    environment,
-    load,
-    cellCharge,
-    cellCharging = 0,
-  ] = apc;
-  const { data } = useBackend<PowerMonitorApcData>();
+  const [ref, equipment, lighting, environment, load, cellCharge, cellCharging = 0] = apc;
+  const { data } = useBackend<PowerMonitorApcData>(context);
   const name = data.apcNames[ref] ?? 'N/A';
 
   if (search && !name.toLowerCase().includes(search.toLowerCase())) {
@@ -182,15 +160,8 @@ const PowerMonitorApcTableRow = (props: PowerMonitorApcTableRowProps) => {
             {cellCharge}%
           </Table.Cell>
           <Table.Cell
-            color={
-              cellCharging > 0
-                ? cellCharging === 1
-                  ? 'average'
-                  : 'good'
-                : 'bad'
-            }
-            nowrap
-          >
+            color={cellCharging > 0 ? (cellCharging === 1 ? 'average' : 'good') : 'bad'}
+            nowrap>
             {apcCellState[cellCharging]}
           </Table.Cell>
         </>

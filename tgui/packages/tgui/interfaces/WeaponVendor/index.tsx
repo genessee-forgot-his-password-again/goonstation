@@ -5,25 +5,17 @@
  * @license MIT
  */
 
-import { useState } from 'react';
-import {
-  Box,
-  Button,
-  Collapsible,
-  LabeledList,
-  Section,
-  Stack,
-  Table,
-} from 'tgui-core/components';
-import { pluralize, toTitleCase } from 'tgui-core/string';
-
-import { useBackend } from '../../backend';
+import { toTitleCase } from 'common/string';
+import { useBackend, useLocalState } from '../../backend';
+import { Box, Button, Collapsible, LabeledList, Section, Stack, Table } from '../../components';
 import { Window } from '../../layouts';
 import { WeaponVendorData, WeaponVendorStockData } from './type';
 
-export const WeaponVendor = () => {
-  const { data } = useBackend<WeaponVendorData>();
-  const [filterAvailable, setFilterAvailable] = useState(false);
+import { pluralize } from '../common/stringUtils';
+
+export const WeaponVendor = (_props, context) => {
+  const { data } = useBackend<WeaponVendorData>(context);
+  const [filterAvailable, setFilterAvailable] = useLocalState(context, 'filter-available', false);
 
   return (
     <Window width={550} height={700}>
@@ -34,16 +26,9 @@ export const WeaponVendor = () => {
               <LabeledList>
                 <LabeledList.Item label="Balance">
                   {Object.entries(data.credits).map(([name, value], index) => (
-                    <Box
-                      key={name}
-                      inline
-                      mr="5px"
-                      className={`WeaponVendor__Credits--${name}`}
-                    >
+                    <Box key={name} inline mr="5px" className={`WeaponVendor__Credits--${name}`}>
                       {value} {name} {pluralize('credit', value)}
-                      {index + 1 !== Object.keys(data.credits).length
-                        ? ', '
-                        : ''}
+                      {index + 1 !== Object.keys(data.credits).length ? ', ' : ''}
                     </Box>
                   ))}
                 </LabeledList.Item>
@@ -56,20 +41,12 @@ export const WeaponVendor = () => {
               scrollable
               title="Materiel"
               buttons={
-                <Button.Checkbox
-                  checked={filterAvailable}
-                  onClick={() => setFilterAvailable(!filterAvailable)}
-                >
+                <Button.Checkbox checked={filterAvailable} onClick={() => setFilterAvailable(!filterAvailable)}>
                   Filter Available
                 </Button.Checkbox>
-              }
-            >
+              }>
               {Object.keys(data.credits).map((category) => (
-                <StockCategory
-                  key={category}
-                  category={category}
-                  filterAvailable={filterAvailable}
-                />
+                <StockCategory key={category} category={category} filterAvailable={filterAvailable} />
               ))}
             </Section>
           </Stack.Item>
@@ -84,9 +61,9 @@ type StockCategoryProps = {
   filterAvailable: boolean;
 };
 
-const StockCategory = (props: StockCategoryProps) => {
+const StockCategory = (props: StockCategoryProps, context) => {
   const { category, filterAvailable } = props;
-  const { data } = useBackend<WeaponVendorData>();
+  const { data } = useBackend<WeaponVendorData>(context);
 
   let stock = data.stock.filter((stock) => stock.category === category);
   if (filterAvailable) {
@@ -98,12 +75,7 @@ const StockCategory = (props: StockCategoryProps) => {
   }
 
   return (
-    <Collapsible
-      className={`WeaponVendor__Category--${category}`}
-      title={toTitleCase(category)}
-      open
-      color={category}
-    >
+    <Collapsible className={`WeaponVendor__Category--${category}`} title={toTitleCase(category)} open color={category}>
       <Table>
         {data.stock
           .filter((stock) => stock.category === category)
@@ -119,14 +91,11 @@ type StockProps = {
   stock: WeaponVendorStockData;
 };
 
-const Stock = ({ stock }: StockProps) => {
-  const { data, act } = useBackend<WeaponVendorData>();
+const Stock = ({ stock }: StockProps, context) => {
+  const { data, act } = useBackend<WeaponVendorData>(context);
 
   return (
-    <Table.Row
-      className="WeaponVendor__Row"
-      opacity={stock.cost > data.credits[stock.category] ? 0.5 : 1}
-    >
+    <Table.Row className="WeaponVendor__Row" opacity={stock.cost > data.credits[stock.category] ? 0.5 : 1}>
       <Table.Cell className="WeaponVendor__Cell" py="5px">
         <Box mb="5px" bold>
           {stock.name}
@@ -136,9 +105,8 @@ const Stock = ({ stock }: StockProps) => {
       <Table.Cell className="WeaponVendor__Cell" py="5px" textAlign="right">
         <Button
           disabled={stock.cost > data.credits[stock.category]}
-          className={`Button__${stock.category}`}
-          onClick={() => act('redeem', { ref: stock.ref })}
-        >
+          color={stock.category}
+          onClick={() => act('redeem', { ref: stock.ref })}>
           Redeem {stock.cost} {pluralize('credit', stock.cost)}
         </Button>
       </Table.Cell>

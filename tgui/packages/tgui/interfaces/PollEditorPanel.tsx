@@ -5,16 +5,11 @@
  * @license ISC
  */
 
-import { Button, Section, Stack } from 'tgui-core/components';
-
 import { useBackend, useLocalState } from '../backend';
+import { Button, Section, Stack } from '../components';
 import { Window } from '../layouts';
-import type {
-  ExpiryOptions,
-  ExpiryType,
-  PollSettings,
-} from './common/forms/PollEditorForm';
 import { PollEditorForm } from './common/forms/PollEditorForm';
+import type { ExpiryOptions, ExpiryType, PollSettings } from './common/forms/PollEditorForm';
 
 interface PollEditorPanelData {
   lastError: string | null;
@@ -52,8 +47,7 @@ const processSettings = (settings: PollSettings) => {
     expiry: processedExpiry,
   };
 };
-const processOptions = (options: string[]) =>
-  options.map((option) => option.trim()).filter((option) => !!option);
+const processOptions = (options: string[]) => options.map((option) => option.trim()).filter((option) => !!option);
 
 // rough yyyy-mm-dd checker, does not check for out-of-range days in shorter months
 const timestampRegex = /^\d{4}-[01]\d-[0-3]\d$/;
@@ -75,9 +69,7 @@ const validate = (settings: PollSettings, options: string[]) => {
       return 'Additional expiry information is required.';
     }
     if (settings.expiry.expiryType === 'timestamp') {
-      const timestampValidation = validateTimestamp(
-        settings.expiry.expiryValue,
-      );
+      const timestampValidation = validateTimestamp(settings.expiry.expiryValue);
       if (timestampValidation) {
         return timestampValidation;
       }
@@ -101,8 +93,8 @@ const validate = (settings: PollSettings, options: string[]) => {
  * In its initial state it is only wired up for creating polls.
  */
 
-export const PollEditorPanel = () => {
-  const { act, data } = useBackend<PollEditorPanelData>();
+export const PollEditorPanel = (_props: unknown, context) => {
+  const { act, data } = useBackend<PollEditorPanelData>(context);
   const { lastError, serverOptions } = data;
 
   // TODO: pull from data for edit
@@ -115,7 +107,7 @@ export const PollEditorPanel = () => {
   };
   const initialOptions = createNewOptions();
 
-  const [state, setState] = useLocalState<PollEditorPanelState>('state', {
+  const [state, setState] = useLocalState<PollEditorPanelState>(context, 'state', {
     currentOptions: initialOptions,
     currentSettings: initialSettings,
     validationWarning: undefined,
@@ -158,11 +150,11 @@ export const PollEditorPanel = () => {
     if (!newValidationWarning) {
       const payload: SavePayload = {
         alertPlayers: processedSettings.alertPlayers,
-        expiryType: processedSettings.expiry.expiryType!,
-        expiryValue: processedSettings.expiry.expiryValue,
+        expiryType: processedSettings.expiry?.expiryType,
+        expiryValue: processedSettings.expiry?.expiryValue,
         multipleChoice: processedSettings.multipleChoice,
         options: processedOptions,
-        servers: processedSettings.servers!,
+        servers: processedSettings.servers,
         title: processedSettings.title,
       };
       act('save', payload);
@@ -190,11 +182,7 @@ export const PollEditorPanel = () => {
                         Reset
                       </Button>
                     </Stack.Item>
-                    <Stack.Item
-                      grow
-                      textAlign="right"
-                      textColor={validationWarning ? 'average' : 'bad'}
-                    >
+                    <Stack.Item grow textAlign="right" textColor={validationWarning ? 'average' : 'bad'}>
                       {validationWarning || lastError}
                     </Stack.Item>
                     <Stack.Item>

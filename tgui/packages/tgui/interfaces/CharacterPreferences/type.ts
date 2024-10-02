@@ -5,7 +5,7 @@
  * @license MIT
  */
 
-import { BooleanLike } from 'tgui-core/react';
+import { BooleanLike } from 'common/react';
 
 export interface CharacterPreferencesData {
   isMentor: BooleanLike;
@@ -73,7 +73,7 @@ export interface CharacterPreferencesData {
   useWasd: BooleanLike;
   useAzerty: BooleanLike;
   preferredMap: string;
-  traitsData: Record<string, CharacterPreferencesTraitStaticData>;
+  traitsData: Record<string, CharacterPreferencesTraitStaticData>
   traitsAvailable: CharacterPreferencesTraitData[];
   traitsMax: number;
   traitsPointsTotal: number;
@@ -101,8 +101,7 @@ export interface CharacterPreferencesTraitData {
   available: BooleanLike;
 }
 
-export type CharacterPreferencesTrait = CharacterPreferencesTraitData &
-  CharacterPreferencesTraitStaticData;
+export type CharacterPreferencesTrait = CharacterPreferencesTraitData & CharacterPreferencesTraitStaticData
 
 export interface CharacterPreferencesProfile {
   active: boolean;
@@ -126,5 +125,5 @@ export enum CharacterPreferencesTooltip {
 export enum CharacterPreferencesScrollTarget {
   Never = 1, // SCROLL_TARGET_NEVER
   Hover = 2, // SCROLL_TARGET_HOVER
-  Always = 3, // SCROLL_TARGET_ALWAYS
+  Always = 3 // SCROLL_TARGET_ALWAYS
 }

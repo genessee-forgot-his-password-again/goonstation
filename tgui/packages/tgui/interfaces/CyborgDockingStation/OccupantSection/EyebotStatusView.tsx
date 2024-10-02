@@ -6,8 +6,7 @@
  * @license ISC
  */
 
-import { LabeledList } from 'tgui-core/components';
-
+import { LabeledList } from '../../../components';
 import { CellChargeBar } from '../CellChargeBar';
 import { OccupantDataEyebot } from '../type';
 

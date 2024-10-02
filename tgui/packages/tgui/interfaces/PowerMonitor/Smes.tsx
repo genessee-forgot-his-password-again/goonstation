@@ -5,14 +5,13 @@
  * @license MIT
  */
 
-import { Chart, LabeledList, Stack, Table } from 'tgui-core/components';
-
 import { useBackend } from '../../backend';
+import { Chart, LabeledList, Stack, Table } from '../../components';
 import { formatPower } from '../../format';
 import { PowerMonitorSmesData, PowerMonitorSmesItemData } from './type';
 
-export const PowerMonitorSmesGlobal = () => {
-  const { data } = useBackend<PowerMonitorSmesData>();
+export const PowerMonitorSmesGlobal = (_props, context) => {
+  const { data } = useBackend<PowerMonitorSmesData>(context);
 
   const availableHistory = data.history.map((v) => v[0]);
   const availableHistoryData = availableHistory.map((v, i) => [i, v]);
@@ -26,9 +25,7 @@ export const PowerMonitorSmesGlobal = () => {
     <Stack fill>
       <Stack.Item width="50%">
         <LabeledList>
-          <LabeledList.Item label="Engine Output">
-            {formatPower(data.available)}
-          </LabeledList.Item>
+          <LabeledList.Item label="Engine Output">{formatPower(data.available)}</LabeledList.Item>
         </LabeledList>
         <Chart.Line
           mt="5px"
@@ -42,9 +39,7 @@ export const PowerMonitorSmesGlobal = () => {
       </Stack.Item>
       <Stack.Item width="50%">
         <LabeledList>
-          <LabeledList.Item label="SMES/PTL Draw">
-            {formatPower(data.load)}
-          </LabeledList.Item>
+          <LabeledList.Item label="SMES/PTL Draw">{formatPower(data.load)}</LabeledList.Item>
         </LabeledList>
         <Chart.Line
           mt="5px"
@@ -78,11 +73,9 @@ type PowerMonitorSmesTableRowsProps = {
   search: string;
 };
 
-export const PowerMonitorSmesTableRows = (
-  props: PowerMonitorSmesTableRowsProps,
-) => {
+export const PowerMonitorSmesTableRows = (props: PowerMonitorSmesTableRowsProps, context) => {
   const { search } = props;
-  const { data } = useBackend<PowerMonitorSmesData>();
+  const { data } = useBackend<PowerMonitorSmesData>(context);
 
   return (
     <>
@@ -98,11 +91,11 @@ type PowerMonitorSmesTableRowProps = {
   search: string;
 };
 
-const PowerMonitorSmesTableRow = (props: PowerMonitorSmesTableRowProps) => {
+const PowerMonitorSmesTableRow = (props: PowerMonitorSmesTableRowProps, context) => {
   const { unit, search } = props;
   // Indexed array to lower data transfer between byond and the window.
   const [ref, stored, charging, input, output, online, load] = unit;
-  const { data } = useBackend<PowerMonitorSmesData>();
+  const { data } = useBackend<PowerMonitorSmesData>(context);
   const name = data.unitNames[ref] ?? 'N/A';
 
   if (search && !name.toLowerCase().includes(search.toLowerCase())) {
@@ -113,14 +106,10 @@ const PowerMonitorSmesTableRow = (props: PowerMonitorSmesTableRowProps) => {
     <Table.Row>
       <Table.Cell>{name}</Table.Cell>
       <Table.Cell>{stored}%</Table.Cell>
-      <Table.Cell color={charging ? 'good' : 'bad'}>
-        {charging ? 'Yes' : 'No'}
-      </Table.Cell>
+      <Table.Cell color={charging ? 'good' : 'bad'}>{charging ? 'Yes' : 'No'}</Table.Cell>
       <Table.Cell>{formatPower(input)}</Table.Cell>
       <Table.Cell>{formatPower(output)}</Table.Cell>
-      <Table.Cell color={online ? 'good' : 'bad'}>
-        {online ? 'Yes' : 'No'}
-      </Table.Cell>
+      <Table.Cell color={online ? 'good' : 'bad'}>{online ? 'Yes' : 'No'}</Table.Cell>
       <Table.Cell>{load ? formatPower(load) : 'N/A'}</Table.Cell>
     </Table.Row>
   );

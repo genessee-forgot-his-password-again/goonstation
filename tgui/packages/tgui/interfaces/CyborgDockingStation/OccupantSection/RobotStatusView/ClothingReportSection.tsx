@@ -6,8 +6,7 @@
  * @license ISC
  */
 
-import { Box, Section } from 'tgui-core/components';
-
+import { Box, Section } from '../../../../components';
 import { DockingAllowedButton } from '../../DockingAllowedButton';
 import type { ClothingData } from '../../type';
 

@@ -5,19 +5,18 @@
  * @license ISC
  */
 
-import { Stack } from 'tgui-core/components';
-
-import { useBackend } from '../../backend';
 import { Window } from '../../layouts';
-import { ChemiCompilerMemory } from './ChemiCompilerMemory';
-import { ChemiCompilerReservoirs } from './ChemiCompilerReservoirs';
-import { ChemiCompilerTextArea } from './ChemiCompilerTextArea';
+import { useBackend } from '../../backend';
 import { ChemiCompilerData } from './type';
+import { ChemiCompilerTextArea } from './ChemiCompilerTextArea';
+import { ChemiCompilerReservoirs } from './ChemiCompilerReservoirs';
+import { ChemiCompilerMemory } from './ChemiCompilerMemory';
+import { Stack } from '../../components';
 
 const SIDEBAR_WIDTH = 18;
 
-export const ChemiCompiler = () => {
-  const { data } = useBackend<ChemiCompilerData>();
+export const ChemiCompiler = (_props, context) => {
+  const { data } = useBackend<ChemiCompilerData>(context);
   const { theme } = data;
   return (
     <Window width={600} height={500} theme={theme}>

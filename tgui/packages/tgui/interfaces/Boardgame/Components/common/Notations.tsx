@@ -1,7 +1,7 @@
-import { Box, Flex } from 'tgui-core/components';
-
 import { useBackend } from '../../../../backend';
+import { Box, Flex } from '../../../../components';
 import { BoardgameData } from '../../utils';
+
 import { generateBoardNotationLetters } from '../../utils';
 import { useStates } from '../../utils';
 
@@ -9,11 +9,11 @@ export type NotationsProps = {
   direction: 'vertical' | 'horizontal';
 };
 
-export const HorizontalNotations = () => {
-  const { data } = useBackend<BoardgameData>();
+export const HorizontalNotations = (props, context) => {
+  const { data } = useBackend<BoardgameData>(context);
   const { width } = data.boardInfo;
   const { border, tileColor1, tileColor2 } = data.styling;
-  const { isFlipped } = useStates();
+  const { isFlipped } = useStates(context);
 
   const bgcolor = border || tileColor2 || 'black';
   const color = tileColor1 || 'white';
@@ -29,8 +29,7 @@ export const HorizontalNotations = () => {
         'background-color': bgcolor,
         color,
       }}
-      className="boardgame__notations boardgame__notations-horizontal"
-    >
+      className="boardgame__notations boardgame__notations-horizontal">
       {letters.map((letter, index) => (
         <Flex.Item key={index} grow={1}>
           <Box className="boardgame__notation-letter">{letter}</Box>
@@ -40,11 +39,11 @@ export const HorizontalNotations = () => {
   );
 };
 
-export const VerticalNotations = () => {
-  const { data } = useBackend<BoardgameData>();
+export const VerticalNotations = (props, context) => {
+  const { data } = useBackend<BoardgameData>(context);
   const { height } = data.boardInfo;
   const { border, tileColor1, tileColor2 } = data.styling;
-  const { isFlipped } = useStates();
+  const { isFlipped } = useStates(context);
 
   const bgcolor = border || tileColor2 || 'black';
   const color = tileColor1 || 'white';
@@ -60,8 +59,7 @@ export const VerticalNotations = () => {
         'background-color': bgcolor,
         color,
       }}
-      className="boardgame__notations boardgame__notations-vertical"
-    >
+      className="boardgame__notations boardgame__notations-vertical">
       {numbers.map((_, index) => (
         <Flex.Item className="boardgame__notations-number" key={index} grow={1}>
           {isFlipped ? index + 1 : height - index}

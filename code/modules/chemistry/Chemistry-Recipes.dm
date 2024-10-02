@@ -26,11 +26,6 @@
 
 	/// units produced per second
 	var/reaction_speed = 5
-	/// if TRUE, the reaction scales with volume, with the reaction_speed being the minimum speed the mixture reacts at
-	var/reaction_volume_dependant = TRUE
-	/// The reaction speed will scale lineary, with reaction_volume_for_double being the amount of reacting chems in the mixture needed for the reaction to take place at double speed.
-	/// this means double that would result in triple the reaction speed
-	var/reaction_volume_for_double = 100
 	var/base_reaction_temp = T20C
 	var/reaction_temp_divider = 10
 
@@ -69,28 +64,6 @@
 	/// Called when a holder filled with a current (non-instant) reaction experiences physical shock
 	proc/physical_shock(force, var/datum/reagents/holder)
 		return
-
-	/// this gets the total volume of the reaction mixture, according to the required chemical list
-	/// this proc does not take factors into account, so you can increase the reaction speed of a reaction, like in real life, by adding one reagent in excess
-	/// although this has some inaccuracies in comparison to real chemical reaction, i refrain from introducing accurate reaction kinetics for performance and my sanity reasons
-	/// this gets inaccurate results in recipes which have one or more reagents checked in other procs, so there this proc has to be modified
-	proc/get_total_reaction_volume(var/datum/reagents/holder)
-		var/result = 0
-		for(var/checked_reagent in src.required_reagents)
-			result += holder.get_reagent_amount(checked_reagent)
-		return result
-
-	/// proc to calculate the rate with which the reaction does work with. To modify a reaction speed, either modify this or the reaction_speed variable
-	proc/get_reaction_speed_multiplicator(var/datum/reagents/holder)
-		var/result = 1 //returns at least 1, so reaction_speed is the lowest reaction speed, else reactions would never really stop (like in real life, heh)
-		if (src.reaction_volume_dependant)
-			result += src.get_volume_reaction_speed_factor(holder)
-		return result
-
-	/// this factor scaled lineary from 0 upwards, increasing by 1 for each reaction_volume_for_double in the reaction
-	/// we need this factor seperatly because there are some reactions which have akward scaling for different chemicals, like e.g. the oil or diethyl ether recipe
-	proc/get_volume_reaction_speed_factor(var/datum/reagents/holder)
-		return round(src.get_total_reaction_volume(holder) / src.reaction_volume_for_double, 0.01)
 
 	//I recommend you set the result amount to the total volume of all components.
 
@@ -370,8 +343,8 @@
 		reaction_icon_state = list("reaction_smoke-1", "reaction_smoke-2")
 		reaction_icon_color = "#ffffff"
 
-		on_reaction(datum/reagents/holder, created_volume)
-			var/amount_to_boil = created_volume * (holder.total_temperature - T100C)/(4 * src.reaction_speed) //for every degree above 100°C, boil .25 extra water per reaction but...
+		on_reaction(datum/reagents/holder)
+			var/amount_to_boil = (holder.total_temperature - T100C)/4 //for every degree above 100°C, boil .25 extra water per reaction but...
 			if(amount_to_boil > holder.get_reagent_amount("water") || (holder.total_temperature > T100C + 100)) //...if there's enough heat to boil all the water or the temp is 100 over 100°C...
 				amount_to_boil = holder.get_reagent_amount("water") //...boil away everything.
 			holder.remove_reagent("water", amount_to_boil)
@@ -444,7 +417,6 @@
 		required_reagents = list("blood" = 0, "styptic_powder" = 0) //removed in on_reaction
 		result_amount = 1
 		instant = FALSE
-		reaction_volume_dependant = FALSE
 		mix_phrase = "The mixture begins to undulate."
 		stateful = TRUE
 		var/count = 0
@@ -2461,22 +2433,13 @@
 		result_amount = 1
 		mix_phrase = "An iridescent black chemical forms in the container."
 
-		on_reaction(datum/reagents/holder, created_volume)
+		on_reaction(datum/reagents/holder)
 			if(holder.total_temperature > (T0C + 30)) //requires *some* outside heating to start reacting more quickly
 				var/temperature_over_30C = holder.total_temperature - (T0C + 30)
-				//more heat = exponentially more welding fuel used, clamped to 0.5u per reaction + however much oil is made
-				var/excess_fuel_to_use = round(clamp(0.1 * (1.1 ** temperature_over_30C), 0, 0.5), 0.01)
-				//because that excess does not scale with created_volume, we got to apply the volume-dependant speed factor seperatly from that
-				excess_fuel_to_use *= 1 + src.get_volume_reaction_speed_factor(holder)
-				holder.remove_reagent("fuel", excess_fuel_to_use)
-
-		get_reaction_speed_multiplicator(var/datum/reagents/holder)
-			. = ..()
-			if (holder.total_temperature > (T0C + 30))
-				//more heat = more oil more quickly, but with diminishing returns that never go over 1.5u per reaction
-				// we need to account with the additional created volume for that baseline 0.05 reaction speed, thus a factor of 20
-				var/temperature_over_30C = holder.total_temperature - (T0C + 30)
-				. *= (1 + round((temperature_over_30C * 30)/(temperature_over_30C + 40), 0.01))
+				var/amount_of_oil_mixed = round((temperature_over_30C * 1.5)/(temperature_over_30C + 40), 0.01) //more heat = more oil more quickly, but with diminishing returns that never go over 0.5u per reaction
+				var/amount_of_fuel_to_use = amount_of_oil_mixed + round(clamp(0.1 * (1.1 ** temperature_over_30C), 0, 0.5), 0.01) //more heat = exponentially more welding fuel used, clamped to 1u per reaction + however much oil is made
+				holder.add_reagent("oil", amount_of_oil_mixed, temp_new = holder.total_temperature, chemical_reaction = TRUE)
+				holder.remove_reagent("fuel", amount_of_fuel_to_use)
 
 	hydrogen_carbon_dissolve //made to interact with oil so you have to keep it 'fueled', change to make a unique chem that fades away instead if this is broken/weird later
 		name = "hydrogen_carbon_dissolving"
@@ -2520,18 +2483,16 @@
 			else
 				holder.remove_reagent("chromium", 4 * created_volume) // super exaggerated catalytic ashing
 			if (holder.has_reagent("magnesium_chloride"))
+				reaction_speed = 0.25
 				holder.remove_reagent("magnesium_chloride", created_volume / 5)
+			else
+				reaction_speed = 0.05
 			if (count >= 10)
 				count -= 10
 				var/location = get_turf(holder.my_atom) || pick(holder.covered_cache)
 				for(var/mob/M in AIviewers(null, location))
 					boutput(M, SPAN_NOTICE("The plastic clumps together in a messy sheet."))
 				new /obj/item/material_piece/rubber/plastic(location)
-
-		get_reaction_speed_multiplicator(var/datum/reagents/holder)
-			. = ..()
-			if (holder.has_reagent("magnesium_chloride"))
-				. *= 5
 
 	hemodissolve // denaturing hemolymph
 		name = "Copper"
@@ -2615,11 +2576,11 @@
 			if(holder?.my_atom?.is_open_container())
 				reaction_icon_state = list("reaction_smoke-1", "reaction_smoke-2")
 				var/datum/reagents/smokeContents = new/datum/reagents/
-				smokeContents.add_reagent("cyanide", created_volume / src.reaction_speed)
+				smokeContents.add_reagent("cyanide", 1)
 				smoke_reaction(smokeContents, 2, location, do_sfx = FALSE)
 			else
 				reaction_icon_state = list("reaction_bubble-1", "reaction_bubble-2")
-				holder.add_reagent("cyanide", created_volume / src.reaction_speed) //you get to keep what would have been in the smoke
+				holder.add_reagent("cyanide", 1) //you get to keep what would have been in the smoke
 
 	cyanide_offgas
 		name = "Cyanide Offgas"
@@ -2629,7 +2590,6 @@
 		mix_phrase = "The mixture slowly gives off fumes."
 		mix_sound = null
 		instant = FALSE
-		reaction_speed = 1
 		stateful = TRUE
 		reaction_icon_color = "#539147"
 		var/count = 0
@@ -2644,9 +2604,9 @@
 		on_reaction(var/datum/reagents/holder, var/created_volume) //assuming this is sodium cyanide so it also interacts with water and sulfuric acid
 			if (QDELETED(holder.my_atom) && !length(holder.covered_cache)) //not sure how this is happening but god please stop runtiming
 				return
-			var/amount_to_smoke = created_volume
+			var/amount_to_smoke = 1
 			if(holder.has_reagent("acid"))
-				amount_to_smoke = 20 * created_volume
+				amount_to_smoke = 20
 				count += 6
 			amount_to_smoke = min(amount_to_smoke, holder.get_reagent_amount("cyanide"))
 			if(count < 6)
@@ -2660,7 +2620,7 @@
 				reaction_icon_state = list("reaction_smoke-1", "reaction_smoke-2")
 				var/datum/reagents/smokeContents = new
 				smokeContents.add_reagent("cyanide", amount_to_smoke)
-				smoke_reaction(smokeContents, 1, location, do_sfx = FALSE)
+				smoke_reaction(smokeContents, amount_to_smoke, location, do_sfx = FALSE)
 				holder.remove_reagent("cyanide", amount_to_smoke)
 				count = 0
 
@@ -2801,7 +2761,7 @@
 			var/location = get_turf(holder.my_atom)
 			if (holder.my_atom && holder.my_atom.is_open_container() || istype(holder,/datum/reagents/fluid_group))
 				temperature_change = 4
-				var/smoke_to_create = clamp((holder.total_temperature - (T20C + 40)) * created_volume / 60 , 0, 5)//for every degree over 60C, make .05u of smoke (up to 5u)...
+				var/smoke_to_create = clamp((holder.total_temperature - (T20C + 40))/20 , 0, 5)//for every degree over 60C, make .05u of smoke (up to 5u)...
 				if(smoke_to_create > 0)                                                        //...but if under 60C, don't make any
 					var/datum/reagents/smokeContents = new/datum/reagents/
 					smokeContents.add_reagent("acid", smoke_to_create)
@@ -2824,10 +2784,6 @@
 		does_react(var/datum/reagents/holder)
 			if(holder.has_reagent("water") || holder.has_reagent("steam"))
 				return TRUE
-
-		get_total_reaction_volume(var/datum/reagents/holder)
-			. = ..()
-			. += holder.get_reagent_amount("water") + holder.get_reagent_amount("steam")
 
 	clacid
 		name = "Hydrochloric Acid"
@@ -2927,21 +2883,18 @@
 
 		on_reaction(var/datum/reagents/holder, var/created_volume)
 			var/location = get_turf(holder.my_atom)
-			//reacts faster than normally the hotter the reaction, careful with ether's burn temperature though
-			var/ether_mix_speed = max((holder.total_temperature - (T0C + 30))/4, 1)
-			//since this portion of the reaction does not consume acid/oxygen, we got to seperatly calculate the volume-depending-factor of this reaction
-			ether_mix_speed *= 1 + src.get_volume_reaction_speed_factor(holder)
+			var/ether_mix_speed = max((holder.total_temperature - (T0C + 30))/4, 1) //reacts faster than normally the hotter the reaction, careful with ether's burn temperature though
 			holder.add_reagent("ether", ether_mix_speed, temp_new = holder.total_temperature, chemical_reaction = TRUE)
 			holder.remove_reagent("ethanol", ether_mix_speed)
 			if(holder?.my_atom?.is_open_container())
 				reaction_icon_state = list("reaction_smoke-1", "reaction_smoke-2")
 				var/datum/reagents/smokeContents = new/datum/reagents/
-				smokeContents.add_reagent("ether", created_volume * 2)
+				smokeContents.add_reagent("ether", 1)
 				smoke_reaction(smokeContents, 2, location, do_sfx = FALSE)
 
 			else
 				reaction_icon_state = list("reaction_bubble-1", "reaction_bubble-2")
-				holder.add_reagent("ether", created_volume * 2) // You get to keep what would have been in the smoke
+				holder.add_reagent("ether", 1) // You get to keep what would have been in the smoke
 
 	ether_offgas
 		name = "Ether Offgas"
@@ -2951,7 +2904,6 @@
 		mix_phrase = "The mixture slowly gives off fumes."
 		mix_sound = null
 		instant = FALSE
-		reaction_speed = 1
 		stateful = TRUE
 		min_temperature = T0C + 30 // Generates vapor above room temperature
 		reaction_icon_color = "#c5d1d3"
@@ -2965,7 +2917,7 @@
 				return FALSE
 
 		on_reaction(var/datum/reagents/holder, var/created_volume)
-			amount_to_smoke = created_volume
+			amount_to_smoke = 1
 			if(count < 6)
 				count++
 				reaction_icon_state = null
@@ -2973,8 +2925,8 @@
 				var/location = get_turf(holder.my_atom)
 				reaction_icon_state = list("reaction_smoke-1", "reaction_smoke-2")
 				var/datum/reagents/smokeContents = new/datum/reagents/
-				smokeContents.add_reagent("ether", amount_to_smoke)
-				smoke_reaction(smokeContents, 1, location, do_sfx = FALSE)
+				smokeContents.add_reagent("ether", 1)
+				smoke_reaction(smokeContents, amount_to_smoke, location, do_sfx = FALSE)
 				holder.remove_reagent("ether", amount_to_smoke)
 				count = 0
 
@@ -3056,10 +3008,10 @@
 				reaction_icon_color = "#757575"
 				mix_multiplier = 0
 			if(holder.has_reagent("silver_nitrate"))
-				amount_to_mix += (10 * created_volume * mix_multiplier) //you get a lot of extra for putting in the harder chem
+				amount_to_mix += (10 * mix_multiplier) //you get a lot of extra for putting in the harder chem
 				holder.remove_reagent("silver_nitrate", created_volume)
 			else
-				amount_to_mix += (5 * created_volume * mix_multiplier)
+				amount_to_mix += (5 * mix_multiplier)
 				holder.remove_reagent("oxygen", created_volume)
 				holder.remove_reagent("silver", created_volume)
 				holder.remove_reagent("sulfur", created_volume)
@@ -3173,7 +3125,6 @@
 		eventual_result = list("salbutamol", "salicylic_acid")
 		result_amount = 4
 		instant = FALSE
-		reaction_volume_dependant = FALSE
 		reaction_speed = 4
 		temperature_change = 0 //this also changes
 		stateful = TRUE
@@ -3285,7 +3236,6 @@
 		reaction_icon_state = null
 		hidden = TRUE
 		instant = FALSE
-		reaction_volume_dependant = FALSE
 		stateful = TRUE
 		var/is_currently_exploding = FALSE //so it doesn't explode multiple times during the slight activation delay
 
@@ -3325,7 +3275,7 @@
 				return FALSE
 
 		on_reaction(var/datum/reagents/holder, var/created_volume)
-			holder.remove_reagent("photophosphide", created_volume)
+			holder.remove_reagent("photophosphide", src.reaction_speed)
 
 	styptic_powder // COGWERKS CHEM REVISION PROJECT: no idea, probably a magic drug
 		name = "Styptic Powder"
@@ -3335,7 +3285,6 @@
 		result_amount = 1
 		mix_phrase = "The solution slowly crackles and reacts."
 		instant = FALSE
-		reaction_volume_dependant = FALSE
 		stateful = TRUE
 		var/cycles = 0
 		var/extra_to_make = 0
@@ -5082,7 +5031,7 @@
 		var/count = 0
 
 		on_reaction(var/datum/reagents/holder, var/created_volume)
-			count += created_volume
+			count ++
 			holder.temperature_reagents(holder.total_temperature + created_volume*200, 400, change_min = 1)
 
 		on_end_reaction(var/datum/reagents/holder)
@@ -5095,7 +5044,6 @@
 		result_amount = 1
 		reaction_speed = 1
 		instant = FALSE
-		reaction_volume_dependant = FALSE
 		mix_phrase = "The mixture gives off very hot air."
 		hidden = TRUE
 		stateful = TRUE
@@ -5130,7 +5078,7 @@
 		var/count = 0
 
 		on_reaction(var/datum/reagents/holder, var/created_volume)
-			count += created_volume
+			count++
 			holder.temperature_reagents(holder.total_temperature - created_volume*200, 400, change_min = 1)
 
 		on_end_reaction(var/datum/reagents/holder)
@@ -5142,7 +5090,6 @@
 		required_reagents = list("cryostylane"= 1, "iodine" = 0)
 		result_amount = 1
 		instant = FALSE
-		reaction_volume_dependant = FALSE
 		reaction_speed = 1
 		temperature_change = -5
 		mix_phrase = "The solution gives off cold fumes."

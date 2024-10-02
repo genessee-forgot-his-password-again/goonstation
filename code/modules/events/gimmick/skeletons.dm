@@ -30,7 +30,7 @@
 
 		var/list/closets = list()
 
-		for_by_tcl(S, /obj/storage/closet)
+		for(var/obj/storage/closet/S)
 			if(S.loc.z == 1)
 				closets += S
 

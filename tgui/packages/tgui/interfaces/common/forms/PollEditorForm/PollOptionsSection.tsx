@@ -5,8 +5,8 @@
  * @license ISC
  */
 
-import { useState } from 'react';
-import { Button, Input, LabeledList, Section } from 'tgui-core/components';
+import { useLocalState } from '../../../../backend';
+import { Button, Input, LabeledList, Section } from '../../../../components';
 
 interface PollOptionsSectionProps {
   onAddOption: () => void;
@@ -16,20 +16,13 @@ interface PollOptionsSectionProps {
   options: string[];
 }
 
-export const PollOptionsSection = (
-  props: PollOptionsSectionProps,
-  context: unknown,
-) => {
-  const {
-    onAddOption,
-    onChangeOption,
-    onRemoveOption,
-    onSwapOptions,
-    options,
-  } = props;
-  const [reorderingOptionIndex, setReorderingOptionIndex] = useState<
-    number | null
-  >(null);
+export const PollOptionsSection = (props: PollOptionsSectionProps, context: unknown) => {
+  const { onAddOption, onChangeOption, onRemoveOption, onSwapOptions, options } = props;
+  const [reorderingOptionIndex, setReorderingOptionIndex] = useLocalState<number | null>(
+    context,
+    'reorderingOptionIndex',
+    null
+  );
   const handleReorder = (index: number) => {
     if (reorderingOptionIndex === null) {
       setReorderingOptionIndex(index);
@@ -44,11 +37,10 @@ export const PollOptionsSection = (
       fill
       scrollable
       buttons={
-        <Button icon="add" onClick={onAddOption} tooltip="Add option">
+        <Button icon="add" onClick={onAddOption} title="Add option">
           Add
         </Button>
-      }
-    >
+      }>
       <LabeledList>
         {options.map((option, index) => (
           <PollOptionListItem
@@ -57,13 +49,7 @@ export const PollOptionsSection = (
             onChange={(value: string) => onChangeOption(index, value)}
             onRemove={() => onRemoveOption(index)}
             onReorder={() => handleReorder(index)}
-            reordering={
-              index === reorderingOptionIndex
-                ? 'self'
-                : reorderingOptionIndex
-                  ? 'other'
-                  : 'none'
-            }
+            reordering={index === reorderingOptionIndex ? 'self' : reorderingOptionIndex ? 'other' : 'none'}
             value={option}
           />
         ))}
@@ -86,40 +72,15 @@ const PollOptionListItem = (props: PollOptionListItemProps) => {
   const handleChange = (e: unknown, value: string) => onChange(value);
   const buttons = (
     <>
-      {reordering === 'self' && (
-        <Button
-          color="red"
-          icon="cancel"
-          onClick={onReorder}
-          tooltip="Cancel reorder"
-        />
-      )}
-      {reordering === 'other' && (
-        <Button
-          icon="arrow-down-up-across-line"
-          onClick={onReorder}
-          tooltip="Swap"
-        />
-      )}
-      {reordering === 'none' && (
-        <Button icon="arrows-up-down" onClick={onReorder} tooltip="Swap" />
-      )}
-      <Button
-        color="bad"
-        icon="trash"
-        onClick={onRemove}
-        tooltip="Remove option"
-      />
+      {reordering === 'self' && <Button color="red" icon="cancel" onClick={onReorder} title="Cancel reorder" />}
+      {reordering === 'other' && <Button icon="arrow-down-up-across-line" onClick={onReorder} title="Swap" />}
+      {reordering === 'none' && <Button icon="arrows-up-down" onClick={onReorder} title="Swap" />}
+      <Button color="bad" icon="trash" onClick={onRemove} title="Remove option" />
     </>
   );
   return (
     <LabeledList.Item label={label} buttons={buttons}>
-      <Input
-        width="100%"
-        value={value}
-        placeholder="Option text..."
-        onChange={handleChange}
-      />
+      <Input width="100%" value={value} placeholder="Option text..." onChange={handleChange} />
     </LabeledList.Item>
   );
 };

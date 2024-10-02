@@ -4,22 +4,14 @@
  * @license MIT
  */
 
-import { BooleanLike, classes } from 'common/react';
-import {
-  createElement,
-  CSSProperties,
-  KeyboardEventHandler,
-  MouseEventHandler,
-  ReactNode,
-  UIEventHandler,
-} from 'react';
-
+import { BooleanLike, classes, pureComponentHooks } from 'common/react';
+import { createVNode, InfernoNode, KeyboardEventHandler, MouseEventHandler, UIEventHandler } from 'inferno';
+import { ChildFlags, VNodeFlags } from 'inferno-vnode-flags';
 import { CSS_COLORS } from '../constants';
+import { logger } from '../logging';
 
 type BooleanProps = Partial<Record<keyof typeof booleanStyleMap, boolean>>;
-type StringProps = Partial<
-  Record<keyof typeof stringStyleMap, string | BooleanLike>
->;
+type StringProps = Partial<Record<keyof typeof stringStyleMap, string | BooleanLike>>;
 
 export type EventHandlers = Partial<{
   onClick: MouseEventHandler<HTMLDivElement>;
@@ -34,14 +26,11 @@ export type EventHandlers = Partial<{
   onScroll: UIEventHandler<HTMLDivElement>;
 }>;
 
-export type BoxProps = {
-  /* |GOONSTATION-ADD| */
-  [key: string]: any;
-} & Partial<{
+export type BoxProps = { [key: string]: any } /* |GOONSTATION-ADD| */ & Partial<{
   as: string;
-  children: ReactNode;
+  children: InfernoNode;
   className: string | BooleanLike;
-  style: CSSProperties;
+  style: Record<string, string>; // |GOONSTATION-CHANGE| (Partial<CSSStyleDeclaration> -> Record<string, string>)
 }> &
   BooleanProps &
   StringProps &
@@ -57,7 +46,7 @@ type DangerDoNotUse = {
 /**
  * Coverts our rem-like spacing unit into a CSS unit.
  */
-export function unit(value: unknown) {
+export const unit = (value: unknown) => {
   if (typeof value === 'string') {
     // Transparently convert pixels into rem units
     if (value.endsWith('px')) {
@@ -68,27 +57,25 @@ export function unit(value: unknown) {
   if (typeof value === 'number') {
     return value + 'rem';
   }
-}
+};
 
 /**
  * Same as `unit`, but half the size for integers numbers.
  */
-export function halfUnit(value: unknown): string | undefined {
+export const halfUnit = (value: unknown) => {
   if (typeof value === 'string') {
     return unit(value);
   }
   if (typeof value === 'number') {
     return unit(value * 0.5);
   }
-}
+};
 
-function isColorCode(str: unknown): boolean {
-  return !isColorClass(str);
-}
+const isColorCode = (str: unknown) => !isColorClass(str);
 
-function isColorClass(str: unknown): boolean {
+const isColorClass = (str: unknown): boolean => {
   return typeof str === 'string' && CSS_COLORS.includes(str as any);
-}
+};
 
 const mapRawPropTo = (attrName) => (style, value) => {
   if (typeof value === 'number' || typeof value === 'string') {
@@ -111,7 +98,7 @@ const mapBooleanPropTo = (attrName, attrValue) => (style, value) => {
 const mapDirectionalUnitPropTo = (attrName, unit, dirs) => (style, value) => {
   if (typeof value === 'number' || typeof value === 'string') {
     for (let i = 0; i < dirs.length; i++) {
-      style[attrName + '' + dirs[i]] = unit(value);
+      style[attrName + '-' + dirs[i]] = unit(value);
     }
   }
 };
@@ -123,71 +110,63 @@ const mapColorPropTo = (attrName) => (style, value) => {
 };
 
 // String / number props
+// |GOONSTATION-CHANGE| camelCase -> kebab-case
 const stringStyleMap = {
-  align: mapRawPropTo('textAlign'),
+  align: mapRawPropTo('text-align'),
   bottom: mapUnitPropTo('bottom', unit),
-  fontFamily: mapRawPropTo('fontFamily'),
-  fontSize: mapUnitPropTo('fontSize', unit),
-  fontWeight: mapRawPropTo('fontWeight'),
+  fontFamily: mapRawPropTo('font-family'),
+  fontSize: mapUnitPropTo('font-size', unit),
+  fontWeight: mapRawPropTo('fontweight'),
   height: mapUnitPropTo('height', unit),
   left: mapUnitPropTo('left', unit),
-  maxHeight: mapUnitPropTo('maxHeight', unit),
-  maxWidth: mapUnitPropTo('maxWidth', unit),
-  minHeight: mapUnitPropTo('minHeight', unit),
-  minWidth: mapUnitPropTo('minWidth', unit),
+  maxHeight: mapUnitPropTo('max-height', unit),
+  maxWidth: mapUnitPropTo('max-width', unit),
+  minHeight: mapUnitPropTo('min-height', unit),
+  minWidth: mapUnitPropTo('min-width', unit),
   opacity: mapRawPropTo('opacity'),
   overflow: mapRawPropTo('overflow'),
-  overflowX: mapRawPropTo('overflowX'),
-  overflowY: mapRawPropTo('overflowY'),
+  overflowX: mapRawPropTo('overflow-x'),
+  overflowY: mapRawPropTo('overflow-y'),
   position: mapRawPropTo('position'),
   right: mapUnitPropTo('right', unit),
-  textAlign: mapRawPropTo('textAlign'),
+  textAlign: mapRawPropTo('text-align'),
   top: mapUnitPropTo('top', unit),
-  verticalAlign: mapRawPropTo('verticalAlign'),
+  verticalAlign: mapRawPropTo('vertical-align'),
   width: mapUnitPropTo('width', unit),
 
   lineHeight: (style, value) => {
     if (typeof value === 'number') {
-      style['lineHeight'] = value;
+      style['line-height'] = value; // |GOONSTATION-CHANGE| (lineHeight -> line-height)
     } else if (typeof value === 'string') {
-      style['lineHeight'] = unit(value);
+      style['line-height'] = unit(value); // |GOONSTATION-CHANGE| (lineHeight -> line-height)
     }
   },
   // Margin
-  m: mapDirectionalUnitPropTo('margin', halfUnit, [
-    'Top',
-    'Bottom',
-    'Left',
-    'Right',
-  ]),
-  mb: mapUnitPropTo('marginBottom', halfUnit),
-  ml: mapUnitPropTo('marginLeft', halfUnit),
-  mr: mapUnitPropTo('marginRight', halfUnit),
-  mt: mapUnitPropTo('marginTop', halfUnit),
+  m: mapDirectionalUnitPropTo('margin', halfUnit, ['Top', 'Bottom', 'Left', 'Right']),
+  mb: mapUnitPropTo('margin-bottom', halfUnit),
+  ml: mapUnitPropTo('margin-left', halfUnit),
+  mr: mapUnitPropTo('margin-right', halfUnit),
+  mt: mapUnitPropTo('margin-top', halfUnit),
   mx: mapDirectionalUnitPropTo('margin', halfUnit, ['Left', 'Right']),
   my: mapDirectionalUnitPropTo('margin', halfUnit, ['Top', 'Bottom']),
   // Padding
-  p: mapDirectionalUnitPropTo('padding', halfUnit, [
-    'Top',
-    'Bottom',
-    'Left',
-    'Right',
-  ]),
-  pb: mapUnitPropTo('paddingBottom', halfUnit),
-  pl: mapUnitPropTo('paddingLeft', halfUnit),
-  pr: mapUnitPropTo('paddingRight', halfUnit),
-  pt: mapUnitPropTo('paddingTop', halfUnit),
+  p: mapDirectionalUnitPropTo('padding', halfUnit, ['Top', 'Bottom', 'Left', 'Right']),
+  pb: mapUnitPropTo('padding-bottom', halfUnit),
+  pl: mapUnitPropTo('padding-left', halfUnit),
+  pr: mapUnitPropTo('padding-right', halfUnit),
+  pt: mapUnitPropTo('padding-top', halfUnit),
   px: mapDirectionalUnitPropTo('padding', halfUnit, ['Left', 'Right']),
   py: mapDirectionalUnitPropTo('padding', halfUnit, ['Top', 'Bottom']),
   // Color props
   color: mapColorPropTo('color'),
   textColor: mapColorPropTo('color'),
-  backgroundColor: mapColorPropTo('backgroundColor'),
+  backgroundColor: mapColorPropTo('background-color'),
 } as const;
 
 // Boolean props
+// |GOONSTATION-CHANGE| camelCase -> kebab-case
 const booleanStyleMap = {
-  bold: mapBooleanPropTo('fontWeight', 'bold'),
+  bold: mapBooleanPropTo('font-weight', 'bold'),
   fillPositionedParent: (style, value) => {
     if (value) {
       style['position'] = 'absolute';
@@ -198,25 +177,24 @@ const booleanStyleMap = {
     }
   },
   inline: mapBooleanPropTo('display', 'inline-block'),
-  italic: mapBooleanPropTo('fontStyle', 'italic'),
-  nowrap: mapBooleanPropTo('whiteSpace', 'nowrap'),
-  preserveWhitespace: mapBooleanPropTo('whiteSpace', 'pre-wrap'),
+  italic: mapBooleanPropTo('font-style', 'italic'),
+  nowrap: mapBooleanPropTo('white-space', 'nowrap'),
+  preserveWhitespace: mapBooleanPropTo('white-space', 'pre-wrap'),
 } as const;
 
-export function computeBoxProps(props): Record<string, any> {
+export const computeBoxProps = (props) => {
   const computedProps: Record<string, any> = {};
   const computedStyles: Record<string, string | number> = {};
 
   // Compute props
-  for (const propName of Object.keys(props)) {
+  for (let propName of Object.keys(props)) {
     if (propName === 'style') {
       continue;
     }
 
     const propValue = props[propName];
 
-    const mapPropToStyle =
-      stringStyleMap[propName] || booleanStyleMap[propName];
+    const mapPropToStyle = stringStyleMap[propName] || booleanStyleMap[propName];
 
     if (mapPropToStyle) {
       mapPropToStyle(computedStyles, propValue);
@@ -229,33 +207,44 @@ export function computeBoxProps(props): Record<string, any> {
   computedProps.style = { ...computedStyles, ...props.style };
 
   return computedProps;
-}
+};
 
-export function computeBoxClassName(props: BoxProps): string {
+export const computeBoxClassName = (props: BoxProps) => {
   const color = props.textColor || props.color;
   const backgroundColor = props.backgroundColor;
   return classes([
     isColorClass(color) && 'color-' + color,
     isColorClass(backgroundColor) && 'color-bg-' + backgroundColor,
   ]);
-}
+};
 
-export function Box(props: BoxProps & DangerDoNotUse) {
+export const Box = (props: BoxProps & DangerDoNotUse) => {
   const { as = 'div', className, children, ...rest } = props;
 
+  // |GOONSTATION-CHANGE| Special handling for function children, Inferno/React difference
+  if (typeof children === 'function') {
+    return children(computeBoxProps(rest));
+  }
+
   // Compute class name and styles
-  const computedClassName = className
-    ? `${className} ${computeBoxClassName(rest)}`
-    : computeBoxClassName(rest);
+  const computedClassName = className ? `${className} ${computeBoxClassName(rest)}` : computeBoxClassName(rest);
   const computedProps = computeBoxProps(rest);
 
-  // Render the component
-  return createElement(
-    typeof as === 'string' ? as : 'div',
-    {
-      ...computedProps,
-      className: computedClassName,
-    },
+  if (as === 'img') {
+    logger.error('Box component cannot be used as an image. Use Image component instead.');
+  }
+
+  // Render a wrapper element
+  // |GOONSTATION-CHANGE| createElement -> createVNode
+  return createVNode(
+    VNodeFlags.HtmlElement,
+    as,
+    computedClassName,
     children,
+    ChildFlags.UnknownChildren,
+    computedProps,
+    undefined
   );
-}
+};
+
+Box.defaultHooks = pureComponentHooks;

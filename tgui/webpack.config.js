@@ -7,8 +7,9 @@
 const webpack = require('webpack');
 const path = require('path');
 const ExtractCssPlugin = require('mini-css-extract-plugin');
+const { createBabelConfig } = require('./babel.config.js');
 
-const createStats = (verbose) => ({
+const createStats = verbose => ({
   assets: verbose,
   builtAt: verbose,
   cached: false,
@@ -24,16 +25,21 @@ const createStats = (verbose) => ({
 });
 
 module.exports = (env = {}, argv) => {
-  const mode = argv.mode || 'production';
+  const mode = argv.mode === 'production' ? 'production' : 'development';
   const bench = env.TGUI_BENCH;
   const config = {
-    mode: mode === 'production' ? 'production' : 'development',
+    mode,
     context: path.resolve(__dirname),
     target: ['web', 'es5', 'browserslist:ie 11'],
     entry: {
-      tgui: ['./packages/tgui-polyfill', './packages/tgui'],
-      // 'tgui-panel': ['./packages/tgui-polyfill', './packages/tgui-panel'],
-      // 'tgui-say': ['./packages/tgui-polyfill', './packages/tgui-say'],
+      'tgui': [
+        './packages/tgui-polyfill',
+        './packages/tgui',
+      ],
+      'tgui-panel': [
+        './packages/tgui-polyfill',
+        './packages/tgui-panel',
+      ],
     },
     output: {
       path: argv.useTmpFolder
@@ -42,25 +48,27 @@ module.exports = (env = {}, argv) => {
       filename: '[name].bundle.js',
       chunkFilename: '[name].bundle.js',
       chunkLoadTimeout: 15000,
-      publicPath: '/',
+      hashFunction: "sha256",
     },
     resolve: {
-      extensions: ['.tsx', '.ts', '.js', '.jsx'],
+      extensions: ['.tsx', '.ts', '.js'],
       alias: {},
     },
     module: {
       rules: [
         {
-          test: /\.([tj]s(x)?|cjs)$/,
-          exclude: /node_modules[\\/]core-js/,
+          test: /\.(js|cjs|ts|tsx)$/,
           use: [
             {
-              loader: require.resolve('swc-loader'),
+              loader: require.resolve('babel-loader'),
+              options: createBabelConfig({
+                removeConsole: !bench,
+              }),
             },
           ],
         },
         {
-          test: /\.(s)?css$/,
+          test: /\.scss$/,
           use: [
             {
               loader: ExtractCssPlugin.loader,
@@ -72,14 +80,6 @@ module.exports = (env = {}, argv) => {
               loader: require.resolve('css-loader'),
               options: {
                 esModule: false,
-              },
-            },
-            {
-              loader: require.resolve('postcss-loader'),
-              options: {
-                postcssOptions: {
-                  plugins: [require.resolve('postcss-css-variables')],
-                },
               },
             },
             {
@@ -117,7 +117,7 @@ module.exports = (env = {}, argv) => {
     stats: createStats(true),
     plugins: [
       new webpack.EnvironmentPlugin({
-        NODE_ENV: env.NODE_ENV || mode,
+        NODE_ENV: env.NODE_ENV || argv.mode || 'development',
         WEBPACK_HMR_ENABLED: env.WEBPACK_HMR_ENABLED || argv.hot || false,
         DEV_SERVER_IP: env.DEV_SERVER_IP || null,
       }),
@@ -138,7 +138,7 @@ module.exports = (env = {}, argv) => {
   }
 
   // Production build specific options
-  if (mode === 'production') {
+  if (argv.mode === 'production') {
     const { EsbuildPlugin } = require('esbuild-loader');
     config.optimization.minimizer = [
       new EsbuildPlugin({
@@ -150,10 +150,9 @@ module.exports = (env = {}, argv) => {
   }
 
   // Development build specific options
-  if (mode !== 'production') {
+  if (argv.mode !== 'production') {
     config.devtool = 'cheap-module-source-map';
   }
-
   // Uncomment the below if you need to locally generate source maps to debug production
   // config.devtool = 'source-map';
 

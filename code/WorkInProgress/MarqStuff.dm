@@ -256,8 +256,6 @@
 		..()
 		playsound(owner, 'sound/effects/bow_pull.ogg', 80, TRUE)
 		owner.visible_message(SPAN_ALERT("[owner] pulls the string on [bow]!"), SPAN_NOTICE("You pull the string on [bow]!"))
-		src.bar.transform = matrix(0, 1, MATRIX_SCALE)
-		src.bar.pixel_x = -15
 
 	onDelete()
 		if (bow)
@@ -265,8 +263,7 @@
 		..()
 
 	onEnd()
-		if (src.state != ACTIONSTATE_FINISH)
-			boutput(owner, SPAN_ALERT("You let go of the string."))
+		boutput(owner, SPAN_ALERT("You let go of the string."))
 		if (bow)
 			bow.aim = null
 		..()
@@ -279,18 +276,17 @@
 
 
 	onUpdate()
-		if (src.moved)
-			src.progress += 0.5
+		if (moved)
+			progress += 0.5
 		else
-			src.progress += 1
-		src.progress = min(src.draw_target, src.progress)
-		src.moved = 0
+			progress += 1
+		progress = min(draw_target,progress)
+		moved = 0
 
-		var/completion_fraction = src.progress/src.draw_target
-		bow.UpdateIcon(completion_fraction)
-		src.bar.color = "#0000FF"
-		animate(src.bar, transform = matrix(completion_fraction, 1, MATRIX_SCALE), time = ACTION_CONTROLLER_INTERVAL)
-		animate(pixel_x = -nround( ((30 - (30 * completion_fraction)) / 2) ), time = ACTION_CONTROLLER_INTERVAL, flags = ANIMATION_PARALLEL)
+		var/completion_fraction = progress/draw_target
+		bar.color = "#0000FF"
+		bar.transform = matrix(completion_fraction, 1, MATRIX_SCALE)
+		bar.pixel_x = -nround( ((30 - (30 * completion_fraction)) / 2) )
 
 /obj/item/arrow
 	name = "steel-headed arrow"
@@ -304,8 +300,7 @@
 	var/image/head
 	amount = 1
 	max_stack = 50
-	appearance_flags = LONG_GLIDE | PIXEL_SCALE | RESET_COLOR | RESET_ALPHA | RESET_TRANSFORM | KEEP_TOGETHER
-	vis_flags = VIS_INHERIT_ID | VIS_INHERIT_PLANE | VIS_INHERIT_LAYER
+	appearance_flags = RESET_COLOR | RESET_ALPHA | LONG_GLIDE | PIXEL_SCALE
 	move_triggered = 1
 
 	New()
@@ -349,21 +344,6 @@
 		O.setHeadMaterial(head_material)
 		O.setShaftMaterial(shaft_material)
 		return O
-
-	attackby(obj/item/W, mob/user, params)
-		if(W.type == src.type && src.check_valid_stack(W))
-			stack_item(W)
-			return
-		if(istype(W, /obj/item/quiver))
-			var/obj/item/quiver/quiver = W
-			quiver.loadArrow(src, user)
-			return
-		if(istype(W, /obj/item/gun/bow))
-			var/obj/item/gun/bow/bow = W
-			if(isnull(bow.loaded))
-				bow.loadArrow(src, user)
-			return
-		. = ..()
 /*
 	attack_hand(var/mob/user)
 		if (amount > 1)
@@ -507,35 +487,23 @@
 	c_flags = ONBACK | ONBELT
 	move_triggered = 1
 
-	New()
-		. = ..()
-		src.create_inventory_counter()
-
-	attackby(obj/item/I, mob/user)
-		if (istype(I, /obj/item/arrow))
-			src.loadArrow(I, user)
+	attackby(var/obj/item/arrow/I, var/mob/user)
+		if (!istype(I))
+			boutput(user, SPAN_ALERT("That cannot be placed in [src]!"))
 			return
-		if (istype(I, /obj/item/gun/bow))
-			var/obj/item/gun/bow/bow = I
-			if (isnull(bow.loaded))
-				var/obj/item/arrow = src.getArrow(user)
-				if (isnull(arrow))
-					return // no arrows
-				bow.loadArrow(arrow, user)
-				src.updateAppearance()
-			return
-		boutput(user, SPAN_ALERT("That cannot be placed in [src]!"))
 
-	proc/loadArrow(obj/item/arrow/arrow, mob/user)
-		if(arrow.amount > 1)
-			var/amountinitial = arrow.amount
+		if(I.amount > 1)
+			var/amountinitial = I.amount
 			for(var/i=0, i<amountinitial, i++)
-				arrow.clone(src)
-				arrow.change_stack_amount(-1)
+				I.clone(src)
+				I.change_stack_amount(-1)
+			maptext = "[contents.len]"
+			icon_state = "quiver-[min(contents.len, 4)]"
 		else
-			user.u_equip(arrow)
-			arrow.set_loc(src)
-		src.updateAppearance()
+			user.u_equip(I)
+			I.set_loc(src)
+			maptext = "[contents.len]"
+			icon_state = "quiver-[min(contents.len, 4)]"
 
 	proc/getArrow(var/mob/user)
 		if (src in user)
@@ -545,7 +513,10 @@
 			else return null
 
 	proc/updateAppearance()
-		src.inventory_counter.update_number(length(contents))
+		if (contents.len)
+			maptext = "[contents.len]"
+		else
+			maptext = null
 		icon_state = "quiver-[min(contents.len, 4)]"
 		return
 
@@ -596,10 +567,6 @@
 				if (O.move_triggered)
 					O.move_trigger(M, kindof)
 
-	equipped(mob/user, slot)
-		. = ..()
-		src.inventory_counter.show_count()
-
 /datum/projectile/arrow
 	name = "arrow"
 	damage = 10
@@ -628,7 +595,7 @@
 	name = "bow"
 	icon = 'icons/obj/items/items.dmi'
 	inhand_image_icon = 'icons/mob/inhand/hand_guns.dmi'
-	icon_state = "bow0"
+	icon_state = "bow"
 	item_state = "bow"
 	var/obj/item/arrow/loaded = null
 	var/datum/action/bar/aim/aim = null
@@ -640,15 +607,10 @@
 	var/spread_base = 40
 	var/max_draw = 3
 	recoil_enabled = FALSE
-	pickup_sfx = null
-	var/const/draw_states = 3
 
 	New()
 		set_current_projectile(new/datum/projectile/arrow)
 		. = ..()
-
-	update_icon(draw_fraction)
-		src.icon_state = "bow[round(draw_fraction * (src.draw_states - 1), 1)]"
 
 	onMaterialChanged()
 		. = ..()
@@ -675,40 +637,29 @@
 				var/obj/item/quiver/Q = H.back
 				var/obj/item/arrow/I = Q.getArrow(user)
 				if(I)
-					src.loadArrow(I, user)
+					loaded = I
+					I.set_loc(src)
+					overlays += I
 					Q.updateAppearance()
 			if(istype(H.belt, /obj/item/quiver))
 				var/obj/item/quiver/Q = H.belt
 				var/obj/item/arrow/I = Q.getArrow(user)
 				if(I)
-					src.loadArrow(I, user)
+					loaded = I
+					I.set_loc(src)
+					overlays += I
 					Q.updateAppearance()
 		return
 
-	proc/loadArrow(obj/item/arrow/arrow, mob/user)
-		if (arrow.amount > 1)
-			arrow.change_stack_amount(-1)
-			arrow = arrow.clone(src)
-		else
-			user.drop_item(arrow)
-		arrow.plane = initial(arrow.plane)
-		arrow.layer = initial(arrow.layer)
-		arrow.pixel_x = 0
-		arrow.pixel_y = 0
-		src.loaded = arrow
-		arrow.set_loc(src)
-		src.vis_contents += arrow
-		playsound(get_turf(src), 'sound/effects/bow_nock.ogg', 60, FALSE)
-
 	attack_hand(var/mob/user)
-		if (!src.loaded && user.is_in_hands(src))
-			src.loadFromQuiver(user)
+		if (!loaded && user.is_in_hands(src))
+			loadFromQuiver(user)
 
 		if (loaded && user.is_in_hands(src))
-			user.put_in_hand_or_drop(src.loaded)
+			user.put_in_hand_or_drop(loaded)
 			boutput(user, SPAN_NOTICE("You unload the arrow from the bow."))
-			src.vis_contents -= src.loaded
-			src.loaded = null
+			overlays.len = 0
+			loaded = null
 		else
 			..()
 
@@ -716,10 +667,6 @@
 		if (istype(loaded))
 			loaded.move_trigger(M, kindof)
 
-	dropped(mob/user)
-		. = ..()
-		src.aim = null
-		src.UpdateIcon(0)
 
 	attack(var/mob/target, var/mob/user)
 		user.lastattacked = target
@@ -731,9 +678,7 @@
 		if(isliving(target))
 			if(loaded)
 				if(loaded.AfterAttack(target,user,1))
-					src.vis_contents -= src.loaded
-					loaded = null //arrow isnt consumed otherwise, for some inexplicable reason.
-					src.UpdateIcon(0)
+					loaded =null;//arrow isnt consumed otherwise, for some inexplicable reason.
 			else
 				boutput(user, SPAN_ALERT("Nothing is loaded in the bow!"))
 		else
@@ -766,7 +711,7 @@
 		if (!loaded)
 			boutput(user, SPAN_ALERT("Nothing is loaded in the bow!"))
 			return 0
-		src.vis_contents -= src.loaded
+		overlays.len = 0
 		var/obj/item/implant/projectile/body_visible/arrow/A = new
 		A.setMaterial(loaded.head_material, appearance = 0, setname = 0)
 		A.arrow = loaded
@@ -835,5 +780,14 @@
 			boutput(user, SPAN_ALERT("An arrow is already loaded onto the bow."))
 			return
 
-		src.loadArrow(I, user)
-
+		if(I.amount > 1)
+			var/obj/item/arrow/C = I.clone(src)
+			I.change_stack_amount(-1)
+			overlays += C
+			loaded = C
+		else
+			overlays += I
+			user.u_equip(I)
+			loaded = I
+			I.set_loc(src)
+			playsound(user, 'sound/effects/bow_nock.ogg', 60, FALSE)

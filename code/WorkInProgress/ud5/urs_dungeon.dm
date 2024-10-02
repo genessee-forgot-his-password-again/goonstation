@@ -176,9 +176,10 @@
 	New()
 		..()
 		SPAWN(1 DECI SECOND)
-			for_by_tcl(T, /obj/adventurepuzzle/invisible/target_link)
+			for(var/obj/adventurepuzzle/invisible/target_link/T)
 				if (T.id == "UD-LANDING-ZONE")
 					target = get_turf(T)
+
 
 	equipped(var/mob/user, var/slot)
 		..()
