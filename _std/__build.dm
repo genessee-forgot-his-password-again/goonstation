@@ -167,7 +167,7 @@ o+`        `-` ``..-:yooos-..----------..`
 
 //------ HOLIDAYS AND OTHER SUCH TOGGLES ------//
 
-//#define RP_MODE 1
+#define RP_MODE 1
 //#define HALLOWEEN 1
 //#define SEASON_WINTER 1
 //#define SEASON_SPRING 1
