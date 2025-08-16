@@ -676,6 +676,13 @@ ABSTRACT_TYPE(/obj/item/survival_rifle_barrel)
 		set_current_projectile(new/datum/projectile/bullet/bullet_22)
 		..()
 
+/obj/item/gun/kinetic/faith/plain
+	name = "\improper Auklet pocket pistol"
+	desc = "A tiny pistol capable of being stored in all sorts of places. Produced by Cormorant Precision Arms. Uses .22 rounds."
+	icon_state = "pocket"
+	item_state = "pocket"
+	// visible while in-hand -- more difficult to conceal compared to Faith
+
 /obj/item/gun/kinetic/silenced_22
 	name = "\improper Orion silenced pistol"
 	desc = "A small pistol with an integrated flash and noise suppressor, bearing the emblem of Sceptre Tactical Laboratories. Uses .22 rounds."
@@ -700,6 +707,32 @@ ABSTRACT_TYPE(/obj/item/survival_rifle_barrel)
 		ammo = new default_magazine
 		set_current_projectile(new/datum/projectile/bullet/bullet_22/HP)
 		..()
+
+/obj/item/gun/kinetic/drake
+	name = "\improper Drake pistol"
+	desc = "A security-grade pistol, ideal for both at the range or on patrol -- it's a shame NanoTrasen doesn't supply their officers with ballistic weapons. Produced by Anderson Para-Munitions. Uses .22 rounds."
+	icon_state = "dumbgun"
+	// visible while in-hand as another downgrade over Orion
+	item_state = "dumbgun"
+	w_class = W_CLASS_SMALL
+	silenced = 1
+	force = MELEE_DMG_PISTOL
+	contraband = 2
+	ammo_cats = list(AMMO_PISTOL_22)
+	max_ammo_capacity = 10
+	auto_eject = 1
+	has_empty_state = 1
+	fire_animation = TRUE
+	default_magazine = /obj/item/ammo/bullets/bullet_22
+	ammobag_magazines = list(/obj/item/ammo/bullets/bullet_22, /obj/item/ammo/bullets/bullet_22HP)
+	ammobag_restock_cost = 1
+	recoil_strength = 3
+	icon_recoil_cap = 30
+	New()
+		ammo = new default_magazine
+		set_current_projectile(new/datum/projectile/bullet/bullet_22)
+		..()
+
 
 /obj/item/gun/kinetic/capella
 	name = "\improper Capella Mk. 8 competition pistol"
@@ -726,7 +759,6 @@ ABSTRACT_TYPE(/obj/item/survival_rifle_barrel)
 		ammo = new default_magazine
 		set_current_projectile(new/datum/projectile/bullet/bullet_22/match)
 		..()
-
 
 
 
@@ -2050,7 +2082,7 @@ ABSTRACT_TYPE(/obj/item/survival_rifle_barrel)
 
 /obj/item/gun/kinetic/single_action/mts_255
 	name = "\improper MTs-255 Revolver Shotgun"
-	desc = "A single-action revolving cylinder shotgun, popular with Soviet hunters, produced by the Zvezda Design Bureau."
+	desc = "A single-action revolving cylinder shotgun, popular with Soviet hunters, produced by the Zvezda Design Bureau. Capable of firing pipe-shot alongside standardized 12-gauge ammo."
 	icon = 'icons/obj/items/guns/kinetic48x32.dmi'
 	wear_image_icon = 'icons/mob/clothing/back.dmi'
 	icon_state = "mts255"

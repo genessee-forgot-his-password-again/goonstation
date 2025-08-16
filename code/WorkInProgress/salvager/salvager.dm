@@ -516,7 +516,7 @@
 
 /obj/item/gun/kinetic/pumpweapon/riotgun/salvager
 	name = "reclaimed shotgun"
-	desc = "A pump action shotgun."
+	desc = "A pump-action shotgun with a nonstandard retrofit. Unlike its standardized cousin, this shotgun can fire makeshift pipe-shot. Unfortunately, its shoddy upgrade has reduced its ammo capacity significantly."
 	gildable = FALSE
 	max_ammo_capacity = 4
 	color = list(1.47114,0.473684,-0.473684,-1.4581,-0.473684,1.47368,0.983451,1,5.43476e-007)
