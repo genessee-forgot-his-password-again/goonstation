@@ -2059,7 +2059,7 @@ ABSTRACT_TYPE(/obj/item/survival_rifle_barrel)
 	c_flags = ONBACK
 	force = MELEE_DMG_RIFLE
 	contraband = 5
-	ammo_cats = list(AMMO_SHOTGUN_AUTOMATIC)
+	ammo_cats = list(AMMO_SHOTGUN_ALL)
 	max_ammo_capacity = 5
 	auto_eject = FALSE
 	can_dual_wield = FALSE
