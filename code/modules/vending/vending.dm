@@ -3421,6 +3421,8 @@ TYPEINFO(/obj/machinery/vending/janitor)
 
 		product_list += new/datum/data/vending_product(/obj/item/gun/kinetic/m16, 1, infinite=TRUE)
 		product_list += new/datum/data/vending_product(/obj/item/ammo/bullets/assault_rifle/remington, 1, infinite=TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/ammo/bullets/assault_rifle, 1, infinite=TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/ammo/bullets/assault_rifle/armor_piercing, 1, infinite=TRUE)
 
 		product_list += new/datum/data/vending_product(/obj/item/gun/kinetic/striker, 1, infinite=TRUE)
 		product_list += new/datum/data/vending_product(/obj/item/ammo/bullets/a12/bird/seven, 1, infinite=TRUE)
