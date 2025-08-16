@@ -3447,3 +3447,333 @@ TYPEINFO(/obj/machinery/vending/janitor)
 		product_list += new/datum/data/vending_product(/obj/item/sword/discount/gang, 1, infinite=TRUE)
 		product_list += new/datum/data/vending_product(/obj/item/gang_machete, 1, infinite=TRUE)
 		product_list += new/datum/data/vending_product(/obj/item/swords/katana/reverse, 1, infinite=TRUE)
+
+// custom things gen made
+
+/obj/machinery/vending/adminguns
+	name = "NextGen Munitions"
+	desc = "Military equipment fabricator. It smells kind of like Dr. Gibb and gunpowder."
+	icon_state = "weapon"
+	icon_panel = "card-panel"
+	icon_off = "weapon"
+	icon_broken = "janitor-broken"
+	icon_fallen = "janitor-fallen"
+	pay = 0
+	freestuff = 1
+
+	create_products()
+		..()
+		product_list += new/datum/data/vending_product(/obj/item/gun/energy/taser_gun, 20, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/gun/energy/laser_gun, 20, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/gun/energy/phaser_gun, 20, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/gun/energy/egun, 20, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/gun/energy/ntgun, 20, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/gun/energy/tasershotgun, 20, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/gun/energy/tasersmg, 20, infinite = TRUE)
+
+		product_list += new/datum/data/vending_product(/obj/item/gun/energy/lasergat, 20, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/ammo/power_cell/lasergat, 20, infinite = TRUE)
+
+		product_list += new/datum/data/vending_product(/obj/item/gun/kinetic/sawnoff, 20, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/gun/kinetic/pumpweapon/riotgun, 20, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/gun/kinetic/single_action/mts_255, 20, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/gun/kinetic/tactical_shotgun, 20, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/gun/kinetic/spes, 20, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/gun/kinetic/striker, 20, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/ammo/bullets/a12, 20, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/ammo/bullets/a12/bird, 20, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/ammo/bullets/nails, 20, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/ammo/bullets/abg, 20, infinite = TRUE)
+
+		product_list += new/datum/data/vending_product(/obj/item/gun/kinetic/m16, 20, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/ammo/bullets/assault_rifle/remington, 20, infinite = TRUE)
+
+		product_list += new/datum/data/vending_product(/obj/item/gun/kinetic/clock_188, 20, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/ammo/bullets/nine_mm_NATO, 20, infinite = TRUE)
+
+		product_list += new/datum/data/vending_product(/obj/item/gun/kinetic/revolver, 20, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/ammo/bullets/a357, 20, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/ammo/bullets/a357/AP, 20, infinite = TRUE)
+
+		product_list += new/datum/data/vending_product(/obj/item/gun/kinetic/detectiverevolver, 20, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/ammo/bullets/a38, 20, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/ammo/bullets/a38/AP, 20, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/ammo/bullets/a38/stun, 20, infinite = TRUE)
+
+		product_list += new/datum/data/vending_product(/obj/item/gun/kinetic/single_action/colt_saa, 20, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/ammo/bullets/c_45, 20, infinite = TRUE)
+
+		product_list += new/datum/data/vending_product(/obj/item/gun/kinetic/deagle, 20, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/ammo/bullets/deagle50cal, 20, infinite = TRUE)
+
+		product_list += new/datum/data/vending_product(/obj/item/gun/kinetic/akm, 20, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/ammo/bullets/akm, 20, infinite = TRUE)
+
+		product_list += new/datum/data/vending_product(/obj/item/gun/kinetic/draco, 20, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/ammo/bullets/akm/draco, 20, infinite = TRUE)
+
+		product_list += new/datum/data/vending_product(/obj/item/gun/kinetic/greasegun, 20, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/ammo/bullets/nine_mm_surplus/mag_grease, 20, infinite = TRUE)
+
+		product_list += new/datum/data/vending_product(/obj/item/gun/kinetic/makarov, 20, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/ammo/bullets/nine_mm_soviet, 20, infinite = TRUE)
+
+		product_list += new/datum/data/vending_product(/obj/item/gun/kinetic/webley, 20, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/ammo/bullets/webley, 20, infinite = TRUE)
+
+		product_list += new/datum/data/vending_product(/obj/item/gun/kinetic/uzi, 20, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/ammo/bullets/nine_mm_surplus/mag_mor, 20, infinite = TRUE)
+
+		product_list += new/datum/data/vending_product(/obj/item/gun/kinetic/silenced_22, 20, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/ammo/bullets/bullet_22, 20, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/ammo/bullets/bullet_22HP, 20, infinite = TRUE)
+
+		product_list += new/datum/data/vending_product(/obj/item/gun/kinetic/pistol, 20, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/ammo/bullets/bullet_9mm, 20, infinite = TRUE)
+
+		product_list += new/datum/data/vending_product(/obj/item/gun/kinetic/riot40mm, 20, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/ammo/bullets/smoke, 20, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/ammo/bullets/pbr, 20, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/ammo/bullets/stunbaton, 20, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/ammo/bullets/breach_flashbang, 20, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/ammo/bullets/grenade_round/explosive, 20, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/ammo/bullets/grenade_round/high_explosive, 20, infinite = TRUE)
+
+		product_list += new/datum/data/vending_product(/obj/item/gun/kinetic/hunting_rifle, 20, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/ammo/bullets/rifle_3006, 20, infinite = TRUE)
+
+		product_list += new/datum/data/vending_product(/obj/item/baton, 20, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/bat, 20, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/breaching_hammer, 20, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/sword, 20, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/sword/discount, 20, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/fireaxe, 20, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/switchblade, 20, infinite = TRUE)
+
+		product_list += new/datum/data/vending_product(/obj/item/clothing/suit/armor/gang, 20, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/clothing/suit/armor/vest, 20, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/clothing/suit/armor/heavy, 20, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/clothing/suit/space/ntso, 20, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/clothing/suit/space/syndicate, 20, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/clothing/head/helmet, 20, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/clothing/head/helmet/hardhat/security/improved, 20, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/clothing/head/helmet/space/ntso, 20, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/clothing/head/helmet/space/syndicate, 20, infinite = TRUE)
+
+		product_list += new/datum/data/vending_product(/obj/item/storage/backpack/syndie/tactical, 20, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/storage/fanny, 20, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/storage/fanny/syndie, 20, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/storage/pouch, 20, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/storage/grenade_pouch, 20, infinite = TRUE)
+
+		product_list += new/datum/data/vending_product(/obj/item/old_grenade/stinger, 20, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/old_grenade/stinger/frag, 20, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/old_grenade/energy_frag, 20, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/old_grenade/high_explosive, 20, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/chem_grenade/flashbang, 20, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/chem_grenade/incendiary, 20, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/old_grenade/smoke, 20, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/old_grenade/smoke/mustard, 20, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/old_grenade/energy_concussion, 20, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/old_grenade/graviton, 20, infinite = TRUE)
+
+		product_list += new/datum/data/vending_product(/obj/item/breaching_charge/NT, 20, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/breaching_charge/thermite, 20, infinite = TRUE)
+
+/obj/machinery/vending/adminmats
+	name = "NextGen Minerals"
+	desc = "Raw material fabricator. There's a sticker on the side that says 'DO NOT PLASMASTONE??'"
+	icon_state = "standard"
+	icon_panel = "standard-panel"
+	icon_off = "standard-off"
+	icon_broken = "standard-broken"
+	icon_fallen = "standard-fallen"
+	pay = 0
+	freestuff = 1
+
+	create_products()
+		..()
+		product_list += new/datum/data/vending_product(/obj/item/raw_material/mauxite, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/raw_material/pharosium, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/raw_material/molitz, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/raw_material/char, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/raw_material/ice, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/raw_material/cobryl, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/raw_material/bohrum, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/raw_material/claretine, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/raw_material/martian, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/raw_material/syreline, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/raw_material/cerenkite, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/raw_material/plasmastone, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/raw_material/eldritch, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/raw_material/gold, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/raw_material/miracle, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/raw_material/erebite, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/raw_material/starstone, 100, infinite = TRUE)
+
+		product_list += new/datum/data/vending_product(/obj/item/material_piece/steel, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/material_piece/glass, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/material_piece/copper, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/material_piece/rubber/latex, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/material_piece/cloth/cottonfabric, 100, infinite = TRUE)
+
+		product_list += new/datum/data/vending_product(/obj/item/currency/spacecash/hundred, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/currency/spacecash/fivehundred, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/currency/spacecash/thousand, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/currency/spacecash/hundredthousand, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/currency/spacecash/million, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/stamped_bullion, 100, infinite = TRUE)
+
+/obj/machinery/vending/adminmeds
+	name = "NextGen Medicines"
+	desc = "Raw chemical fabricator. Can also make non-chemical medical remedies."
+	icon_state = "med"
+	icon_panel = "standard-panel"
+	icon_off = "med-off"
+	icon_broken = "med-broken"
+	icon_fallen = "med-fallen"
+	pay = 0
+	freestuff = 1
+
+	create_products()
+		..()
+		product_list += new/datum/data/vending_product(/obj/item/storage/firstaid/regular, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/storage/firstaid/brute, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/storage/firstaid/fire, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/storage/firstaid/toxin, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/storage/firstaid/oxygen, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/storage/firstaid/brain, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/storage/firstaid/crit, 100, infinite = TRUE)
+
+		product_list += new/datum/data/vending_product(/obj/item/item_box/medical_patches/mini_silver_sulf, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/item_box/medical_patches/mini_styptic, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/item_box/medical_patches/mini_synthflesh, 100, infinite = TRUE)
+
+		product_list += new/datum/data/vending_product(/obj/item/item_box/medical_patches/silver_sulf, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/item_box/medical_patches/styptic, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/item_box/medical_patches/synthflesh, 100, infinite = TRUE)
+
+		product_list += new/datum/data/vending_product(/obj/item/storage/medical_pouch, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/storage/belt/syndicate_medic_belt, 100, infinite = TRUE)
+
+		product_list += new/datum/data/vending_product(/obj/item/stimpack, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/reagent_containers/emergency_injector/omnizine, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/reagent_containers/emergency_injector/charcoal, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/reagent_containers/emergency_injector/epinephrine, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/reagent_containers/emergency_injector/anti_rad, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/reagent_containers/emergency_injector/salicylic_acid, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/reagent_containers/emergency_injector/qwikheal, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/reagent_containers/emergency_injector/bringbak, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/reagent_containers/emergency_injector/bloodbak, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/reagent_containers/emergency_injector/painstop, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/reagent_containers/emergency_injector/high_capacity/cardiac, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/reagent_containers/emergency_injector/high_capacity/bloodloss, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/reagent_containers/emergency_injector/high_capacity/lifesupport, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/reagent_containers/emergency_injector/high_capacity/juggernaut, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/reagent_containers/emergency_injector/high_capacity/donk_injector, 100, infinite = TRUE)
+
+		product_list += new/datum/data/vending_product(/obj/item/storage/pill_bottle/cyberpunk, 100, infinite = TRUE)
+
+		product_list += new/datum/data/vending_product(/obj/item/device/analyzer/healthanalyzer, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/device/analyzer/healthanalyzer_upgrade, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/device/analyzer/healthanalyzer_organ_upgrade, 100, infinite = TRUE)
+
+		product_list += new/datum/data/vending_product(/obj/item/clothing/glasses/healthgoggles, 100, infinite = TRUE)
+
+/obj/machinery/vending/adminfood
+	name = "NextGen Meals"
+	desc = "Finished food synthesizer. Great for parties!"
+	icon_state = "food"
+	icon_panel = "standard-panel"
+	icon_off = "standard-off"
+	icon_broken = "standard-broken"
+	icon_fallen = "standard-fallen"
+	pay = 0
+	freestuff = 1
+
+	create_products()
+		..()
+		product_list += new/datum/data/vending_product(/obj/item/storage/box/glassbox, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/storage/box/cutlery, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/storage/box/plates, 100, infinite = TRUE)
+
+		product_list += new/datum/data/vending_product(/obj/item/storage/box/donkpocket_kit, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/storage/box/bacon_kit, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/storage/box/cookie_tin, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/storage/box/beer, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/storage/box/popsicles, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/kitchen/peach_rings, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/kitchen/gummy_worms_bag, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/kitchen/food_box/donut_box, 100, infinite = TRUE)
+
+		product_list += new/datum/data/vending_product(/obj/item/reagent_containers/food/snacks/breadloaf, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/reagent_containers/food/snacks/breadloaf/banana, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/reagent_containers/food/snacks/breadloaf/pumpkin, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/reagent_containers/food/snacks/breadloaf/honeywheat, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/reagent_containers/food/snacks/breadloaf/corn, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/reagent_containers/food/snacks/breadloaf/corn/sweet, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/reagent_containers/food/snacks/breadloaf/corn/sweet/honey, 100, infinite = TRUE)
+
+		product_list += new/datum/data/vending_product(/obj/item/reagent_containers/food/snacks/burger/synthburger, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/reagent_containers/food/snacks/burger/cheeseburger, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/reagent_containers/food/snacks/burger/chicken, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/reagent_containers/food/snacks/burger/chicken/spicy, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/reagent_containers/food/snacks/burger/fishburger, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/reagent_containers/food/snacks/burger/baconburger, 100, infinite = TRUE)
+
+		product_list += new/datum/data/vending_product(/obj/item/reagent_containers/food/snacks/sandwich/meat_s, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/reagent_containers/food/snacks/sandwich/pb, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/reagent_containers/food/snacks/sandwich/pbh, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/reagent_containers/food/snacks/sandwich/blt, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/reagent_containers/food/snacks/sandwich/cheese, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/reagent_containers/food/snacks/sandwich/meatball, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/reagent_containers/food/snacks/sandwich/banhmi, 100, infinite = TRUE)
+
+		product_list += new/datum/data/vending_product(/obj/item/reagent_containers/food/snacks/corndog, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/reagent_containers/food/snacks/corndog/banana, 100, infinite = TRUE)
+
+		product_list += new/datum/data/vending_product(/obj/item/reagent_containers/food/snacks/danish_apple, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/reagent_containers/food/snacks/danish_blueb, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/reagent_containers/food/snacks/danish_cherry, 100, infinite = TRUE)
+
+		product_list += new/datum/data/vending_product(/obj/item/reagent_containers/food/snacks/steak/synth, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/reagent_containers/food/snacks/soup/oatmeal, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/reagent_containers/food/snacks/soup/chili, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/reagent_containers/food/snacks/soup/tomato, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/reagent_containers/food/snacks/taco/complete, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/reagent_containers/food/snacks/donkpocket/warm, 100, infinite = TRUE)
+
+		product_list += new/datum/data/vending_product(/obj/item/reagent_containers/food/snacks/candy, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/reagent_containers/food/snacks/candy/nougat, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/reagent_containers/food/snacks/candy/chocolate, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/reagent_containers/food/snacks/candy/wrapped_candy/butterscotch, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/reagent_containers/food/snacks/candy/wrapped_candy/caramel, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/reagent_containers/food/snacks/candy/wrapped_candy/hard, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/reagent_containers/food/snacks/candy/wrapped_candy/pb_cup, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/reagent_containers/food/snacks/candy/wrapped_candy/taffy/cherry, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/reagent_containers/food/snacks/chips, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/reagent_containers/food/snacks/onionchips, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/reagent_containers/food/snacks/fries, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/reagent_containers/food/snacks/donut/custom/frosted, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/reagent_containers/food/snacks/donut/custom/robust, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/reagent_containers/food/snacks/donut/custom/robusted, 100, infinite = TRUE)
+
+		product_list += new/datum/data/vending_product(/obj/item/reagent_containers/food/drinks/cola, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/reagent_containers/food/drinks/peach, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/reagent_containers/food/drinks/cola/random, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/reagent_containers/food/drinks/chickensoup, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/reagent_containers/food/drinks/bottle/soda/bottledwater, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/reagent_containers/food/drinks/coffee, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/reagent_containers/food/drinks/milk, 100, infinite = TRUE)
+
+		product_list += new/datum/data/vending_product(/obj/item/reagent_containers/food/drinks/bottle/beer, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/reagent_containers/food/drinks/bottle/fancy_beer, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/reagent_containers/food/drinks/bottle/hobo_wine, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/reagent_containers/food/drinks/bottle/wine, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/reagent_containers/food/drinks/bottle/mead, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/reagent_containers/food/drinks/bottle/cider, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/reagent_containers/food/drinks/bottle/rum, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/reagent_containers/food/drinks/bottle/vodka, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/reagent_containers/food/drinks/bottle/gin, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/reagent_containers/food/drinks/bottle/champagne, 100, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/reagent_containers/food/drinks/bottle/bojackson, 100, infinite = TRUE)

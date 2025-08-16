@@ -17642,6 +17642,19 @@
 /obj/railing/cyan,
 /turf/unsimulated/floor/cave,
 /area/crater)
+"brJ" = (
+/obj/machinery/light{
+	dir = 8;
+	layer = 9.1;
+	pixel_x = -10
+	},
+/obj/table/reinforced/industrial,
+/obj/machinery/glass_recycler/bar{
+	pixel_y = 12
+	},
+/obj/item/reagent_containers/food/drinks/drinkingglass/oldf,
+/turf/unsimulated/floor/wood/seven,
+/area/centcom/offices/genessee)
 "brM" = (
 /obj/machinery/vending/cola/red,
 /turf/unsimulated/floor/red/side,
@@ -52211,6 +52224,21 @@
 	},
 /turf/unsimulated/floor/plating,
 /area/watchful_eye_sensor)
+"dMD" = (
+/obj/decal/poster/wallsign/dead_exec_portrait{
+	pixel_y = -32
+	},
+/obj/storage/closet/syndicate,
+/obj/item/currency/spacecash/million,
+/obj/item/currency/spacecash/million,
+/obj/item/electronics/scanner/syndicate,
+/obj/item/spraybottle/cleaner/tsunami,
+/obj/item/device/camera_viewer/omniview,
+/obj/item/device/detective_scanner/detective,
+/obj/item/clothing/glasses/vr,
+/obj/item/pet_carrier/admin_crimes,
+/turf/unsimulated/floor/carpet/arcade,
+/area/centcom/offices/genessee)
 "dMF" = (
 /obj/machinery/computer3/generic/secure_data{
 	dir = 4
@@ -54945,6 +54973,27 @@
 	opacity = 0
 	},
 /area/centcom/lobby)
+"emM" = (
+/obj/window/reinforced/north,
+/obj/storage/closet/dresser,
+/obj/item/storage/backpack/satchel/NT{
+	slots = 12;
+	name = "\improper Corporate Security Satchel"
+	},
+/obj/item/clothing/suit/det_suit/beepsky,
+/obj/item/clothing/under/misc/turds,
+/obj/item/clothing/glasses/sunglasses/sechud,
+/obj/item/clothing/shoes/swat/noslip,
+/obj/item/clothing/gloves/fingerless,
+/obj/item/clothing/head/basecap/black,
+/obj/item/device/radio/headset/syndicate/comtac{
+	name = "Corporate Detective's headset";
+	icon_override = "inspector"
+	},
+/obj/item/device/radio_upgrade,
+/obj/item/storage/belt/security/shoulder_holster/inspector,
+/turf/unsimulated/floor/carpet/arcade,
+/area/centcom/offices/genessee)
 "emZ" = (
 /obj/decal/tile_edge/line/black{
 	dir = 8;
@@ -58752,6 +58801,13 @@
 	},
 /turf/unsimulated/floor/martian,
 /area/crunch)
+"hqC" = (
+/obj/decal/poster/wallsign/mantaposter{
+	pixel_y = 32
+	},
+/obj/storage/secure/closet/fridge,
+/turf/unsimulated/floor/wood/seven,
+/area/centcom/offices/genessee)
 "hqN" = (
 /obj/stool/chair/couch/purple{
 	dir = 8
@@ -58887,6 +58943,10 @@
 	},
 /turf/unsimulated/wall/auto/lead/blue,
 /area/upper_arctic/pod2)
+"huG" = (
+/obj/machinery/vending/adminfood,
+/turf/unsimulated/floor/wood/seven,
+/area/centcom/offices/genessee)
 "huI" = (
 /obj/fakeobject/airlock_broken/firelock{
 	dir = 1;
@@ -58940,6 +59000,12 @@
 /obj/item/clothing/under/misc/walpoutfit2,
 /turf/unsimulated/floor/terrazzo/black,
 /area/centcom/offices/walpvrgis)
+"hwk" = (
+/obj/window/reinforced/north,
+/obj/window/reinforced/west,
+/obj/machinery/vending/murderbox_gang,
+/turf/unsimulated/floor/industrial,
+/area/centcom/offices/genessee)
 "hwn" = (
 /obj/machinery/door/unpowered/wood{
 	dir = 8;
@@ -59563,6 +59629,10 @@
 	icon_state = "floor2"
 	},
 /area/shuttle/merchant_shuttle/left_centcom/cogmap)
+"iaw" = (
+/obj/machinery/door/window/westleft,
+/turf/unsimulated/floor/industrial,
+/area/centcom/offices/genessee)
 "iaA" = (
 /obj/indestructible/shuttle_corner{
 	dir = 9;
@@ -60236,9 +60306,16 @@
 	dir = 8
 	},
 /area/centcom/offices/cogwerks)
+"izw" = (
+/turf/unsimulated/floor/industrial,
+/area/centcom/offices/genessee)
 "izT" = (
 /turf/unsimulated/wall/auto/lead/gray,
 /area/iomoon/base)
+"iAa" = (
+/obj/window/reinforced/north,
+/turf/unsimulated/floor/industrial,
+/area/centcom/offices/genessee)
 "iAN" = (
 /obj/shrub{
 	dir = 1
@@ -62879,6 +62956,12 @@
 /obj/map/light/brighterwhite,
 /turf/unsimulated/floor/carpet/blue/fancy/narrow/eastwest,
 /area/afterlife/bar/sanctuary)
+"kxD" = (
+/obj/stool/chair/comfy/sleek{
+	dir = 8
+	},
+/turf/unsimulated/floor/wood/seven,
+/area/centcom/offices/genessee)
 "kxS" = (
 /obj/stool/chair/comfy/shuttle/red{
 	dir = 1
@@ -63143,6 +63226,15 @@
 	},
 /turf/unsimulated/floor/plating,
 /area/moon/museum)
+"kIC" = (
+/turf/unsimulated/wall/generic{
+	dir = 4;
+	icon = 'icons/misc/worlds.dmi';
+	icon_state = "leadwindow_1";
+	name = "window";
+	opacity = 0
+	},
+/area/centcom/offices/genessee)
 "kIF" = (
 /obj/fakeobject{
 	anchored = 1;
@@ -64145,6 +64237,10 @@
 /obj/decal/poster/wallsign/stencil/right/two,
 /turf/unsimulated/floor/setpieces/gauntlet,
 /area/sim/racing_track)
+"lvQ" = (
+/obj/machinery/door/window/westleft,
+/turf/unsimulated/floor/wood/seven,
+/area/centcom/offices/genessee)
 "lwe" = (
 /obj/lattice{
 	dir = 10;
@@ -64187,6 +64283,13 @@
 	icon_state = "shore-31"
 	},
 /area/titlescreen)
+"lyG" = (
+/obj/window/reinforced/west,
+/obj/stool/chair/comfy/sleek{
+	dir = 4
+	},
+/turf/unsimulated/floor/wood/seven,
+/area/centcom/offices/genessee)
 "lzl" = (
 /turf/unsimulated/wall/auto/adventure/shuttle/dark,
 /area/syndicate_station/battlecruiser)
@@ -65626,6 +65729,12 @@
 	},
 /turf/space,
 /area/diner/tug)
+"mKl" = (
+/obj/decal/poster/wallsign/eiffelposter{
+	pixel_x = -32
+	},
+/turf/unsimulated/floor/wood/seven,
+/area/centcom/offices/genessee)
 "mKt" = (
 /turf/unsimulated/floor/wood/seven,
 /area/sim/gunsim/lobby)
@@ -65908,10 +66017,21 @@
 /obj/spawner/ancient_robot_artifact,
 /turf/unsimulated/floor/ancient,
 /area/crunch)
+"mXA" = (
+/obj/machinery/chem_dispenser/soda,
+/turf/unsimulated/floor/wood/seven,
+/area/centcom/offices/genessee)
 "mXS" = (
 /mob/living/critter/spider/spacerachnid,
 /turf/unsimulated/floor/cave,
 /area/crater/cave/lower)
+"mXV" = (
+/mob/living/critter/small_animal/dog/corgi{
+	desc = "Formerly the HoP's beloved corgi. Now, Ian is Michael's beloved corgi.";
+	name = "Ian"
+	},
+/turf/unsimulated/floor/wood/seven,
+/area/centcom/offices/genessee)
 "mYR" = (
 /obj/decal/cleanable/blood{
 	icon_state = "left_bloodygloves_c"
@@ -66807,6 +66927,14 @@
 	},
 /turf/unsimulated/floor/circuit/red,
 /area/syndicate_station/assault_pod)
+"nJa" = (
+/turf/unsimulated/wall/generic{
+	icon = 'icons/misc/worlds.dmi';
+	icon_state = "leadwindow_1";
+	name = "window";
+	opacity = 0
+	},
+/area/centcom/offices/genessee)
 "nJg" = (
 /obj/mapping_helper/wingrille_spawn/auto/reinforced/crystal,
 /turf/unsimulated/floor/plating,
@@ -67636,6 +67764,9 @@
 	tag = "icon-fblue2 (NORTHWEST)"
 	},
 /area/afterlife/bar/sanctuary)
+"oig" = (
+/turf/unsimulated/wall/auto/lead/blue,
+/area/centcom/offices/genessee)
 "oiq" = (
 /obj/table/wood/auto/desk,
 /obj/item/clipboard,
@@ -68038,6 +68169,12 @@
 	},
 /turf/unsimulated/floor/wood/six,
 /area/centcom/offices/janantilles)
+"oAX" = (
+/obj/admin_plaque{
+	name = "Michael's Office"
+	},
+/turf/unsimulated/wall/auto/lead/blue,
+/area/centcom/offices/genessee)
 "oAZ" = (
 /obj/machinery/door/airlock/pyro/external{
 	dir = 4
@@ -68292,6 +68429,20 @@
 	},
 /turf/unsimulated/floor/plating,
 /area/hospital)
+"oLE" = (
+/obj/machinery/light{
+	dir = 4;
+	layer = 9.1;
+	pixel_x = 10
+	},
+/obj/stool/chair/comfy/sleek{
+	dir = 8
+	},
+/obj/decal/poster/wallsign/bookcase{
+	pixel_y = 28
+	},
+/turf/unsimulated/floor/wood/seven,
+/area/centcom/offices/genessee)
 "oMX" = (
 /obj/mesh/catwalk,
 /obj/cable{
@@ -68421,6 +68572,25 @@
 	},
 /turf/unsimulated/floor/wood/six,
 /area/centcom/gallery)
+"oTa" = (
+/obj/machinery/light{
+	dir = 8;
+	layer = 9.1;
+	pixel_x = -10
+	},
+/obj/window/reinforced/north,
+/obj/table/reinforced/industrial/auto,
+/obj/item/cigpacket/cigarillo,
+/obj/item/cigpacket/cigarillo{
+	pixel_x = 8;
+	pixel_y = 5
+	},
+/obj/item/cigpacket/cigarillo{
+	pixel_x = -7;
+	pixel_y = 5
+	},
+/turf/unsimulated/floor/carpet/arcade,
+/area/centcom/offices/genessee)
 "oTk" = (
 /turf/unsimulated/floor/blackwhite{
 	dir = 10
@@ -69267,6 +69437,14 @@
 	},
 /turf/unsimulated/floor/black,
 /area/iomoon/base/underground)
+"pyc" = (
+/obj/machinery/door/unpowered/wood{
+	dir = 1;
+	icon = 'icons/obj/doors/door_office.dmi';
+	lock_dir = 4
+	},
+/turf/unsimulated/floor,
+/area/centcom/offices/genessee)
 "pyi" = (
 /obj/fakeobject/pipe{
 	color = "b4b4b4";
@@ -71372,6 +71550,19 @@
 /obj/machinery/communications_dish,
 /turf/space,
 /area/watchful_eye_sensor)
+"qYg" = (
+/obj/table/reinforced/industrial/auto,
+/obj/traitorifier/virtual/nuclear,
+/obj/item/uplink/syndicate/virtual{
+	icon_state = "uplink";
+	name = "jailbroken uplink";
+	is_VR_uplink = 0;
+	desc = "Grants access to the Syndicate's smuggling network. Unlimited use.";
+	pixel_x = 10;
+	pixel_y = 10
+	},
+/turf/unsimulated/floor/industrial,
+/area/centcom/offices/genessee)
 "qYW" = (
 /obj/machinery/power/data_terminal,
 /obj/cable{
@@ -71644,6 +71835,12 @@
 /obj/map/light/brighterwhite,
 /turf/unsimulated/floor/wood/two,
 /area/afterlife/bar)
+"rny" = (
+/obj/stool/chair/office/syndie{
+	dir = 8
+	},
+/turf/unsimulated/floor/carpet/arcade,
+/area/centcom/offices/genessee)
 "rnz" = (
 /obj/lattice/directional_icons{
 	dir = 1
@@ -72852,6 +73049,10 @@
 	icon_state = "cairngorm2"
 	},
 /area/syndicate_station/battlecruiser)
+"sdl" = (
+/obj/machinery/door/window/northright,
+/turf/unsimulated/floor/carpet/arcade,
+/area/centcom/offices/genessee)
 "sdU" = (
 /obj/machinery/shuttle/engine/propulsion{
 	dir = 1;
@@ -73083,6 +73284,9 @@
 	},
 /turf/unsimulated/floor/airless/plating/catwalk/auto/iomoon,
 /area/iomoon)
+"slw" = (
+/turf/unsimulated/floor/wood/seven,
+/area/centcom/offices/genessee)
 "slQ" = (
 /obj/item/paper/watchful_eye,
 /obj/table/nanotrasen/auto,
@@ -73092,6 +73296,11 @@
 /obj/decal/poster/wallsign/stencil/left/seven,
 /turf/unsimulated/floor/setpieces/gauntlet,
 /area/sim/racing_track)
+"slX" = (
+/obj/machinery/vending/adminmeds,
+/obj/window/reinforced/west,
+/turf/unsimulated/floor/industrial,
+/area/centcom/offices/genessee)
 "slY" = (
 /obj/cable/green{
 	icon_state = "5-10"
@@ -73198,6 +73407,10 @@
 	dir = 1
 	},
 /area/iomoon/base/underground)
+"spl" = (
+/obj/machinery/bot/medbot/head_surgeon,
+/turf/unsimulated/floor/carpet/arcade,
+/area/centcom/offices/genessee)
 "spy" = (
 /turf/unsimulated/floor/stairs/wide/other{
 	dir = 8
@@ -73337,6 +73550,9 @@
 	},
 /turf/unsimulated/floor/plating,
 /area/owlery/Owlmait2)
+"swo" = (
+/turf/unsimulated/floor/carpet/arcade,
+/area/centcom/offices/genessee)
 "swp" = (
 /turf/unsimulated/floor/black/side{
 	dir = 4
@@ -73822,6 +74038,10 @@
 /obj/mapping_helper/wingrille_spawn/auto,
 /turf/unsimulated/floor/engine,
 /area/shuttle/merchant_shuttle/right_centcom/cogmap2)
+"sVn" = (
+/obj/submachine/weapon_vendor/syndicate,
+/turf/unsimulated/floor/industrial,
+/area/centcom/offices/genessee)
 "sVQ" = (
 /obj/fakeobject/pipe{
 	color = "b4b4b4";
@@ -74612,6 +74832,15 @@
 	},
 /turf/unsimulated/floor/plating,
 /area/centcom/lobby)
+"tJN" = (
+/obj/machinery/light{
+	dir = 4;
+	layer = 9.1;
+	pixel_x = 10
+	},
+/obj/machinery/vending/adminguns,
+/turf/unsimulated/floor/industrial,
+/area/centcom/offices/genessee)
 "tKt" = (
 /turf/unsimulated/outdoors/grass,
 /area/void_diner)
@@ -80044,6 +80273,11 @@
 /obj/mapping_helper/wingrille_spawn/auto,
 /turf/unsimulated/floor/plating,
 /area/owlery/Owlmait2)
+"xFX" = (
+/obj/machinery/vending/adminmats,
+/obj/window/reinforced/west,
+/turf/unsimulated/floor/industrial,
+/area/centcom/offices/genessee)
 "xGi" = (
 /obj/cable{
 	icon_state = "1-8"
@@ -80277,6 +80511,19 @@
 	icon_state = "shore-7"
 	},
 /area/titlescreen)
+"xNQ" = (
+/obj/machinery/light{
+	dir = 4;
+	layer = 9.1;
+	pixel_x = 10
+	},
+/obj/window/reinforced/north,
+/obj/item/ammo/ammobox/shootingrange{
+	name = "Corporate Ammo Bag"
+	},
+/obj/table/reinforced/industrial/auto,
+/turf/unsimulated/floor/industrial,
+/area/centcom/offices/genessee)
 "xNY" = (
 /obj/decal/cleanable/fungus,
 /turf/simulated/wall/auto/reinforced/old,
@@ -80803,6 +81050,11 @@
 	},
 /turf/unsimulated/floor/wood/two,
 /area/centcom/offices/katzen)
+"ydl" = (
+/obj/table/reinforced/industrial/auto,
+/obj/item/device/light/zippo/syndicate,
+/turf/unsimulated/floor/carpet/arcade,
+/area/centcom/offices/genessee)
 "yea" = (
 /turf/unsimulated/floor/black{
 	icon_state = "cairngorm11"
@@ -80957,6 +81209,31 @@
 	},
 /turf/unsimulated/floor/plating,
 /area/watchful_eye_sensor)
+"ykr" = (
+/obj/machinery/light{
+	dir = 8;
+	layer = 9.1;
+	pixel_x = -10
+	},
+/obj/item/gun/kinetic/deagle{
+	name = "Brownstone";
+	desc = "The heaviest handgun you've ever seen. The grip is stamped \"Anderson Para-Munitions\". This one has the initials 'M.B.' engraved on the side."
+	},
+/obj/item/ammo/bullets/deagle50cal,
+/obj/item/ammo/bullets/deagle50cal,
+/obj/item/ammo/bullets/deagle50cal,
+/obj/item/ammo/bullets/deagle50cal,
+/obj/item/ammo/bullets/deagle50cal,
+/obj/storage/secure/closet/brig{
+	req_access = null;
+	name = "gun safe"
+	},
+/obj/item/gun/kinetic/m16,
+/obj/item/ammo/bullets/assault_rifle/remington,
+/obj/item/ammo/bullets/assault_rifle/remington,
+/obj/item/ammo/bullets/assault_rifle/remington,
+/turf/unsimulated/floor/carpet/arcade,
+/area/centcom/offices/genessee)
 "ykL" = (
 /turf/unsimulated/floor/marble/black,
 /area/centcom/gallery)
@@ -144780,15 +145057,15 @@ gcn
 dkX
 dny
 dmu
-gcn
-gcn
-gcn
-gZQ
-gcn
-gcn
-gZQ
-gcn
-gcn
+oig
+oig
+oig
+nJa
+oig
+oig
+nJa
+oig
+oig
 gZQ
 gcn
 gcn
@@ -145082,15 +145359,15 @@ xay
 dMu
 dMT
 dZt
-xay
-aES
-aES
-gmA
-aES
-aES
-aES
-aES
-gmA
+kIC
+brJ
+mKl
+huG
+oTa
+ydl
+swo
+ykr
+oig
 aES
 aES
 aES
@@ -145384,15 +145661,15 @@ sWb
 dMu
 dMu
 dMu
-xay
-aES
-aES
-aES
-aES
-aES
-aES
-aES
-aES
+oig
+mXA
+mXV
+slw
+emM
+rny
+swo
+spl
+oig
 aES
 sDR
 dsm
@@ -145686,15 +145963,15 @@ sWb
 dMu
 dMu
 dMu
-xay
-iCR
-aES
-aES
-aES
-aES
-xXj
-aES
-aES
+oig
+hqC
+slw
+slw
+sdl
+swo
+swo
+dMD
+oig
 aES
 dsz
 dsn
@@ -145988,15 +146265,15 @@ xay
 dMv
 dMT
 dMu
-xay
-aES
-aES
-aES
-gmA
-aES
-aES
-aES
-ruY
+oAX
+lyG
+lvQ
+lyG
+hwk
+iaw
+xFX
+slX
+oig
 aES
 dsz
 dsk
@@ -146290,15 +146567,15 @@ xay
 dMu
 dMu
 dMu
-xay
-aES
-aES
-aES
-aES
-aES
-aES
-aES
-aES
+pyc
+slw
+slw
+slw
+iAa
+izw
+izw
+izw
+oig
 aES
 dsz
 dsl
@@ -146592,15 +146869,15 @@ rst
 dMu
 dMu
 dMu
-xay
-aES
-aES
-aES
-ruY
-aES
-aES
-aES
-gmA
+oig
+oLE
+kxD
+kxD
+xNQ
+qYg
+sVn
+tJN
+oig
 aES
 sDR
 dsm
@@ -146894,15 +147171,15 @@ dYr
 dMu
 dMT
 dZt
-xay
-aES
-aES
-aES
-aES
-aES
-aES
-aES
-aES
+oig
+oig
+oig
+oig
+oig
+oig
+oig
+oig
+oig
 aES
 aES
 aES
