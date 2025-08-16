@@ -16,16 +16,17 @@
 
 	attack_self(mob/user)
 		..()
-		if(!ON_COOLDOWN(src, "panic button", 15 SECONDS))
-			if(isliving(user))
-				playsound(src, 'sound/items/security_alert.ogg', 30)
-				usr.visible_message(SPAN_ALERT("[usr] presses the red button on [src]."),
-				SPAN_NOTICE("You press the button on [src]."),
-				SPAN_ALERT("You see [usr] press a button on [src]."))
-				logTheThing(LOG_COMBAT, user, "triggers [src] at [log_loc(user)]")
-				triggerpanicbutton()
-		else
-			boutput(user, SPAN_NOTICE("The [src] buzzes faintly. It must be cooling down."))
+		if(ON_COOLDOWN(src, "panic button", 15 SECONDS))
+			boutput(user, SPAN_NOTICE("\The [src] buzzes faintly. It must be cooling down."))
+			return
+		if(isliving(user) && !is_dead_or_ghost_role(user))
+			playsound(src, 'sound/items/security_alert.ogg', 30)
+			usr.visible_message(SPAN_ALERT("[usr] presses the red button on [src]."),
+			SPAN_NOTICE("You press the button on [src]."),
+			SPAN_ALERT("You see [usr] press a button on [src]."))
+			logTheThing(LOG_COMBAT, user, "triggers [src] at [log_loc(user)]")
+			triggerpanicbutton()
+
 
 	proc/triggerpanicbutton(user)
 		var/datum/signal/signal = get_free_signal()
@@ -117,7 +118,7 @@
 	New()
 		set_current_projectile(new/datum/projectile/energy_bolt/stasis)
 		projectiles = list(current_projectile)
-		AddComponent(/datum/component/holdertargeting/windup, 3 SECONDS)
+		AddComponent(/datum/component/holdertargeting/windup, 2 SECONDS)
 		..()
 
 /datum/projectile/energy_bolt/stasis
@@ -287,3 +288,362 @@ ABSTRACT_TYPE(/mob/living/critter/human/mercenary)
 	Shipping to Frontier Outpost 8.<br>
 	Received at Frontier Outpost 8.<br>
 	Awaiting local transportation.</center>"}
+
+// Spiderweb shit and abilities. woe, anyone foolish enough to gaze upon this code
+/obj/spiderweb
+	name = "spider web"
+	desc = "Not your average cobweb, it looks much thicker and seems to be coated with some sort of fluid."
+	HELP_MESSAGE_OVERRIDE({"This web is <b>immune</b> to Brute and Burn damage. Use <b>Cutting or Stabbing</b> weapons to destroy. "})
+	icon = 'icons/obj/decals/cleanables.dmi'
+	icon_state = "cobweb_small"
+	anchored = ANCHORED_ALWAYS
+	var/weblevel = 1
+	density = 0
+
+	proc/can_web_walk(atom/A)
+		return isliving(A) && A.hasStatus("webwalk")
+
+	New()
+		..()
+		src.update_self()
+
+	Cross(atom/A)
+		switch(weblevel)
+			if(-INFINITY to 2)
+				return 1 //is this even necessary? idk
+			if(3 to INFINITY)
+				if(!src.can_web_walk(A))
+					return 0
+				else
+					return 1
+
+	Crossed(atom/movable/AM)
+		. = ..()
+		if (isintangible(AM) || isobserver(AM))
+			return
+		switch(weblevel)
+			if(-INFINITY to 2)
+				if(!src.can_web_walk(AM))
+					AM.changeStatus("slowed", 1 SECONDS)
+					if(!ON_COOLDOWN(AM, "webrustle", 1 SECOND))
+						playsound(AM.loc, 'sound/impact_sounds/Bush_Hit.ogg', 45, 1)
+
+	attackby(obj/item/W, mob/user)
+		if (!W) return
+		if (!user) return
+		var/dmg = FALSE
+		if (W.hit_type == DAMAGE_CUT || W.hit_type == DAMAGE_STAB)
+			playsound(src.loc, 'sound/impact_sounds/burn_sizzle.ogg', 45, 1)
+			dmg = TRUE
+		else if (W.hit_type == DAMAGE_BLUNT || W.hit_type == DAMAGE_BURN)
+			playsound(src.loc, 'sound/impact_sounds/Bush_Hit.ogg', 45, 1)
+			boutput(user, SPAN_NOTICE("Your [W.name] isn't effective against the [src]!"))
+			return
+
+		if(dmg == TRUE)
+			src.take_damage(1, "brute", user)
+
+		user.lastattacked  = get_weakref(src)
+		..()
+
+	attack_hand(mob/user)
+		. = ..()
+		if(!ON_COOLDOWN(user, "pokeweb", 1 SECOND))
+			src.visible_message(SPAN_ALERT("<b>[user]</b> [pick("gently", "angrily", "fondly", "subtly", "horrifyingly")] [pick("pokes", "whacks", "punches", "touches")] the [src]!"))
+			playsound(src.loc, 'sound/impact_sounds/Bush_Hit.ogg', 45, 1)
+
+/obj/spiderweb/proc/update_self()
+	playsound(src, 'sound/misc/splash_1.ogg', 45, 1)
+	switch(src.weblevel)
+		if (-INFINITY to 1)
+			src.name = initial(src.name)
+			src.set_opacity(0)
+			src.set_density(0)
+			src.icon_state = "cobweb_small"
+		if (2)
+			src.name = "thick [initial(src.name)]"
+			src.set_opacity(1)
+			src.set_density(0)
+			src.icon_state = "cobweb_floor-c"
+		if (3 to INFINITY)
+			src.name = "dense [initial(src.name)]"
+			src.set_opacity(1)
+			src.set_density(1)
+			src.icon_state = "cobweb_floor"
+
+/obj/spiderweb/proc/take_damage(var/amount, var/damtype = "brute",var/mob/user)
+	if (!isnum(amount) || amount <= 0)
+		return
+
+	src.weblevel -= 1
+	if (src.weblevel < 1)
+		qdel (src)
+	else
+		src.update_self()
+
+
+/datum/statusEffect/webwalk
+	id = "webwalk"
+	name = "Web Walking"
+	desc = "You can walk through spider webs without any adverse effects and will slowly heal when standing on spider webs."
+	icon_state = "foot"
+	effect_quality = STATUS_QUALITY_POSITIVE
+	duration = INFINITE_STATUS
+	maxDuration = null
+	unique = TRUE
+
+	onUpdate(timePassed)
+		. = ..()
+		var/turf/T = get_turf(owner)
+		var/obj/spiderweb/web_tile = locate(/obj/spiderweb) in T.contents
+		if((web_tile) && !ON_COOLDOWN(src.owner, "webwalk_heal", 2 SECONDS) && isliving(owner))
+			var/mob/living/L = owner
+			L.HealDamage("All", 0.75, 0.75, 0.75)
+
+/datum/targetable/spider/lay_spider_web
+	name = "Lay a Web"
+	desc = "Lay a spider web on the ground. If there is already a web there, upgrade it to the next level."
+	icon = 'icons/mob/critter_ui.dmi'
+	icon_state = "spider_web"
+	targeted = 1
+	target_anything = 1
+	cooldown = 3 SECONDS
+	max_range = 1
+
+	cast(atom/target)
+		. = ..()
+		var/turf/T = get_turf(target)
+		if (isturf(T))
+			if (T.density)
+				boutput(holder.owner, SPAN_ALERT("You can't lay a web there!"))
+				return 1
+
+			for (var/obj/O in T.contents)
+				if (istype(O, /obj/window) || istype(O, /obj/forcefield) || istype(O, /obj/blob))
+					boutput(holder.owner, SPAN_ALERT("You can't lay a web there!"))
+					return 1
+
+
+			var/obj/spiderweb/web_tile = locate(/obj/spiderweb) in T.contents
+
+			if (istype(web_tile))
+				if(web_tile.weblevel < 3)
+					web_tile.weblevel += 1
+					web_tile.update_self()
+					boutput(holder.owner, SPAN_NOTICE("You reinforce the web on [T]."))
+				else
+					boutput(holder.owner, SPAN_NOTICE("You can't reinforce this web any more."))
+					return
+			else
+				new/obj/spiderweb(T)
+				boutput(holder.owner, SPAN_NOTICE("You lay a web on [T]."))
+
+/mob/living/critter/spider/weblaying
+	name = "weblaying spider"
+	real_name = "weblaying spider"
+	desc = "Terrifying. These creatures will build a nest of horror if left unchecked."
+	add_abilities = list(/datum/targetable/spider/lay_spider_web,
+						/datum/targetable/critter/spider_bite,
+						/datum/targetable/critter/spider_flail,
+						/datum/targetable/critter/spider_drain,
+						/datum/targetable/spider/lay_spider_egg)
+
+	health_brute = 50
+	health_brute_vuln = 0.75
+	health_burn = 50
+	health_burn_vuln = 0.3
+	reagent_capacity = 0
+
+/mob/living/critter/spider/weblaying/baby
+	name = "li'l weblaying spider"
+	icon_state = "lil_spide"
+	icon_state_dead = "lil_spide-dead"
+	density = 0
+	flags = TABLEPASS
+	fits_under_table = 1
+	health_brute = 10
+	health_burn = 10
+	good_grip = 0
+	can_grab = 0
+	max_skins = 1
+	venom1 = "toxin"
+	venom2 = "black_goop"
+	babyspider = 1
+	adultpath = /mob/living/critter/spider/weblaying/med
+	bite_transfer_amt = 0.3
+	reagent_capacity = 0
+	add_abilities = list(/datum/targetable/spider/lay_spider_web,
+						/datum/targetable/critter/spider_bite,
+						/datum/targetable/critter/spider_flail,
+						/datum/targetable/critter/spider_drain)
+
+/mob/living/critter/spider/weblaying/med
+	name = "medium weblaying spider"
+	icon_state = "med_spide"
+	icon_state_dead = "med_spide-dead"
+	density = 0
+	flags = TABLEPASS
+	fits_under_table = 1
+	health_brute = 25
+	health_burn = 25
+	good_grip = 0
+	can_grab = 0
+	max_skins = 1
+	venom1 = "toxin"
+	venom2 = "black_goop"
+	babyspider = 1
+	adultpath = /mob/living/critter/spider/weblaying
+	bite_transfer_amt = 0.6
+	add_abilities = list(/datum/targetable/spider/lay_spider_web,
+						/datum/targetable/critter/spider_bite,
+						/datum/targetable/critter/spider_flail,
+						/datum/targetable/critter/spider_drain)
+
+
+/datum/targetable/spider/lay_spider_egg
+	name = "Lay Spider Egg"
+	desc = "Lay a tiny egg that will hatch into a new spider."
+	icon = 'icons/mob/critter_ui.dmi'
+	icon_state = "spider_lay_egg"
+	cooldown = 5 MINUTES
+	ignore_holder_lock = TRUE
+	var/in_use = FALSE
+	var/ghost_confirmation_delay = 30 SECONDS
+
+	cast(atom/target, params)
+		if (..())
+			return CAST_ATTEMPT_FAIL_CAST_FAILURE
+		var/turf/T = get_turf(src.holder.owner)
+		if (!isturf(T) || istype(T, /turf/space))
+			boutput(src.holder.owner, SPAN_ALERT("You can't lay an egg there!"))
+			return CAST_ATTEMPT_FAIL_NO_COOLDOWN
+		boutput(holder.owner, SPAN_NOTICE("You lay a teeny tiny egg."))
+		src.doCooldown()
+		make_weblaying_spider(src.holder.owner, get_turf(src.holder.owner))
+		return CAST_ATTEMPT_SUCCESS
+
+	proc/make_weblaying_spider(mob/living/critter/spider/weblaying/W, turf/T, tries = 0)
+		if (QDELETED(W))
+			return
+		if (!istype(W))
+			boutput(W, "something went terribly wrong, call 1-800-CODER")
+			return
+
+		var/spawnturf = T
+		var/list/text_messages = list()
+		text_messages.Add("Would you like to respawn as a weblaying spider? Your name will be added to the list of eligible candidates.")
+		text_messages.Add("You are eligible to be respawned as a weblaying spider. You have [src.ghost_confirmation_delay / 10] seconds to respond to the offer.")
+		text_messages.Add("You have been added to the list of eligible candidates. The game will pick a player soon. Good luck!")
+
+		// The proc takes care of all the necessary work (job-banned etc checks, confirmation delay).
+		message_ghosts("A <b>weblaying spider egg</b> has been placed at [log_loc(T, ghostjump = TRUE)].")
+		message_admins("Sending weblaying spider offer to eligible ghosts. They have [src.ghost_confirmation_delay / 10] seconds to respond.")
+		var/list/datum/mind/candidates = dead_player_list(1, src.ghost_confirmation_delay, text_messages, allow_dead_antags = 1)
+		if (!islist(candidates) || length(candidates) <= 0)
+			message_admins("Couldn't set up weblaying spider; no ghosts responded. [tries < 1 ? "Trying again in 3 minutes." : "Aborting."] Source: [src.holder]")
+			logTheThing(LOG_ADMIN, null, "Couldn't set up weblaying spider; no ghosts responded. [tries < 1 ? "Trying again in 3 minutes." : "Aborting."] Source: [src.holder]")
+			if (tries >= 1)
+				boutput(W, SPAN_ALERT("None of the eggs hatch. The egg withers and dies."))
+				return
+			else
+				boutput(W, SPAN_ALERT("None of the eggs hatch. Trying again in three minutes..."))
+				SPAWN(15 SECONDS)
+					make_weblaying_spider(W, spawnturf, tries++)
+			return
+		var/datum/mind/lucky_dude = candidates[1]
+		if (lucky_dude.add_antagonist(ROLE_ANTAGONIST_CRITTER, source = ANTAGONIST_SOURCE_SUMMONED))
+			log_respawn_event(lucky_dude, "weblaying_spider", src.holder.owner)
+			message_admins("[lucky_dude.key] respawned as a weblaying_spider for [src.holder.owner].")
+			usr.playsound_local(usr.loc, 'sound/misc/splash_1.ogg', 50)
+			var/mob/living/critter/spider/weblaying/baby/B = lucky_dude.current
+			B.make_critter(/mob/living/critter/spider/weblaying/baby, spawnturf)
+			message_ghosts("A <b>baby weblaying spider</b> has been born at [log_loc(B, ghostjump = TRUE)].")
+			boutput(W, SPAN_NOTICE("The egg you planted at [spawnturf] has hatched into a new spider!"))
+
+ABSTRACT_TYPE(/obj/item/gun/kinetic/breakaction)
+/obj/item/gun/kinetic/breakaction
+	var/broke_open = FALSE
+	var/shells_to_eject = 0
+	var/can_spin_closed = FALSE
+
+	update_icon()
+		. = ..()
+		src.icon_state = initial(src.icon_state) + (!src.broke_open ? "" : "-empty" )
+
+	canshoot(mob/user)
+		if (!src.broke_open)
+			return TRUE
+		..()
+
+	shoot(turf/target, turf/start, mob/user, POX, POY, is_dual_wield, atom/called_target = null)
+		if (src.broke_open)
+			src.toggle_action(user)
+			if (src.ammo.amount_left > 0)
+				user.visible_message(SPAN_ALERT("<b>[user]</b> slams shut [src] and fires in one fluid motion. Wow!"))
+		if (!src.broke_open && src.ammo.amount_left > 0)
+			src.shells_to_eject++
+		..()
+
+	attack_self(mob/user)
+		src.toggle_action(user)
+		..()
+
+	attackby(obj/item/I, mob/user)
+		if (istype(I, /obj/item/ammo/bullets) && !src.broke_open)
+			boutput(user, SPAN_ALERT("You can't load shells into the chambers! You'll have to open [src] first!"))
+			return
+		..()
+
+	attack_hand(mob/user)
+		if (!src.broke_open && user.find_in_hand(src))
+			boutput(user, SPAN_ALERT("[src] is still closed, you need to open the action to take the shells out!"))
+			return
+		..()
+
+	on_spin_emote(mob/living/carbon/human/user)
+		if(src.broke_open && src.can_spin_closed) // Only allow spinning to close the gun, doesn't make as much sense spinning it open.
+			src.toggle_action(user)
+			user.visible_message(SPAN_ALERT("<b>[user]</b> snaps shut [src] with a [pick("spin", "twirl")]!"))
+		..()
+
+	proc/toggle_action(mob/user)
+		if (!src.broke_open)
+			src.casings_to_eject = src.shells_to_eject
+
+			if (src.casings_to_eject > 0) //this code exists because without it the gun ejects double the amount of shells
+				src.ejectcasings()
+				src.shells_to_eject = 0
+		src.broke_open = !src.broke_open
+
+		playsound(user.loc, 'sound/weapons/gunload_click.ogg', 15, TRUE)
+
+		UpdateIcon()
+
+/obj/item/gun/kinetic/breakaction/singleshotrifle
+	name = "\improper single shot rifle"
+	desc = "A break-barrel style single shot .308 rifle. Nasty."
+	inhand_image_icon = 'icons/mob/inhand/hand_guns.dmi'
+	icon = 'icons/obj/items/guns/kinetic48x32.dmi'
+	item_state = "mts255"
+	icon_state = "singleshot"
+	force = MELEE_DMG_RIFLE
+	contraband = 7
+	ammo_cats = list(AMMO_TRANQ_ALL, AMMO_RIFLE_308)
+	max_ammo_capacity = 1
+	auto_eject = FALSE
+	can_dual_wield = FALSE
+	two_handed = TRUE
+	add_residue = TRUE
+	gildable = FALSE
+	sound_load_override = 'sound/weapons/gunload_sawnoff.ogg'
+	recoil_strength = 14
+	recoil_max = 14
+	default_magazine = /obj/item/ammo/bullets/rifle_3006/single
+
+	New()
+		if (prob(10))
+			name = pick ("elephant rifle", "brullbar rifle", "comically oversized clown stopper", "lion tamer", "drone hunter")
+		ammo = new default_magazine
+		set_current_projectile(new/datum/projectile/bullet/rifle_3006)
+		AddComponent(/datum/component/holdertargeting/windup, 0.5 SECONDS)
+		..()

@@ -33,7 +33,6 @@ TYPEINFO_NEW(/turf/simulated/wall/auto)
 	var/image/connect_image = null
 	/// Deconstruction state
 	var/d_state = 0
-	var/force_state = FALSE //prevents updating iconstate in update_icon. used only for creepify station.
 
 	New()
 		..()
@@ -57,11 +56,10 @@ TYPEINFO_NEW(/turf/simulated/wall/auto)
 
 		var/connectdir = get_connected_directions_bitflag(typinfo.connects_to, typinfo.connects_to_exceptions, typinfo.connect_across_areas, typinfo.connect_diagonal)
 
-		if(!force_state)
-			var/the_state = "[mod][connectdir]"
-			if ( !(istype(src, /turf/simulated/wall/auto/jen)) && !(istype(src, /turf/simulated/wall/auto/reinforced/jen)) ) //please no more sprite, i drained my brain doing this
-				src.icon_state += "[src.d_state ? "C" : null]"
-			icon_state = the_state
+		var/the_state = "[mod][connectdir]"
+		if ( !(istype(src, /turf/simulated/wall/auto/jen)) && !(istype(src, /turf/simulated/wall/auto/reinforced/jen)) ) //please no more sprite, i drained my brain doing this
+			src.icon_state += "[src.d_state ? "C" : null]"
+		icon_state = the_state
 
 		if (light_mod)
 			src.RL_SetSprite("[light_mod][connectdir]")
@@ -676,6 +674,20 @@ TYPEINFO_NEW(/turf/simulated/wall/auto/hedge)
 	light_mod = "wall-"
 	flags = FLUID_DENSE | IS_PERSPECTIVE_FLUID
 	default_material = "wood"
+
+TYPEINFO(/turf/simulated/wall/auto/shuttle/dark)
+TYPEINFO_NEW(/turf/simulated/wall/auto/shuttle/dark)
+	. = ..()
+	connect_overlay = 0
+/turf/simulated/wall/auto/shuttle/dark
+	icon = 'icons/turf/walls/shuttle/dark.dmi'
+#ifdef PERSPECTIVE_EDITOR_WALL
+	icon_state = "dshuttle-0"
+#else
+	icon_state = "dshuttle-map"
+#endif
+	mod = "dshuttle-"
+	opacity = 1
 
 /* ===================================================== */
 /* -------------------- UNSIMULATED -------------------- */

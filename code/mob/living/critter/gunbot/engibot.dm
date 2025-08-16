@@ -1,9 +1,8 @@
 /mob/living/critter/robotic/gunbot/engineerbot
 	name = "Syndicate MULTI Unit"
-	real_name = "Syndicate MULTI Unit"
 	icon_state = "engineerbot"
 	base_icon_state = "engineerbot"
-	desc = "An engnieering unit, you can somehow feel that it's angry at you."
+	desc = "An engineering unit, you can somehow feel that it's angry at you."
 	health_brute = 20
 	health_burn = 10
 	health_burn_vuln = 0.8
@@ -89,7 +88,7 @@
 		msgs.played_sound = 'sound/impact_sounds/generic_hit_2.ogg'
 		msgs.damage_type = DAMAGE_BURN
 		msgs.flush(SUPPRESS_LOGS)
-		user.lastattacked = target
+		user.lastattacked = get_weakref(target)
 		attack_twitch(user)
 		ON_COOLDOWN(src, "limb_cooldown", 3 SECONDS)
 

@@ -71,7 +71,7 @@
 			if (I.hitsound)
 				playsound(I, I.hitsound, 50, 1)
 			src._health -= I.force
-			user.lastattacked = src
+			user.lastattacked = get_weakref(src)
 			if (src._health <= 0)
 				if (src.falling)
 					return
@@ -217,7 +217,7 @@
 
 /obj/shrub
 	name = "shrub"
-	desc = "A bush. Despite your best efforts, you can't tell if it's real or not."
+	desc = "A bush. Despite your best efforts, you can't tell if it's real or not. "
 	icon = 'icons/misc/worlds.dmi'
 	icon_state = "shrub"
 	anchored = ANCHORED
@@ -274,7 +274,7 @@
 		else if (destroyed)
 			return ..()
 
-		user.lastattacked = src
+		user.lastattacked = get_weakref(src)
 		if (iscow(user) && user.a_intent == INTENT_HELP)	//Cow people may want to eat some of the bush's leaves
 			graze(user)
 			return 0
@@ -333,7 +333,7 @@
 			REMOVE_ATOM_PROPERTY(AM, PROP_MOB_HIDE_ICONS, src)
 
 	attackby(var/obj/item/W, mob/user)
-		user.lastattacked = src
+		user.lastattacked = get_weakref(src)
 		hit_twitch(src)
 		attack_particle(user,src)
 		playsound(src, 'sound/impact_sounds/Bush_Hit.ogg', 50, TRUE, 0)
@@ -426,10 +426,17 @@ TYPEINFO(/obj/shrub/syndicateplant)
 /obj/shrub/syndicateplant
 	var/net_id
 	is_syndicate = TRUE
+
 	New()
 		. = ..()
 		src.net_id = generate_net_id(src)
 		MAKE_DEFAULT_RADIO_PACKET_COMPONENT(src.net_id, "control", FREQ_HYDRO)
+
+	get_desc(dist, mob/user)
+		if(istrainedsyndie(user))
+			. += SPAN_ALERT("<b>The latest in syndicate spy technology. </b>")
+		else
+			. += "Is that an antenna? "
 
 	proc/fuck_up()
 		var/datum/effects/system/spark_spread/S = new
@@ -465,12 +472,15 @@ TYPEINFO(/obj/shrub/syndicateplant)
 	icon = 'icons/misc/worlds.dmi'
 	icon_state = "bonsai"
 	desc = "The Captain's most prized possession. Don't touch it. Don't even look at it."
+	health = 5 //Fragile tree
 	anchored = ANCHORED
 	density = 1
 	layer = EFFECTS_LAYER_UNDER_1
 	dir = EAST
 
 	destroy()
+		if(src.destroyed)
+			return
 		src.set_dir(NORTHEAST)
 		src.destroyed = 1
 		src.set_density(0)
@@ -491,7 +501,7 @@ TYPEINFO(/obj/shrub/syndicateplant)
 				boutput(M, SPAN_ALERT("You suddenly feel hollow. Something very dear to you has been lost."))
 
 	graze(mob/user)
-		user.lastattacked = src
+		user.lastattacked = get_weakref(src)
 		if (user.mind && user.mind.assigned_role == "Captain")
 			boutput(user, SPAN_NOTICE("You catch yourself almost taking a bite out of your precious bonzai but stop just in time!"))
 			return
@@ -511,18 +521,18 @@ TYPEINFO(/obj/shrub/syndicateplant)
 		if (inafterlife(user))
 			boutput(user, "You can't bring yourself to hurt such a beautiful thing!")
 			return
-		if (src.destroyed) return
 		if (user.mind && user.mind.assigned_role == "Captain")
 			if (issnippingtool(W))
 				boutput(user, SPAN_NOTICE("You carefully and lovingly sculpt your bonsai tree."))
 			else
 				boutput(user, SPAN_ALERT("Why would you ever destroy your precious bonsai tree?"))
-		else if(isitem(W) && (user.mind && user.mind.assigned_role != "Captain"))
-			src.destroy()
+			return
+		var/was_destroyed = src.destroyed
+		. = ..()
+		if(src.destroyed && !was_destroyed)
 			boutput(user, SPAN_ALERT("I don't think the Captain is going to be too happy about this..."))
 			src.visible_message(SPAN_ALERT("<b>[user] ravages [src] with [W].</b>"))
 			src.interesting = "Inexplicably, the genetic code of the bonsai tree has the words 'fuck [user.real_name]' encoded in it over and over again."
-		return
 
 	meteorhit(obj/O as obj)
 		src.visible_message(SPAN_ALERT("<b>The meteor smashes right through [src]!</b>"))
@@ -1280,6 +1290,11 @@ TYPEINFO(/obj/shrub/syndicateplant)
 			name = "Space Station 10"
 			desc = "Looks like the regional Nanotrasen hub station passing by your orbit."
 			icon_state = "ss10"
+	earth
+		name = "Earth"
+		desc = "Oh shit, it's Earth!"
+		icon = 'icons/obj/large/160x160.dmi'
+		icon_state = "earthrise"
 
 obj/decoration
 
@@ -1617,6 +1632,7 @@ obj/decoration/gibberBroken
 	mouse_opacity = 0
 
 /obj/decoration/damagedchair
+	name = "damaged chair"
 	anchored = ANCHORED_ALWAYS
 	icon = 'icons/obj/decoration.dmi'
 	icon_state = "damagedchair"
@@ -1939,30 +1955,43 @@ obj/decoration/pottedfern
 /obj/fireworksbox
 	name = "Box of Fireworks"
 	desc = "The Label simply reads : \"Firwerks fun is having total family.\""
-	density = 0
-	anchored = UNANCHORED
-	opacity = 0
 	icon = 'icons/obj/objects.dmi'
 	icon_state = "fireworksbox"
-	var/fireworking = 0
+	var/fireworking = FALSE
+	var/amount_left = 25
+
+	New()
+		. = ..()
+		src.amount_left = rand(15, 25)
 
 	attack_hand(mob/user)
 		if(fireworking) return
-		fireworking = 1
+		fireworking = TRUE
 		boutput(user, SPAN_ALERT("The fireworks go off as soon as you touch the box. This is some high quality stuff."))
 		anchored = ANCHORED
 
 		SPAWN(0)
-			for(var/i=0, i<rand(15,25), i++)
+			for(var/i=0, i<src.amount_left, i++)
 				particleMaster.SpawnSystem(new /datum/particleSystem/fireworks(src.loc))
 				playsound(src.loc, 'sound/effects/firework.ogg', 50, 1)
 				sleep(rand(2, 15))
 
-			for(var/mob/O in oviewers(world.view, src))
-				O.show_message(SPAN_NOTICE("The box of fireworks magically disappears."), 1)
-
+			src.visible_message(SPAN_NOTICE("The box of fireworks magically disappears."))
 			qdel(src)
 		return
+
+	attackby(obj/item/I, mob/user)
+		if (issnippingtool(I) && !src.fireworking)
+			var/a_firework = weighted_pick(list(/obj/item/roman_candle=5, /obj/item/firework=5, /obj/item/firework/bootleg=1))
+			var/obj/item/the_firework = new a_firework(src.loc)
+			boutput(user, "You take [the_firework] from the box.")
+			user.put_in_hand_or_drop(the_firework)
+			src.amount_left -= 1
+			if (src.amount_left <= 0)
+				src.visible_message(SPAN_NOTICE("The box of fireworks magically disappears."))
+				qdel(src)
+			return
+		. = ..()
 
 ADMIN_INTERACT_PROCS(/obj/lever, proc/toggle)
 /obj/lever
@@ -1984,12 +2013,12 @@ ADMIN_INTERACT_PROCS(/obj/lever, proc/toggle)
 		playsound(src.loc, 'sound/machines/button.ogg', 40, 0.5)
 		if (on)
 			on = FALSE
-			flick("wall-lever-up-anim", src)
+			FLICK("wall-lever-up-anim", src)
 			src.icon_state = "wall-lever-up"
 			src.off()
 		else
 			on = TRUE
-			flick("wall-lever-down-anim", src)
+			FLICK("wall-lever-down-anim", src)
 			src.icon_state = "wall-lever-down"
 			src.on()
 

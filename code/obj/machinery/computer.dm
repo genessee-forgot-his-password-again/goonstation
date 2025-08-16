@@ -49,8 +49,11 @@
 			SETUP_GENERIC_ACTIONBAR(user, src, 2 SECONDS, /obj/machinery/computer/proc/unscrew_monitor,\
 			list(W, user), W.icon, W.icon_state, null, null)
 			return
-		else
-			src.Attackhand(user)
+		..()
+
+	grab_smash(obj/item/grab/G, mob/user)
+		if(..())
+			src.set_broken()
 
 	get_help_message(dist, mob/user)
 		if (src.circuit_type)
@@ -70,6 +73,7 @@
 			A.icon_state = "3"
 		else
 			user?.show_text("You disconnect the monitor.", "blue")
+			logTheThing(LOG_STATION, user, "disassembles [src] [log_loc(src)]")
 			A.state = 4
 			A.icon_state = "4"
 		var/obj/item/circuitboard/M = new src.circuit_type(A)
@@ -97,10 +101,6 @@
 	icon = 'airtunnelcomputer.dmi'
 	icon_state = "console00"
 */
-
-/obj/machinery/computer/hangar
-	name = "Hangar"
-	icon_state = "teleport"
 
 /obj/machinery/computer/New()
 	..()
@@ -153,8 +153,10 @@
 		set_broken()
 		src.set_density(0)
 
+/obj/machinery/computer/overload_act()
+	return !src.set_broken()
+
 /obj/machinery/computer/power_change()
-	//if(!istype(src,/obj/machinery/computer/security/telescreen))
 	if(status & BROKEN)
 		icon_state = "[src.base_icon_state]b"
 		light.disable()

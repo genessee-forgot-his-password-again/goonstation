@@ -41,6 +41,7 @@
 	var/symbol_setting = null
 	var/material_uses = 10
 	var/can_dip = TRUE // can we dip this in reagents to write with them?
+	var/obj/decal/cleanable/writing/default_cleanable = /obj/decal/cleanable/writing
 	var/static/list/c_default = list("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z",
 	"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "Exclamation Point", "Question Mark", "Period", "Comma", "Colon", "Semicolon", "Ampersand", "Left Parenthesis", "Right Parenthesis",
 	"Left Bracket", "Right Bracket", "Percent", "Plus", "Minus", "Times", "Divided", "Equals", "Less Than", "Greater Than")
@@ -123,7 +124,7 @@
 			src.in_use = 0
 			return
 		phrase_log.log_phrase("floorpen", t)
-		var/obj/decal/cleanable/writing/G = make_cleanable(/obj/decal/cleanable/writing, T)
+		var/obj/decal/cleanable/writing/G = make_cleanable(src.default_cleanable, T)
 		G.artist = user.key
 
 		logTheThing(LOG_STATION, user, "writes on [T] with [src][src.material ? " (material: [src.material.getName()])" : null] [log_loc(T)]: [t]")
@@ -235,6 +236,13 @@
 	color = "red"
 	font_color = "red"
 
+/obj/item/pen/infrared
+	name = "infrared pen"
+	desc = "A pen that can write in infrared."
+	color = "#FFEE44" // color var owns
+	font_color = "#D20040"
+	default_cleanable = /obj/decal/cleanable/writing/infrared
+
 /obj/item/pen/pencil // god this is a dumb path
 	name = "pencil"
 	desc = "The core is graphite, not lead, don't worry!"
@@ -275,7 +283,7 @@
 			src.change_mode(new_mode, user)
 
 	proc/change_mode(var/new_mode, var/mob/holder)
-		tooltip_rebuild = 1
+		tooltip_rebuild = TRUE
 		switch (new_mode)
 			if ("pen")
 				src.penmode = "pen"
@@ -521,6 +529,13 @@
 			..()
 			src.setMaterial(getMaterial("gold"))
 
+	infrared
+		name = "infrared crayon"
+		desc = "A crayon that can write in infrared."
+		color = "#FFEE44" // color var owns
+		font_color = "#D20040"
+		default_cleanable = /obj/decal/cleanable/writing/infrared
+
 	random
 		var/picked_color
 
@@ -699,7 +714,7 @@
 		if(src.maptext_crayon)
 			G = make_cleanable(/obj/decal/cleanable/writing/maptext_dummy, T)
 		else
-			G = make_cleanable(/obj/decal/cleanable/writing, T)
+			G = make_cleanable(src.default_cleanable, T)
 		G.artist = user.key
 
 		if(user.client) //I don't give a damn about monkeys writing stuff with crayon!!
@@ -752,22 +767,24 @@
 	name = "chalk"
 	desc = "A stick of rock and dye that reminds you of your childhood. Don't get too carried away!"
 	icon_state = "chalk-9"
-	color = "#333333"
+	color = "#ffffff"
 	font = "Comic Sans MS"
+	var/true_color
 	var/chalk_health = 10 //10 uses before it snaps
 
 	random
-		var/picked_color
 		New()
+			src.true_color = random_color()
+			src.assign_color(src.true_color)
 			..()
-			src.assign_color(src.picked_color)
 
-		reset_color()
-			src.assign_color(src.picked_color)
+	New()
+		..()
+		src.true_color = src.color
 
 	proc/assign_color(var/color)
 		if(isnull(color))
-			color = "#ffffff"
+			src.color = "#ffffff"
 		src.color = color
 		src.font_color = src.color
 		src.color_name = hex2color_name(color)
@@ -798,7 +815,7 @@
 			src.icon_state = "chalk-[src.chalk_health]"
 
 	reset_color()
-		src.assign_color(initial(src.color))
+		src.assign_color(src.true_color)
 
 	write_on_turf(var/turf/T as turf, var/mob/user as mob)
 		..()
@@ -834,51 +851,6 @@
 				user.suiciding = 0
 		qdel(src)
 		return 1
-
-/* =============== INFRARED PENS =============== */
-
-/obj/item/pen/infrared
-	desc = "A pen that can write in infrared."
-	name = "infrared pen"
-	color = "#FFEE44" // color var owns
-	font_color = "#D20040"
-
-	write_on_turf(var/turf/T as turf, var/mob/user as mob, params)
-		if (!T || !user || src.in_use || BOUNDS_DIST(T, user) > 0)
-			return
-		if(!user.literate)
-			boutput(user, SPAN_ALERT("You don't know how to write."))
-			return
-		src.in_use = 1
-		var/t = tgui_input_text(user, "What do you want to write?", "Write")
-		if (!t || BOUNDS_DIST(T, user) > 0)
-			src.in_use = 0
-			return
-		var/obj/decal/cleanable/writing/infrared/G = make_cleanable(/obj/decal/cleanable/writing/infrared,T)
-		G.artist = user.key
-
-		logTheThing(LOG_STATION, user, "writes on [T] with [src][src.material ? " (material: [src.material.getName()])" : null] [log_loc(T)]: [t]")
-		t = copytext(html_encode(t), 1, MAX_MESSAGE_LEN)
-		if (src.font_color)
-			G.color = src.font_color
-		if(apply_material_to_drawing(G, user))
-			;
-		/*if (src.uses_handwriting && user?.mind?.handwriting)
-			G.font = user.mind.handwriting
-			G.webfont = 1
-		*/
-		else if (src.font)
-			G.font = src.font
-			//if (src.webfont)
-				//G.webfont = 1
-		G.words = "[t]"
-		if (islist(params) && params["icon-y"] && params["icon-x"])
-			G.pixel_x = text2num(params["icon-x"]) - 16
-			G.pixel_y = text2num(params["icon-y"]) - 16
-		else
-			G.pixel_x = rand(-4,4)
-			G.pixel_y = rand(-4,4)
-		src.in_use = 0
 
 /* =============== HAND LABELERS =============== */
 
@@ -931,9 +903,9 @@
 		if(!user.literate)
 			boutput(user, SPAN_ALERT("You don't know how to write."))
 			return
-		tooltip_rebuild = 1
+		tooltip_rebuild = TRUE
 		var/holder = src.loc
-		var/str = copytext(html_encode(tgui_input_text(user, "Label text?", "Set label", allowEmpty = TRUE, max_length = 30)), 1, 32)
+		var/str = copytext(strip_html_tags(tgui_input_text(user, "Label text?", "Set label", allowEmpty = TRUE, max_length = 30)), 1, 32)
 		if(str)
 			phrase_log.log_phrase("label", str, no_duplicates=TRUE)
 		if (src.loc != holder)
@@ -1037,12 +1009,12 @@
 	attack_self(mob/user as mob)
 		var/dat = "<B>Clipboard</B><BR>"
 		if (src.pen)
-			dat += "<A href='?src=\ref[src];pen=1'>Remove Pen</A><BR><HR>"
+			dat += "<A href='byond://?src=\ref[src];pen=1'>Remove Pen</A><BR><HR>"
 		for(var/obj/item/paper/P in src)
-			dat += "<A href='?src=\ref[src];read=\ref[P]'>[P.name]</A> <A href='?src=\ref[src];title=\ref[P]'>Title</A> <A href='?src=\ref[src];remove=\ref[P]'>Remove</A><BR>"
+			dat += "<A href='byond://?src=\ref[src];read=\ref[P]'>[P.name]</A> <A href='byond://?src=\ref[src];title=\ref[P]'>Title</A> <A href='byond://?src=\ref[src];remove=\ref[P]'>Remove</A><BR>"
 
 		for(var/obj/item/photo/P in src) //Todo: make it actually show the photo.  Currently, using [bicon()] just makes an egg image pop up (??)
-			dat += "<A href='?src=\ref[src];remove=\ref[P]'>[P.name]</A><br>"
+			dat += "<A href='byond://?src=\ref[src];remove=\ref[P]'>[P.name]</A><br>"
 
 		user.Browse(dat, "window=clipboard")
 		onclose(user, "clipboard")
@@ -1258,7 +1230,7 @@
 
 		if(href_list["action"] == "retrieve")
 			usr.put_in_hand_or_drop(src.contents[text2num(href_list["id"])], usr)
-			tooltip_rebuild = 1
+			tooltip_rebuild = TRUE
 			usr.visible_message("[usr] takes something out of the folder.")
 		else if(href_list["action"] == "peek")
 			var/obj/item/I = src.contents[text2num(href_list["id"])]
@@ -1283,7 +1255,7 @@
 	proc/show_window(var/user, var/action = "retrieve")
 		var/output = "<html><head><title>Folder</title></head><body><br>"
 		for(var/i = 1, i <= src.contents.len, i++)
-			output += "<a href='?src=\ref[src];id=[i];action=[action]'>[src.contents[i].name]</a><br>"
+			output += "<a href='byond://?src=\ref[src];id=[i];action=[action]'>[src.contents[i].name]</a><br>"
 		output += "</body></html>"
 		user << browse(output, "window=folder;size=400x600")
 
@@ -1292,7 +1264,7 @@
 			user.drop_item()
 		W.set_loc(src)
 		src.amount++
-		tooltip_rebuild = 1
+		tooltip_rebuild = TRUE
 
 /* =============== BOOKLETS =============== */
 

@@ -60,7 +60,7 @@ ABSTRACT_TYPE(/obj/vehicle)
 	attackby(obj/item/W, mob/user)
 		if(src.rider && src.rider_visible && W.force)
 			W.attack(src.rider, user)
-			user.lastattacked = src // sets click cooldown
+			user.lastattacked = get_weakref(src) // sets click cooldown
 			if (attacks_fast_eject || is_incapacitated(rider))
 				eject_rider()
 			W.visible_message(SPAN_ALERT("[user] swings at [src.rider] with [W]!"))
@@ -160,7 +160,8 @@ ABSTRACT_TYPE(/obj/vehicle)
 			src.eject_other_stuff()
 
 	was_deconstructed_to_frame(mob/user)
-		eject_rider(crashed=FALSE, selfdismount=FALSE, ejectall=TRUE)
+		if (src.rider)
+			eject_rider(crashed=FALSE, selfdismount=FALSE, ejectall=TRUE)
 
 	/// remove the ability buttons from the rider
 	proc/handle_button_removal()
@@ -1097,6 +1098,9 @@ TYPEINFO(/obj/vehicle/clowncar)
 	if(mob_target == user && can_act(user))	// if drop self, then climbed in
 		if(rider)
 			return
+		if (user.hasStatus("drunk"))
+			var/mob/living/carbon/human/H = user
+			H.apply_automated_arrest("DUI.", "Drove while inebriated.")
 		mob_target.set_loc(src)
 		rider = mob_target
 		handle_button_addition()
@@ -1331,7 +1335,7 @@ TYPEINFO(/obj/vehicle/clowncar)
 /obj/vehicle/clowncar/cluwne/attackby(var/obj/item/W, var/mob/user)
 	eject_rider()
 	W.attack(rider, user)
-	user.lastattacked = src
+	user.lastattacked = get_weakref(src)
 
 /obj/vehicle/clowncar/cluwne/eject_rider(var/crashed, var/selfdismount, var/ejectall = 1)
 	..(crashed, selfdismount)

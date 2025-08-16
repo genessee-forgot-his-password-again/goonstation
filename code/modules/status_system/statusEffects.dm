@@ -30,6 +30,8 @@
 	var/track_cat
 	/// If the effect is positive (buffs), negative (debuffs), or neutral (misc)
 	var/effect_quality = STATUS_QUALITY_NEUTRAL
+	/// List because they might be on different HUDs. This is kind of hacky but should be fine since the screen object cleans up in disposing.
+	var/list/atom/movable/screen/statusEffect/hud_elements = null
 
 
 	/**
@@ -235,7 +237,7 @@
 		icon_state = "stam-"
 		duration = INFINITE_STATUS
 		maxDuration = null
-		change = -5
+		change = -2.5
 
 	staminaregen/cursed
 		id = "weakcurse"
@@ -594,10 +596,8 @@
 					M.changeStatus("knockdown", 3 SECONDS)
 					boutput(M, SPAN_ALERT("You feel weak."))
 					M.emote("collapse")
-				if(!ON_COOLDOWN(M, "radiation_vomit_check", 5 SECONDS) && prob(stage**2))
-					M.changeStatus("knockdown", 3 SECONDS)
-					boutput(M, SPAN_ALERT("You feel sick."))
-					M.vomit()
+				if(stage > 1 && prob(min((stage + 2)**2, 40)))
+					M.nauseate(1)
 
 			return ..(timePassed)
 
@@ -781,6 +781,73 @@
 			if(ismob(owner))
 				var/mob/M = owner
 				REMOVE_ATOM_PROPERTY(M, PROP_MOB_STAMINA_REGEN_BONUS, "stim_withdrawl")
+
+	simpledot/werewolf_bane
+		id = "werewolf_bane"
+		name = "Wolf's Bane"
+		desc = "POISON!"
+		icon_state = "wolf_bane"
+		maxDuration = 5 MINUTES
+//////////////////////////////////effect_quality =
+		var/stage = 0
+
+		onAdd(optional=null)
+			changeState()
+			return ..(optional)
+
+		getTooltip()
+			var/how_much = ""
+			switch(stage)
+				if(0)
+					how_much = "a bit of"
+				if(1)
+					how_much = "a little"
+				if(2)
+					how_much = "some"
+				if(3)
+					how_much = "quite a lot"
+				if(4)
+					how_much = "a dangerous amount of"
+				if(5)
+					how_much = "way way way too much"
+			. = "You are afflicted with [how_much] wolf's bane."
+
+		onUpdate(timePassed)
+			changeState()
+			if (istype(owner, /mob/living/carbon/human))
+				var/mob/living/carbon/human/H = owner
+				if (iswerewolf(H))
+					if (prob(8))
+						H.changeStatus("stunned", 1 SECONDS)
+					if (prob(10))
+						H.dizziness = clamp(H.dizziness+5, 0, stage*5)
+					if (stage >= 2 && prob(stage*10)) //Why not?
+						H.take_toxin_damage(stage)
+					H.make_jittery(2)
+					return
+				if (H.get_ability_holder(/datum/abilityHolder/werewolf) != null) //If wolf in human form
+					if (prob(40))
+						H.dizziness = clamp(H.dizziness+5, 0, stage*5)
+					H.make_jittery(5)
+					return
+
+			return ..(timePassed)
+
+		proc/changeState()
+			if(owner?.reagents)
+				if (duration >= 200 SECONDS)
+					stage = 4
+				else if (duration >= 100 SECONDS)
+					stage = 3
+				else if (duration > 50 SECONDS)
+					stage = 2
+				else if (duration <= 20 SECONDS)
+					stage = 1
+				else if (duration <= 0)
+					stage = 0
+					return
+				// TODO: different icons per stage
+				// icon_state = "wolf_bane[stage]"
 
 	stuns
 		effect_quality = STATUS_QUALITY_NEGATIVE
@@ -1730,19 +1797,43 @@
 	visible = TRUE
 	effect_quality = STATUS_QUALITY_NEGATIVE
 	movement_modifier = /datum/movement_modifier/shiver
+	/// chilled by a space phoenix
+	var/phoenix_chill = FALSE
 
-	onAdd(optional=null)
+	preCheck(atom/A)
+		. = ..()
+		if (istype(A, /mob/living/critter/space_phoenix))
+			. = FALSE
+
+	onAdd(optional)
+		src.phoenix_chill = optional
 		var/mob/M = owner
 		if(istype(M))
 			M.emote("shiver")
-			M.thermoregulation_mult *= 3
+			M.thermoregulation_mult *= (src.phoenix_chill ? 3 : 1.5)
+			if (phoenix_chill)
+				var/mob/living/carbon/human/H = src.owner
+				if (istype(H))
+					H.changeStatus("phoenix_temp_visible", 5 SECONDS)
+		. = ..()
+
+	onChange(optional)
+		if (optional && !src.phoenix_chill)
+			var/mob/M = owner
+			if (istype(M))
+				M.thermoregulation_mult *= 2
+			src.phoenix_chill = TRUE
+		if (src.phoenix_chill)
+			var/mob/living/carbon/human/H = src.owner
+			if (istype(H))
+				H.changeStatus("phoenix_temp_visible", 5 SECONDS)
 		. = ..()
 
 	onRemove()
 		. = ..()
 		var/mob/M = owner
 		if(istype(M))
-			M.thermoregulation_mult /= 3
+			M.thermoregulation_mult /= (src.phoenix_chill ? 3 : 1.5)
 
 /datum/statusEffect/miasma
 	id = "miasma"
@@ -1769,23 +1860,23 @@
 		var/mob/living/L = owner
 		if(!isalive(L))
 			return
-		var/puke_prob = 0
+		var/nausea_prob = 0
 		var/tox = 0
 		switch(how_miasma)
 			if(1)
 				if(probmult(1))
 					L.emote("shudder")
 			if(2)
-				puke_prob = 0.2
+				nausea_prob = 10
 				tox = 0.05
 			if(3)
-				puke_prob = 0.5
+				nausea_prob = 15
 				tox = 0.2
 			if(4)
-				puke_prob = 1
+				nausea_prob = 20
 				tox = 0.45
 			if(5)
-				puke_prob = 2
+				nausea_prob = 25
 				tox = 0.7
 		if(ismobcritter(L))
 			var/mob/living/critter/critter = L
@@ -1795,9 +1886,8 @@
 		L.take_toxin_damage(tox * mult)
 		if(weighted_average > 4)
 			weighted_average = 0
-		if(probmult(puke_prob))
-			var/vomit_message = SPAN_ALERT("[L] pukes all over [himself_or_herself(L)].")
-			L.vomit(0, null, vomit_message)
+		if(probmult(nausea_prob))
+			L.nauseate(1)
 		return ..(timePassed)
 
 	proc/changeState()
@@ -2161,25 +2251,24 @@
 	onUpdate(var/timePassed)
 		var/mob/living/L = owner
 		var/tox = 0
-		var/puke_prob = 0
+		var/nausea_prob = 0
 		switch(timePassed)
 			if(0 to 20 SECONDS)
 				tox = 0.1
-				puke_prob = 0.5
+				nausea_prob = 5
 			if(20 SECONDS to 60 SECONDS)
 				tox = 0.4
-				puke_prob = 1
+				nausea_prob = 10
 			if(60 SECONDS to INFINITY)
 				tox = 1
-				puke_prob = 2
+				nausea_prob = 20
 		L.take_toxin_damage(tox)
 		if(prob(2))
 			L.emote(pick("groan", "moan", "shudder"))
 		if(prob(2))
 			L.change_eye_blurry(rand(5,10))
-		if(prob(puke_prob))
-			var/vomit_message = SPAN_ALERT("[L] pukes all over [himself_or_herself(L)].")
-			L.vomit(0, null, vomit_message)
+		if(prob(nausea_prob))
+			L.nauseate(1)
 
 	//firstly: sorry
 	//secondly: second arg is a proportional scale. 1 is standard, 5 is every port-a-puke tick, 10 is mass emesis.
@@ -2418,7 +2507,7 @@
 /datum/statusEffect/quickcharged
 	id = "quick_charged"
 	name = "Quick charged"
-	icon_state = "stam-"
+	icon_state = "stam+"
 	maxDuration = null
 
 	getTooltip()
@@ -2722,7 +2811,7 @@
 	onAdd(optional)
 		..()
 		var/mob/living/M = src.owner
-		RegisterSignal(M, COMSIG_MOB_SAY, PROC_REF(remove_self))
+		RegisterSignal(M, COMSIG_ATOM_SAY, PROC_REF(remove_self))
 		if (!istype(M) || !M.bioHolder)
 			src.remove_self()
 			return
@@ -2739,7 +2828,7 @@
 		if (src.added_accent)
 			var/mob/living/M = src.owner
 			M.bioHolder.RemoveEffectInstance(src.added_accent)
-		UnregisterSignal(src.owner, COMSIG_MOB_SAY)
+		UnregisterSignal(src.owner, COMSIG_ATOM_SAY)
 
 /datum/statusEffect/graffiti
 	id = "graffiti_blind"
@@ -3032,7 +3121,7 @@
 		onAdd(optional)
 			..()
 			var/mob/living/carbon/human/H = src.owner
-			H.regens_blood = FALSE // curse steals all your blood
+			APPLY_ATOM_PROPERTY(H, PROP_MOB_NO_BLOOD_REGEN, src)
 
 		onUpdate(timePassed)
 			..()
@@ -3050,22 +3139,21 @@
 			if (src.blood_to_collect <= 0)
 				src.linked_curser.lift_curse(TRUE)
 			else if (H.blood_volume <= 0 || isdead(H))
-				H.visible_message(SPAN_ALERT("[H] spontaneously implodes!!! <b>HOLY FUCK!!</b>"), SPAN_ALERT("<b>Ohhhh shit</b>"))
-				for (var/i in 1 to rand(3, 4))
-					var/obj/decal/cleanable/blood_splat = make_cleanable(/obj/decal/cleanable/blood/splatter, get_turf(H))
-					blood_splat.streak_cleanable(pick(cardinal), full_streak = prob(25), dist_upper = rand(4, 6))
-				playsound(H, 'sound/impact_sounds/Slimy_Splat_2_Short.ogg', 40, TRUE)
-				H.implode(TRUE)
-				src.linked_curser.lift_curse_specific(FALSE, H)
+				H.visible_message(SPAN_ALERT("[H] spontaneously dessicates, drained of all fluids! <b>HOLY FUCK!!</b>"), SPAN_ALERT("<b>Ohhhh shit</b>"))
+				playsound(H, 'sound/impact_sounds/Flesh_Crush_1.ogg', 70, TRUE)
+				H.death(FALSE)
+				H.disfigured = TRUE
+				H.UpdateName()
+				H.bioHolder?.AddEffect("husk")
+				H.bioHolder?.mobAppearance.flavor_text = "A desiccated husk."
+				H.set_clothing_icon_dirty()
+				src.linked_curser?.lift_curse_specific(FALSE, H)
+				src.remove_self()
 
 		onRemove()
 			var/mob/living/carbon/human/H = src.owner
 			if (!QDELETED(H))
-				var/count
-				for(var/datum/statusEffect/art_curse/blood/status in H.statusEffects)
-					count += 1
-				if (count == 1)
-					H.regens_blood = TRUE
+				REMOVE_ATOM_PROPERTY(H, PROP_MOB_NO_BLOOD_REGEN, src)
 			..()
 
 	aging
@@ -3104,9 +3192,13 @@
 				src.final_msg_given = TRUE
 				H.playsound_local(H, 'sound/ambience/spooky/Void_Calls.ogg', 75, FALSE)
 			if (H.bioHolder.age >= src.original_age + 120)
+				H.visible_message(SPAN_ALERT("[H] collapses into a pile of bones!"))
+				H.set_mutantrace(/datum/mutantrace/skeleton)
 				H.death(FALSE)
-				H.skeletonize()
-				src.linked_curser.lift_curse_specific(FALSE, H)
+				H.decomp_stage = DECOMP_STAGE_SKELETONIZED
+				H.set_clothing_icon_dirty()
+				src.linked_curser?.lift_curse_specific(FALSE, H)
+				src.remove_self()
 
 		onRemove()
 			var/mob/living/carbon/human/H = src.owner
@@ -3181,7 +3273,8 @@
 			..()
 			var/mob/living/carbon/human/H = src.owner
 			if (QDELETED(H) || isdead(H))
-				src.linked_curser.lift_curse_specific(FALSE, H)
+				src.linked_curser?.lift_curse_specific(FALSE, H)
+				src.remove_self()
 
 		onRemove()
 			var/mob/living/carbon/human/H = src.owner
@@ -3329,6 +3422,8 @@
 		. = ..()
 		RegisterSignal(src.owner, COMSIG_MOB_LAYDOWN_STANDUP, PROC_REF(standup))
 		RegisterSignal(src.owner, COMSIG_MOVABLE_MOVED, PROC_REF(check_valid))
+		var/mob/mob_owner = src.owner
+		src.standup(null, mob_owner.lying)
 
 	proc/check_valid()
 		var/obj/table/table = locate() in src.owner.loc
@@ -3455,3 +3550,310 @@
 	icon_state = "empulsar"
 	unique = TRUE
 	effect_quality = STATUS_QUALITY_NEUTRAL
+
+/datum/statusEffect/pod_corrosion
+	id = "pod_corrosion"
+	effect_quality = STATUS_QUALITY_NEGATIVE
+	var/dmg_per_tick = 4
+
+	onAdd()
+		..()
+		src.owner.add_filter("corrosion_color", 1, color_matrix_filter(normalize_color_to_matrix("#0c6900")))
+
+	onUpdate(timePassed)
+		..()
+		var/mult = timePassed / LIFE_PROCESS_TICK_SPACING
+		var/obj/machinery/vehicle/pod_hit = src.owner
+		pod_hit.health -= src.dmg_per_tick * mult
+		pod_hit.checkhealth()
+
+	onRemove()
+		..()
+		src.owner.remove_filter("corrosion_color")
+
+/datum/statusEffect/nausea
+	name = "Nauseous"
+	id = "nausea"
+	icon_state = "nausea1"
+	var/stacks = 1
+	var/vomiting = FALSE
+
+	onChange(optional)
+		if (src.stacks > 20 && optional > 0)
+			return
+		src.stacks += optional
+		var/old_desc = src.desc
+		switch(src.stacks)
+			if (0 to 5)
+				src.desc = "You're feeling kinda sick."
+				src.icon_state = "nausea1"
+			if (6 to 9)
+				src.desc = "You think you're going to puke."
+				src.icon_state = "nausea2"
+			if (10 to INFINITY)
+				src.desc = "You're about to throw up!"
+				src.icon_state = "nausea3"
+		if (src.stacks >= 10 && !src.vomiting)
+			src.vomiting = TRUE
+			boutput(src.owner, SPAN_ALERT(SPAN_BOLD(src.desc)))
+			for (var/atom/movable/screen/statusEffect/hud_element in src.hud_elements)
+				animate_angry_wibble(hud_element)
+			SPAWN(5 SECONDS)
+				var/mob/vomitee = src.owner
+				vomitee.vomit()
+		else if (old_desc != src.desc)
+			if (optional > 0)
+				boutput(src.owner, SPAN_ALERT(src.desc))
+			else
+				boutput(src.owner, SPAN_NOTICE("You feel a little less sick."))
+
+	onUpdate(timePassed)
+		if (prob(5))
+			src.stacks -= 0.5
+		if (src.stacks <= 0)
+			src.owner.delStatus(src)
+
+/datum/statusEffect/space_phoenix_empowered_feather
+	id = "phoenix_empowered_feather"
+	name = "Empowered Feather"
+	desc = "Your next feather attack against a pod will deal an extra 10% of its current life on hit, as well as gain a 25% disruption chance."
+	icon_state = "phoenix_feather_emp"
+	effect_quality = STATUS_QUALITY_POSITIVE
+
+/datum/statusEffect/space_phoenix_sail
+	id = "space_phoenix_sail"
+	name = "Sailing"
+	desc = "You are sailing the solar winds, granting a large movement speed buff while in space."
+	icon_state = "phoenix_sail"
+	effect_quality = STATUS_QUALITY_POSITIVE
+	move_triggered = TRUE
+
+	move_trigger()
+		..()
+		if (!istype(get_turf(src.owner), /turf/space))
+			src.owner.delStatus(src)
+
+/datum/statusEffect/space_phoenix_ice_barrier
+	id = "phoenix_ice_barrier"
+	name = "Ice Barrier"
+	desc = "Attacks against you can only do up to 10 damage."
+	icon_state = "phoenix_barrier"
+	effect_quality = STATUS_QUALITY_POSITIVE
+
+	onAdd()
+		..()
+		src.owner.add_filter("phoenix_barrier_outline", 1, outline_filter(1, "#09e5f5"))
+
+	onRemove()
+		..()
+		src.owner.remove_filter("phoenix_barrier_outline")
+
+/datum/statusEffect/space_phoenix_vulnerable
+	id = "phoenix_vulnerable"
+	name = "Vulnerable"
+	desc = "You've been made vulnerable, causing you to radiate ice and have halted health regeneration."
+	icon_state = "phoenix_vulnerable"
+	effect_quality = STATUS_QUALITY_NEGATIVE
+	maxDuration = 30 SECONDS
+
+/datum/statusEffect/space_phoenix_warmth_counter
+	id = "phoenix_warmth_counter"
+	name = "Station Warming"
+	icon_state = "phoenix_warmth"
+	effect_quality = STATUS_QUALITY_NEGATIVE
+	var/time_passed = 0
+
+	onUpdate(timePassed)
+		..()
+		var/mob/living/critter/space_phoenix/phoenix = src.owner
+		if (!istype(phoenix))
+			return // ???
+
+		if (phoenix.in_dangerous_place())
+			src.time_passed = min(src.time_passed + timePassed, 30 SECONDS)
+			if (src.time_passed >= 30 SECONDS)
+				if (!ON_COOLDOWN(phoenix, "warmth_damage", 1 SECOND))
+					var/mult = max(LIFE_PROCESS_TICK_SPACING, timePassed) / LIFE_PROCESS_TICK_SPACING
+					phoenix.TakeDamage("All", burn = 4 * mult)
+		else
+			src.time_passed -= timePassed
+			if (src.time_passed <= 0)
+				src.owner.delStatus(src)
+
+	getTooltip()
+		return "Being on the station increases your warmth, staying over 30 seconds and you'll start to take damage.<br><br>Current time spent: [round(src.time_passed / 10, 1)] seconds"
+
+
+/datum/statusEffect/in_nest
+	id = "in_phoenix_nest"
+	visible = FALSE
+
+	onUpdate()
+		..()
+		var/mob/living/L = src.owner
+		if (isdead(L))
+			var/area/phoenix_nest/A = get_area(src.owner)
+			A.atom_entered(src.owner)
+			src.owner.delStatus(src)
+
+/datum/statusEffect/cold_snap
+	id = "cold_snap"
+	name = "Cold Snap"
+	desc = "You've been chilled to a dangerous temperature by a space phoenix!"
+	icon_state = "phoenix_cold_snap"
+	effect_quality = STATUS_QUALITY_NEGATIVE
+
+	onAdd()
+		..()
+		src.owner.add_filter("cold_snap_color_matrix", 1, color_matrix_filter(normalize_color_to_matrix("#000985")))
+
+	onRemove()
+		..()
+		src.owner.remove_filter("cold_snap_color_matrix")
+
+/datum/statusEffect/phoenix_temp_visible
+	id = "phoenix_temp_visible"
+	name = "Temperature Visible"
+	visible = FALSE
+	maxDuration = 5 SECONDS
+
+	onAdd()
+		..()
+		var/mob/living/carbon/human/H = src.owner
+		if (!H.phoenix_temp_overlay)
+			H.phoenix_temp_overlay = new /image/phoenix_temperature_indicator('icons/mob/space_phoenix.dmi', H, "temp_indicator", HUD_LAYER_UNDER_1, null, H)
+
+	onChange()
+		..()
+		var/mob/living/carbon/human/H = src.owner
+		if (!H.phoenix_temp_overlay)
+			H.phoenix_temp_overlay = new /image/phoenix_temperature_indicator('icons/mob/space_phoenix.dmi', H, "temp_indicator", HUD_LAYER_UNDER_1, null, H)
+
+	onUpdate()
+		..()
+		var/mob/living/carbon/human/H = src.owner
+		H.phoenix_temp_overlay.update_temperature(H.bodytemperature)
+
+	onRemove()
+		..()
+		var/mob/living/carbon/human/H = src.owner
+		QDEL_NULL(H.phoenix_temp_overlay)
+
+/datum/statusEffect/phoenix_nest_counter
+	id = "phoenix_mobs_collected"
+	name = "Extra Health Regneration"
+	icon_state = "phoenix_health_regen"
+	effect_quality = STATUS_QUALITY_POSITIVE
+
+	getTooltip()
+		var/mob/living/critter/space_phoenix/phoenix = src.owner
+		var/datum/abilityHolder/space_phoenix/ability_holder = phoenix.get_ability_holder(/datum/abilityHolder/space_phoenix)
+		if (!ability_holder)
+			return "Cannot connect to ability holder, please file a bug report!"
+		return "Extra [phoenix.extra_life_regen] out of combat health regeneration from [min(ability_holder.stored_critter_count, 5)] / 5 critters and [min(ability_holder.stored_human_count, 5)] / 5 humans collected in your nest."
+
+/datum/statusEffect/phoenix_revive_ready
+	id = "phoenix_revive_ready"
+	name = "Revival on Death"
+	icon_state = "phoenix_revive_ready"
+	desc = "You will be resurrected upon death with full health."
+	effect_quality = STATUS_QUALITY_POSITIVE
+
+/datum/statusEffect/broken
+	id = "broken_madness"
+	name = "Broken"
+	desc = "You have been driven to madness by the immense psychic pressure of the unknowable minds drifting far above."
+	visible = TRUE
+	icon_state = "madness"
+
+	onAdd(optional)
+		. = ..()
+		var/mob/mob_owner = src.owner
+		mob_owner.addOverlayComposition(/datum/overlayComposition/insanity/large)
+
+	onRemove()
+		. = ..()
+		var/mob/mob_owner = src.owner
+		mob_owner.removeOverlayComposition(/datum/overlayComposition/insanity/large)
+		var/datum/antagonist/antag_datum = mob_owner.mind?.get_antagonist(ROLE_BROKEN)
+		if (!antag_datum || antag_datum.removing)
+			return
+		message_admins("[key_name(src.owner)] regained their sanity and is no longer broken.")
+		logTheThing(LOG_ADMIN, src.owner, "regained their sanity and is no longer broken.")
+		mob_owner.mind.remove_antagonist(ROLE_BROKEN, ANTAGONIST_REMOVAL_SOURCE_EXPIRED)
+
+/datum/statusEffect/mimicDisguise
+	id = "mimic_disguise"
+	name = "Disguised"
+	desc = "Your speed and health are matching with your disguise."
+	icon_state = "mimicface"
+	visible = TRUE
+	var/pixels = null
+	var/speed_string = null
+
+	getTooltip()
+		var/mob/living/critter/mimic/mob_owner = src.owner
+		return "Health: [mob_owner.max_health], Speed: [speed_string]"
+	onAdd(optional)
+		. = ..()
+		src.onChange(optional)
+	onChange(optional)
+		. = ..()
+		src.pixels = optional
+		scale()
+
+	proc/scale()
+		var/health = null
+		var/mob/living/critter/mimic/antag_spawn/mob_owner = src.owner
+		if (mob_owner.modifier)
+			REMOVE_MOVEMENT_MODIFIER(mob_owner, mob_owner.modifier, src.type)
+		if (src.pixels <= 70)
+			mob_owner.modifier = /datum/movement_modifier/mimic/mimic_fast
+			health = 10
+			speed_string = "Fast!"
+		else if (src.pixels <= 230 || mob_owner.base_form)
+			mob_owner.modifier = /datum/movement_modifier/mimic
+			health = 25
+			speed_string = "Normal."
+		else if (src.pixels <= 800)
+			health = 50
+		else
+			health = src.pixels / 12
+			if (health > 120)
+				health = 120
+
+		if (health >= 50 && health <= 90)
+			mob_owner.modifier = /datum/movement_modifier/mimic/mimic_slow
+			speed_string = "Slow."
+		else if (health >= 90)
+			mob_owner.modifier = /datum/movement_modifier/mimic/mimic_superslow
+			speed_string = "Super slow..."
+
+		mob_owner.max_health = health
+		mob_owner.health = mob_owner.max_health
+		APPLY_MOVEMENT_MODIFIER(mob_owner, mob_owner.modifier, src.type)
+		src.getTooltip()
+
+/datum/statusEffect/spellshield
+	id = "spellshield"
+	name = "Spell shield"
+	desc = "You have an active spellshield, protecting you from various damage sources."
+	icon_state = "nradiation1"
+
+	onAdd()
+		..()
+		var/mob/M = src.owner
+
+		M.AddOverlays(image('icons/effects/effects.dmi', M, "enshield", MOB_LAYER + 1), "spellshield_overlay")
+		boutput(M, SPAN_NOTICE("<b>You are surrounded by a magical barrier!</b>"))
+		M.visible_message(SPAN_ALERT("[M] is encased in a protective shield."))
+		playsound(M, 'sound/effects/MagShieldUp.ogg', 50, TRUE)
+
+	onRemove()
+		..()
+		var/mob/M = src.owner
+		M.ClearSpecificOverlays("spellshield_overlay")
+
+		boutput(M, SPAN_NOTICE("<b>Your magical barrier fades away!</b>"))
+		M.visible_message(SPAN_ALERT("The shield protecting [M] fades away."))
+		playsound(M, 'sound/effects/MagShieldDown.ogg', 50, TRUE)

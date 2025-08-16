@@ -255,8 +255,8 @@ toxic - poisons
 	cost = 50
 	dissipation_rate = 5
 	dissipation_delay = 3
-	color_red = 255
-	color_green = 165
+	color_red = 1
+	color_green = 0.65
 	color_blue = 0
 	max_range = 7 //slight range boost
 	damage_type = D_ENERGY
@@ -329,13 +329,11 @@ toxic - poisons
 	var/strong = FALSE
 
 	on_pointblank(var/obj/projectile/P, var/mob/living/M)
-		// var/dir = angle2dir(angle)
-		M.throw_at(get_edge_target_turf(M, get_dir(P, M)),7,1, throw_type = THROW_GUNIMPACT)
+		M.throw_at(get_edge_target_turf(M, get_dir_accurate(P, M)),7,1, throw_type = THROW_GUNIMPACT)
 
-		//When it hits a mob or such should anything special happen
+	//When it hits a mob or such should anything special happen
 	on_hit(atom/hit, angle, var/obj/projectile/O)
-		// var/dir = angle2dir(angle)
-		var/dir = get_dir(O.shooter, hit)
+		var/dir = get_dir_accurate(O.shooter, hit)
 		var/pow = O.power
 		if (isliving(hit))
 			O.die()

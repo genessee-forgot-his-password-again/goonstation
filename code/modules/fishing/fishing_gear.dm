@@ -51,7 +51,7 @@
 				fishing_spot_type = type2parent(fishing_spot_type)
 			if (fishing_spot)
 				if (fishing_spot.rod_tier_required > src.tier)
-					user.visible_message(SPAN_ALERT("You need a higher tier rod to fish here!"))
+					boutput(user, SPAN_ALERT("You need a higher tier rod to fish here!"))
 					return TRUE
 				actions.start(new /datum/action/fishing(user, src, fishing_spot, target), user)
 				return TRUE //cancel the attack because we're fishing now
@@ -259,7 +259,7 @@ TYPEINFO(/obj/item/fish_portal)
 	name = "Aquatic Research Pool"
 	desc = "A small bulky pool that you can fish in. It has a low probability of containing various low-rarity fish."
 	density = 1
-	anchored = 1
+	anchored = ANCHORED
 	icon = 'icons/obj/items/fishing_gear.dmi'
 	icon_state = "fishing_pool"
 
@@ -323,7 +323,7 @@ TYPEINFO(/obj/item/fish_portal)
 	name = "master pool"
 
 /obj/fishing_pool/portable
-	anchored = 0
+	anchored = UNANCHORED
 
 	attackby(obj/item/W, mob/user)
 		if (istool(W, TOOL_SCREWING | TOOL_WRENCHING))
@@ -346,6 +346,10 @@ TYPEINFO(/obj/item/fish_portal)
 	layer = MOB_LAYER + 0.1
 	var/working = FALSE
 	var/allowed = list(/obj/item/reagent_containers/food/fish)
+
+	New()
+		..()
+		AddComponent(/datum/component/transfer_input/quickloading, allowed)
 
 	attack_hand(var/mob/user)
 		if (!length(src.contents))
@@ -416,7 +420,7 @@ TYPEINFO(/obj/item/fish_portal)
 					amtload++
 				S.UpdateIcon()
 				boutput(user, SPAN_NOTICE("[amtload] fish loaded from the portable aquarium!"))
-				S.tooltip_rebuild = 1
+				S.tooltip_rebuild = TRUE
 			return
 		else
 			var/proceed = FALSE
@@ -433,7 +437,7 @@ TYPEINFO(/obj/item/fish_portal)
 			W.dropped(user)
 
 /obj/submachine/fishing_upload_terminal/portable
-	anchored = 0
+	anchored = UNANCHORED
 
 	attackby(obj/item/W, mob/user)
 		if (istool(W, TOOL_SCREWING | TOOL_WRENCHING))
@@ -522,8 +526,8 @@ TYPEINFO(/obj/item/syndie_fishing_rod)
 			src.lure.overlay_refs = I.overlay_refs?.Copy()
 			src.lure.plane = initial(src.lure.plane)
 			src.lure.layer = initial(src.lure.layer)
-			src.lure.tooltip_rebuild = 1
-			tooltip_rebuild = 1
+			src.lure.tooltip_rebuild = TRUE
+			tooltip_rebuild = TRUE
 		else
 			boutput(user, "You can't change the bait while the line is out!")
 		return
@@ -603,7 +607,7 @@ TYPEINFO(/obj/item/syndie_fishing_rod)
 		if (!src.lure)
 			src.lure = new (src)
 			src.lure.rod = src
-			tooltip_rebuild = 1
+			tooltip_rebuild = TRUE
 			RegisterSignal(src.lure, XSIG_MOVABLE_TURF_CHANGED, PROC_REF(max_range_check))
 		if (src.lure.owner && src.lure.loc != src.lure.owner)
 			src.lure.owner = null
