@@ -3554,6 +3554,7 @@ TYPEINFO(/obj/machinery/vending/janitor)
 		product_list += new/datum/data/vending_product(/obj/item/sword/discount, 20, infinite = TRUE)
 		product_list += new/datum/data/vending_product(/obj/item/fireaxe, 20, infinite = TRUE)
 		product_list += new/datum/data/vending_product(/obj/item/switchblade, 20, infinite = TRUE)
+		product_list += new/datum/data/vending_product(/obj/item/crashaxe, 20, infinite = TRUE)
 
 		product_list += new/datum/data/vending_product(/obj/item/clothing/suit/armor/gang, 20, infinite = TRUE)
 		product_list += new/datum/data/vending_product(/obj/item/clothing/suit/armor/vest, 20, infinite = TRUE)
