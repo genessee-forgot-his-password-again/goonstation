@@ -138,10 +138,10 @@ o+`        `-` ``..-:yooos-..----------..`
 //#define MAP_OVERRIDE_DONUT2       // Updated Donut Station 2, by committee.
 //#define MAP_OVERRIDE_DONUT3       // Donut Station 3, by Ryumi
 //#define MAP_OVERRIDE_KONDARU      // Kondaru Station, by Kubius
-#define MAP_OVERRIDE_ATLAS        // NCS Atlas, by Gannets (and Kubius)
+//#define MAP_OVERRIDE_ATLAS        // NCS Atlas, by Gannets (and Kubius)
 //#define MAP_OVERRIDE_CLARION      // NSS Clarion (Used to be Destiny's Alt), by Dionsu and a69andahalf.
 //#define MAP_OVERRIDE_OSHAN        // Oshan Laboratory, Abzu, by committee
-//#define MAP_OVERRIDE_NADIR        // Nadir Extraction Site by Kubius
+#define MAP_OVERRIDE_NADIR        // Nadir Extraction Site by Kubius
 
 //-------Discontinued or gimmick maps:
 //#define MAP_OVERRIDE_MANTA        // NSS Manta by Azungar
@@ -171,7 +171,7 @@ o+`        `-` ``..-:yooos-..----------..`
 //#define HALLOWEEN 1
 //#define SEASON_WINTER 1
 //#define SEASON_SPRING 1
-//#define SEASON_SUMMER 1
+#define SEASON_SUMMER 1
 //#define SEASON_AUTUMN 1
 //#define XMAS 1
 //#define CANADADAY 1
